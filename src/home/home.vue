@@ -106,7 +106,7 @@ onUnmounted(() => {
       <div class="gradient-overlay"></div>
       <div class="content">
         <div class="text-content">
-          <h1 class="name scroll-animate fade-up delay-1">LX 知识库</h1>
+          <h1 class="name scroll-animate fade-up delay-1">揽星河 | 知识库</h1>
           <p class="subtitle scroll-animate fade-up delay-4">天地一指也 · 万物一马也</p>
         </div>
       </div>
@@ -185,10 +185,9 @@ onUnmounted(() => {
 .hero-section {
   position: relative;
   width: 100%;
+  height: 100vh;
   overflow: hidden;
   background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f1628 100%);
-  margin-top: -50px;
-  padding-top: 50px;
 }
 
 .gradient-overlay {

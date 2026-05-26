@@ -8,10 +8,9 @@
  * 3. 首页时内容区无顶部padding，与透明头部融为一体
  */
 import AppHeader from './components/AppHeader.vue'
-import FPSMonitor from './components/FPSMonitor.vue'
 import { useSettings } from './composables/useSettings'
-import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const route = useRoute()
 const { settings, initSettings } = useSettings()
@@ -20,29 +19,15 @@ initSettings()
 /**
  * 判断是否在首页
  */
-const isHome = computed(() => route.path === '/')
-
-/**
- * 判断是否需要隐藏顶部导航栏（用于独立页面）
- */
-const hideHeader = computed(() => {
-  const fullscreenPages = [
-    '/project/echarts-datav/demo'
-  ]
-  return fullscreenPages.includes(route.path)
-})
+const isHome = computed(() => route.path === '/' || route.path === '/home')
 </script>
 
 <template>
   <div id="app">
-    <!-- 顶部导航栏（独立页面隐藏） -->
-    <AppHeader v-if="!hideHeader" />
-    
-    <!-- FPS 监控 -->
-    <FPSMonitor v-if="settings.showFps && !hideHeader" />
-    
+    <!-- 顶部导航栏 -->
+    <AppHeader />
     <!-- 主内容区域 -->
-    <main class="main-content" :class="{ 'no-padding': isHome || hideHeader }">
+    <main class="main-content" :class="{ 'no-padding': isHome }">
       <router-view />
     </main>
   </div>

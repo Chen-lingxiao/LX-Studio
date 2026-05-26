@@ -131,9 +131,9 @@ onUnmounted(() => {
               >
                 <img :src="visibleImages.current" :alt="'预览图 ' + currentIndex" class="slide-image" />
                 <div class="slide-overlay">
-                  <router-link to="/examples" class="visit-btn">
+                  <button class="visit-btn">
                     访问项目
-                  </router-link>
+                  </button>
                 </div>
               </div>
               <div 

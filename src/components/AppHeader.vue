@@ -4,7 +4,7 @@
  * 
  * 功能说明：
  * 1. 显示应用标题和 Cesium 版本
- * 2. 提供横向导航菜单（首页、在线示例、项目示例）
+ * 2. 提供横向导航菜单（首页、项目示例、学习文档）
  * 3. 集成功能区（邮箱、GitHub、主题切换、设置）
  * 4. 在首页时背景透明，与首页融为一体
  */
@@ -85,9 +85,7 @@ const handleCloseSettings = () => {
         <router-link to="/" class="nav-link" :class="{ active: $route.path === '/', 'white-link': useWhiteTextStyle }">
           <span>首页</span>
         </router-link>
-        <router-link to="/examples" class="nav-link" :class="{ active: $route.path === '/examples', 'white-link': useWhiteTextStyle }">
-          <span>在线沙盒</span>
-        </router-link>
+        
         <router-link to="/project" class="nav-link" :class="{ active: $route.path.startsWith('/project'), 'white-link': useWhiteTextStyle }">
           <span>项目示例</span>
         </router-link>

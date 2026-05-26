@@ -19,11 +19,7 @@ const router = createRouter({
       name: 'Home',
       component: () => import('../home/home.vue')
     },
-    {
-      path: '/examples',
-      name: 'Examples',
-      component: () => import('../examples/examples.vue')
-    },
+    
     {
       path: '/project',
       name: 'Project',
@@ -56,11 +52,7 @@ const router = createRouter({
         }
       ]
     },
-    {
-      path: '/project/echarts-datav/demo',
-      name: 'EchartsDemo',
-      component: () => import('../DataView/EchartsDemo.vue')
-    },
+    
     {
       path: '/study',
       name: 'Study',

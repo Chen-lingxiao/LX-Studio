@@ -28,13 +28,6 @@ const emit = defineEmits(['close'])
 const { settings, updateSetting } = useSettings()
 
 /**
- * 处理FPS开关切换
- */
-const handleFpsToggle = () => {
-  updateSetting('showFps', !settings.showFps)
-}
-
-/**
  * 处理主题色预设选择
  * @param preset 主题色预设名称
  */
@@ -72,21 +65,6 @@ const handleClose = () => {
           
           <!-- 设置内容 -->
           <div class="settings-content">
-            <!-- FPS显示开关 -->
-            <div class="setting-item">
-              <div class="setting-label">
-                <span class="iconfont icon-fps"></span>
-                <span>FPS监控</span>
-              </div>
-              <div 
-                class="toggle-switch" 
-                :class="{ active: settings.showFps }"
-                @click="handleFpsToggle"
-              >
-                <div class="toggle-thumb"></div>
-              </div>
-            </div>
-            
             <!-- 明暗模式切换 -->
             <div class="setting-item">
               <div class="setting-label">
