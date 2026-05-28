@@ -5,6 +5,44 @@ import { useHomeSection } from '../composables/useHomeSection'
 
 const { setCurrentSection, setIsOnHome } = useHomeSection()
 
+const linksData = [
+  {
+    name: 'Leaflet',
+    desc: '轻量级开源交互式地图 JavaScript 库，专注于移动设备友好的交互式地图开发，拥有丰富的插件生态和简洁的 API 设计',
+    url: 'https://leafletjs.cn/'
+  },
+  {
+    name: 'OpenLayers',
+    desc: '高性能开源地图渲染与交互框架，支持多种地图源和投影方式，适用于企业级 GIS 应用与复杂地理数据可视化',
+    url: 'https://openlayers.org/'
+  },
+  {
+    name: 'Mapbox',
+    desc: '全球领先的地图与位置数据平台，提供自定义地图样式、矢量瓦片和导航 SDK，广泛应用于出行和物流领域',
+    url: 'https://www.mapbox.com/'
+  },
+  {
+    name: '天地图',
+    desc: '国家地理信息公共服务平台，由国家测绘地理信息局主导建设，提供权威的地理信息数据服务和在线地图 API',
+    url: 'https://www.tianditu.gov.cn/'
+  },
+  {
+    name: 'Cesium',
+    desc: '世界级三维地球与地理空间可视化引擎，支持全球高精度地形和影像加载，适用于数字孪生、智慧城市等场景',
+    url: 'https://cesium.com/'
+  },
+  {
+    name: 'ECharts',
+    desc: 'Apache 基金会开源可视化图表库，提供丰富的图表类型和交互能力，支持大数据量渲染和自定义主题配置',
+    url: 'https://echarts.apache.org/zh/index.html'
+  },
+  {
+    name: 'Unreal Engine',
+    desc: '虚幻引擎是 Epic Games 开发的实时 3D 创作平台，可用于游戏开发、影视制作、建筑可视化及仿真模拟',
+    url: 'https://www.unrealengine.com/'
+  }
+]
+
 const sectionHeight = ref(0)
 const scrollContainer = ref(null)
 const isLoaded = ref(false)
@@ -149,7 +187,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div class="scroll-indicator bottom scroll-animate fade-up delay-2" @click="scrollToSection(2)">
-        <span class="scroll-text">等待中</span>
+        <span class="scroll-text">技术生态</span>
         <div class="scroll-arrow">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -158,10 +196,31 @@ onUnmounted(() => {
       </div>
     </section>
     
-    <section class="projects-section" :style="{ height: sectionHeight + 'px' }">
-      <div class="projects-content">
-        <h2 class="scroll-animate fade-up">等待中</h2>
-        <p>占位</p>
+    <section class="links-section" :style="{ height: sectionHeight + 'px' }">
+      <div class="links-content">
+        <h2 class="scroll-animate fade-up">技术生态</h2>
+        <p class="links-subtitle scroll-animate fade-up delay-1">常用工具与平台</p>
+        <div class="links-grid">
+          <a
+            v-for="(item, index) in linksData"
+            :key="item.name"
+            :href="item.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-card scroll-animate fade-up"
+            :class="'delay-' + (index % 4 + 1)"
+          >
+            <div class="link-info">
+              <h3>{{ item.name }}</h3>
+              <p>{{ item.desc }}</p>
+            </div>
+            <span class="link-arrow">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </div>
       </div>
     </section>
   </div>
@@ -371,8 +430,8 @@ onUnmounted(() => {
   transition: color 0.3s;
 }
 
-/* Projects Section */
-.projects-section {
+/* Links Section */
+.links-section {
   position: relative;
   width: 100%;
   background: var(--color-bg-elevated);
@@ -380,81 +439,117 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
+  overflow-y: auto;
 }
 
-.projects-content {
-  max-width: 1000px;
+.links-content {
+  max-width: 1100px;
   padding: 3rem;
   width: 100%;
 }
 
-.projects-content h2 {
+.links-content h2 {
   text-align: center;
   font-size: 2.5rem;
   font-weight: 300;
-  margin-bottom: 3rem;
+  margin-bottom: 0.75rem;
   color: var(--color-text-primary);
   letter-spacing: 0.2rem;
   transition: color 0.3s;
 }
 
-.projects-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+.links-subtitle {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin-bottom: 3rem;
+  transition: color 0.3s;
 }
 
-.project-card {
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1.75rem;
   background: var(--color-bg-surface);
   border-radius: 12px;
-  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
   box-shadow: var(--shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
-.project-card:hover {
-  transform: translateY(-8px);
+.link-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.03) 0%, rgba(22, 33, 62, 0.03) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.link-card:hover {
+  transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
-.project-image {
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.link-card:hover::before {
+  opacity: 1;
 }
 
-.image-placeholder {
-  color: #ffffff;
-  opacity: 0.5;
+.link-info {
+  flex: 1;
+  min-width: 0;
 }
 
-.project-info {
-  padding: 1.5rem;
-}
-
-.project-info h3 {
-  font-size: 1.25rem;
+.link-info h3 {
+  font-size: 1.0625rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   color: var(--color-text-primary);
+  letter-spacing: 0.05rem;
   transition: color 0.3s;
 }
 
-.project-info p {
-  font-size: 0.9375rem;
+.link-info p {
+  font-size: 0.8125rem;
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  line-height: 1.7;
+  margin: 0;
   transition: color 0.3s;
+}
+
+.link-arrow {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s;
+}
+
+.link-card:hover .link-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+  color: var(--color-text-primary);
 }
 
 /* 滚动触发动画 */
 .scroll-animate {
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .scroll-animate.fade-up {
@@ -475,7 +570,7 @@ onUnmounted(() => {
 
 .scroll-animate.animate {
   opacity: 1;
-  transform: translateY(0) translateX(0) scale(1);
+  transform: none;
 }
 
 /* 动画延迟 */
@@ -513,10 +608,8 @@ onUnmounted(() => {
 /* 硬件加速优化 */
 .hero-section,
 .about-section,
-.projects-section,
-.scroll-animate {
+.links-section {
   will-change: transform;
-  backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
 }
 </style>

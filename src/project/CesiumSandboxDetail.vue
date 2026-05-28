@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const project = {
   name: 'Cesium 在线沙盒编辑器',
-  url: '',
+  url: 'http://110.42.220.162:81',
   description: '自主主导、AI协同开发的 Cesium 三维 GIS 在线示例沙盒，提供丰富可视化示例、标签检索、代码实时编辑与运行，高效辅助开发者学习 Cesium 核心 API 与三维开发流程。',
   techStack: ['Vue 3', 'TypeScript', 'Vite', 'CesiumJS', 'Monaco Editor', 'Tailwind CSS', 'AI 辅助开发'],
   responsibilities: [
@@ -131,9 +131,9 @@ onUnmounted(() => {
               >
                 <img :src="visibleImages.current" :alt="'预览图 ' + currentIndex" class="slide-image" />
                 <div class="slide-overlay">
-                  <button class="visit-btn">
+                  <a :href="project.url" target="_blank" rel="noopener noreferrer" class="visit-btn">
                     访问项目
-                  </button>
+                  </a>
                 </div>
               </div>
               <div 

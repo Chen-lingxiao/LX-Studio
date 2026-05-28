@@ -54,7 +54,7 @@ const router = createRouter({
     },
     
     {
-      path: '/study',
+      path: '/study/:pathMatch(.*)*',
       name: 'Study',
       component: () => import('../study/study.vue')
     }

@@ -8,6 +8,7 @@
  * 3. 首页时内容区无顶部padding，与透明头部融为一体
  */
 import AppHeader from './components/AppHeader.vue'
+import AppFooter from './components/AppFooter.vue'
 import { useSettings } from './composables/useSettings'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
@@ -30,6 +31,8 @@ const isHome = computed(() => route.path === '/' || route.path === '/home')
     <main class="main-content" :class="{ 'no-padding': isHome }">
       <router-view />
     </main>
+    <!-- 页脚 -->
+    <AppFooter />
   </div>
 </template>
 
@@ -53,6 +56,7 @@ const isHome = computed(() => route.path === '/' || route.path === '/home')
   height: 100vh;
   overflow-y: auto;
   padding-top: 50px;
+  padding-bottom: 28px;
 }
 
 /* 首页时无顶部padding */
