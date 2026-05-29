@@ -17,10 +17,24 @@ const props = defineProps({
 const historyEvents = ref([])
 const calendarData = ref(null)
 const isLoading = ref(false)
+const hasError = ref(false)
 const historyListRef = ref(null)
 const touchStartY = ref(0)
 const isAtTop = ref(false)
 const isAtBottom = ref(false)
+
+const funnyEvents = [
+  { year: '2063', title: '人类首次曲速飞行，与瓦肯人首次接触' },
+  { year: '2151', title: '进取号NX-01启航，开启人类深空探索' },
+  { year: '2161', title: '星际联邦正式成立' },
+  { year: '2245', title: '经典进取号NCC-1701正式服役' },
+  { year: '2267', title: '联邦与克林贡爆发全面战争' },
+  { year: '2365', title: '人类首次遭遇博格文明' },
+  { year: '2366', title: '沃尔夫359战役，联邦舰队重创' },
+  { year: '2373', title: '博格再度入侵地球，历史险些被改写' },
+  { year: '2375', title: '自治领战争结束，银河系格局重塑' },
+  { year: '2378', title: '航海家号历经艰险返回地球' }
+]
 
 const currentDate = ref(new Date())
 const today = computed(() => {
@@ -37,43 +51,46 @@ const today = computed(() => {
 
 const fetchHistoryEvents = async () => {
   isLoading.value = true
+  hasError.value = false
   const { year, month, day } = today.value
-  
+
   const [events, calendar] = await Promise.all([
     apiFetchHistoryEvents(month, day),
     fetchCalendarDay(year, month, day)
   ])
-  
-  if (events.length > 0) {
+
+  if (events && events.length > 0) {
     historyEvents.value = events.map(event => ({
       year: event.date?.split('年')[0] || '',
       title: event.title
     }))
+  } else {
+    hasError.value = true
   }
-  
+
   if (calendar) {
     calendarData.value = calendar
   }
-  
+
   isLoading.value = false
 }
 
 const handleWheel = (event) => {
   const list = historyListRef.value
   if (!list) return
-  
+
   const scrollTop = list.scrollTop
   const scrollHeight = list.scrollHeight
   const clientHeight = list.clientHeight
-  
+
   const canScrollUp = scrollTop > 0
   const canScrollDown = scrollTop < scrollHeight - clientHeight - 10
-  
+
   if (!canScrollUp && event.deltaY < 0) {
     event.preventDefault()
     event.stopPropagation()
   }
-  
+
   if (!canScrollDown && event.deltaY > 0) {
     event.preventDefault()
     event.stopPropagation()
@@ -87,23 +104,23 @@ const handleTouchStart = (event) => {
 const handleTouchMove = (event) => {
   const list = historyListRef.value
   if (!list) return
-  
+
   const touchCurrentY = event.touches[0].clientY
   const deltaY = touchCurrentY - touchStartY.value
   touchStartY.value = touchCurrentY
-  
+
   const scrollTop = list.scrollTop
   const scrollHeight = list.scrollHeight
   const clientHeight = list.clientHeight
-  
+
   const canScrollUp = scrollTop > 0
   const canScrollDown = scrollTop < scrollHeight - clientHeight - 10
-  
+
   if (!canScrollUp && deltaY > 0) {
     event.preventDefault()
     event.stopPropagation()
   }
-  
+
   if (!canScrollDown && deltaY < 0) {
     event.preventDefault()
     event.stopPropagation()
@@ -138,21 +155,21 @@ onUnmounted(() => {
         <h2 class="relax-title"></h2>
         <p class="relax-subtitle">𝓛𝓲𝓿𝓮 𝓵𝓸𝓷𝓰 𝓪𝓷𝓭 𝓹𝓻𝓸𝓼𝓹𝓮𝓻</p>
       </div>
-      
+
       <div class="relax-main">
         <!-- 左侧：音乐播放器 -->
         <div class="music-column">
           <div class="section-header">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 18V5l12-2v13"/>
-              <circle cx="6" cy="18" r="3"/>
-              <circle cx="18" cy="16" r="3"/>
+              <path d="M9 18V5l12-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="18" cy="16" r="3" />
             </svg>
             <span>音乐</span>
           </div>
           <MusicPlayer :songs="songs" />
         </div>
-        
+
         <!-- 右侧：日期和历史 -->
         <div class="date-column">
           <!-- 上面：日历日期 -->
@@ -176,42 +193,48 @@ onUnmounted(() => {
                   <span v-if="calendarData.gzYear" class="calendar-item">{{ calendarData.gzYear }}</span>
                   <span v-if="calendarData.gzYear && calendarData.gzMonth" class="calendar-divider">·</span>
                   <span v-if="calendarData.gzMonth" class="calendar-item">{{ calendarData.gzMonth }}</span>
-                  <span v-if="(calendarData.gzMonth || calendarData.gzYear) && calendarData.gzDate" class="calendar-divider">·</span>
+                  <span v-if="(calendarData.gzMonth || calendarData.gzYear) && calendarData.gzDate"
+                    class="calendar-divider">·</span>
                   <span v-if="calendarData.gzDate" class="calendar-item">{{ calendarData.gzDate }}</span>
-                  <span v-if="(calendarData.gzDate || calendarData.gzMonth || calendarData.gzYear) && (calendarData.lMonth || calendarData.lDate)" class="calendar-divider">·</span>
-                  <span v-if="calendarData.lMonth && calendarData.lDate" class="calendar-item">农历 {{ calendarData.lMonth }}月{{ calendarData.lDate }}</span>
+                  <span
+                    v-if="(calendarData.gzDate || calendarData.gzMonth || calendarData.gzYear) && (calendarData.lMonth || calendarData.lDate)"
+                    class="calendar-divider">·</span>
+                  <span v-if="calendarData.lMonth && calendarData.lDate" class="calendar-item">农历 {{ calendarData.lMonth
+                    }}月{{ calendarData.lDate }}</span>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <!-- 下面：历史上的今天 -->
           <div class="history-area">
             <div class="section-header">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 8v4l3 3"/>
-                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 8v4l3 3" />
+                <circle cx="12" cy="12" r="10" />
               </svg>
               <span>历史上的今天</span>
             </div>
-            <div 
-              ref="historyListRef"
-              class="history-list custom-scrollbar"
-            >
-              <div 
-                v-for="(event, index) in historyEvents" 
-                :key="index" 
-                class="history-item"
-              >
-                <span class="history-year">{{ event.year }}年</span>
-                <span class="history-dot">·</span>
-                <span class="history-event">{{ event.title }}</span>
-              </div>
+            <div ref="historyListRef" class="history-list custom-scrollbar">
+              <template v-if="!hasError">
+                <div v-for="(event, index) in historyEvents" :key="index" class="history-item">
+                  <span class="history-year">{{ event.year }}年</span>
+                  <span class="history-dot">·</span>
+                  <span class="history-event">{{ event.title }}</span>
+                </div>
+              </template>
+              <template v-else>
+                <div class="loading-text error-text">抱歉服务出错了，暂无数据~</div>
+                <div v-for="(event, index) in funnyEvents" :key="'funny-' + index" class="history-item funny-item">
+                  <span class="history-year">{{ event.year }}年</span>
+                  <span class="history-dot">·</span>
+                  <span class="history-event">{{ event.title }}</span>
+                </div>
+              </template>
               <div v-if="isLoading" class="loading-text">加载中...</div>
-              <div v-if="!isLoading && historyEvents.length === 0" class="loading-text">暂无数据</div>
             </div>
           </div>
-          
+
           <!-- 免责声明 -->
           <div class="disclaimer">
             <span>内容来自第三方接口，可能存在误差，仅供娱乐与参考，不构成史实依据</span>
@@ -330,7 +353,7 @@ onUnmounted(() => {
 
 .date-num {
   color: rgba(255, 255, 255, 0.98);
-  text-shadow: 
+  text-shadow:
     0 0 20px rgba(99, 102, 241, 0.6),
     0 0 40px rgba(56, 189, 248, 0.4),
     0 1px 8px rgba(0, 0, 0, 0.4);
@@ -461,12 +484,22 @@ onUnmounted(() => {
   padding: 12px 0;
 }
 
+.error-text {
+  color: rgba(251, 191, 36, 0.9);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.funny-item .history-event {
+  color: rgba(167, 139, 250, 0.85);
+}
+
 @media (max-width: 900px) {
   .relax-main {
     grid-template-columns: 1fr;
     gap: 30px;
   }
-  
+
   .date-column {
     order: -1;
   }
@@ -476,7 +509,7 @@ onUnmounted(() => {
   .relax-title {
     font-size: 1.8rem;
   }
-  
+
   .date-main {
     font-size: 1.8rem;
   }
