@@ -12,11 +12,11 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSettings } from '../composables/useSettings'
 import { useHomeSection } from '../composables/useHomeSection'
-import SettingsPanel from './SettingsPanel.vue'
+import SettingsPanel from './settings/SettingsPanel.vue'
 
 const route = useRoute()
 const { settings, updateSetting } = useSettings()
-const { isHeroSection } = useHomeSection()
+const { isLightSection, isDarkSection } = useHomeSection()
 
 /**
  * 判断是否在首页
@@ -24,9 +24,28 @@ const { isHeroSection } = useHomeSection()
 const isHome = computed(() => route.path === '/home')
 
 /**
- * 是否应用白色文字样式（首页且处于hero区域）
+ * 是否应用白色文字样式
+ * - 首页：暗色章节或暗色模式使用白色文字
+ * - 非首页：暗色主题使用白色文字
  */
-const useWhiteTextStyle = computed(() => isHome.value && isHeroSection.value)
+const useWhiteTextStyle = computed(() => {
+  if (isHome.value) {
+    return isDarkSection.value || settings.isDark
+  }
+  return settings.isDark
+})
+
+/**
+ * 是否应用深色文字样式
+ * - 首页：浅色章节且亮色模式使用深色文字
+ * - 非首页：浅色主题使用深色文字
+ */
+const useDarkTextStyle = computed(() => {
+  if (isHome.value) {
+    return isLightSection.value && !settings.isDark
+  }
+  return !settings.isDark
+})
 
 /**
  * 设置面板显示状态
@@ -74,46 +93,50 @@ const handleCloseSettings = () => {
   <header class="app-header" :class="{ 'transparent-header': isHome }">
     <!-- 左侧标题区域 -->
     <div class="header-content">
-      <h1 class="header-title" :class="{ 'white-text': useWhiteTextStyle }">LX</h1>
-      <span class="header-version" :class="{ 'white-text': useWhiteTextStyle }">v1.141.0</span>
+      <h1 class="header-title" :class="{ 'white-text': useWhiteTextStyle, 'force-dark-text': useDarkTextStyle }">LX</h1>
+      <span class="header-version" :class="{ 'white-text': useWhiteTextStyle, 'force-dark-text': useDarkTextStyle }">v1.0.0</span>
     </div>
     
     <!-- 右侧区域：导航菜单 + 功能区 -->
     <div class="header-right">
       <!-- 导航菜单 -->
       <nav class="header-nav">
-        <router-link to="/" class="nav-link" :class="{ active: $route.path === '/', 'white-link': useWhiteTextStyle }">
+        <router-link to="/" class="nav-link" :class="{ active: $route.path === '/', 'white-link': useWhiteTextStyle, 'force-dark-link': useDarkTextStyle }">
           <span>首页</span>
         </router-link>
         
-        <router-link to="/project" class="nav-link" :class="{ active: $route.path.startsWith('/project'), 'white-link': useWhiteTextStyle }">
-          <span>项目示例</span>
+        <router-link to="/articles" class="nav-link" :class="{ active: $route.path.startsWith('/articles'), 'white-link': useWhiteTextStyle, 'force-dark-link': useDarkTextStyle }">
+          <span>文章</span>
         </router-link>
-        <router-link to="/study" class="nav-link" :class="{ active: $route.path === '/study', 'white-link': useWhiteTextStyle }">
-          <span>学习笔记</span>
+        
+        <router-link to="/project" class="nav-link" :class="{ active: $route.path.startsWith('/project'), 'white-link': useWhiteTextStyle, 'force-dark-link': useDarkTextStyle }">
+          <span>项目</span>
+        </router-link>
+        <router-link to="/study" class="nav-link" :class="{ active: $route.path === '/study', 'white-link': useWhiteTextStyle, 'force-dark-link': useDarkTextStyle }">
+          <span>知识库</span>
         </router-link>
       </nav>
       
       <!-- 分隔线 -->
-      <div class="nav-divider" :class="{ 'white-divider': useWhiteTextStyle }"></div>
+      <div class="nav-divider" :class="{ 'white-divider': useWhiteTextStyle, 'force-dark-divider': useDarkTextStyle }"></div>
       
       <!-- 功能区图标 -->
       <div class="icon-group">
-        <div class="icon-item" :class="{ 'white-icon': useWhiteTextStyle }" @click="handleIconClick('email')" title="邮箱">
+        <div class="icon-item" :class="{ 'white-icon': useWhiteTextStyle, 'force-dark-icon': useDarkTextStyle }" @click="handleIconClick('email')" title="邮箱">
           <span class="iconfont icon-youxiang"></span>
         </div>
-        <div class="icon-item" :class="{ 'white-icon': useWhiteTextStyle }" @click="handleGithubClick" title="GitHub">
+        <div class="icon-item" :class="{ 'white-icon': useWhiteTextStyle, 'force-dark-icon': useDarkTextStyle }" @click="handleGithubClick" title="GitHub">
           <span class="iconfont icon-githublogo"></span>
         </div>
         <div 
           class="icon-item" 
-          :class="{ 'white-icon': useWhiteTextStyle }"
+          :class="{ 'white-icon': useWhiteTextStyle, 'force-dark-icon': useDarkTextStyle }"
           @click="handleThemeToggle" 
           :title="settings.isDark ? '切换到亮色主题' : '切换到暗色主题'"
         >
           <span class="iconfont" :class="settings.isDark ? 'icon-taiyang' : 'icon-yueliang'"></span>
         </div>
-        <div class="icon-item" :class="{ 'white-icon': useWhiteTextStyle }" @click="handleIconClick('settings')" title="设置">
+        <div class="icon-item" :class="{ 'white-icon': useWhiteTextStyle, 'force-dark-icon': useDarkTextStyle }" @click="handleIconClick('settings')" title="设置">
           <span class="iconfont icon-shezhi"></span>
         </div>
       </div>
@@ -280,6 +303,40 @@ const handleCloseSettings = () => {
 
 .white-icon:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 强制深色文字（浅色章节）- 不受明暗模式影响 */
+.force-dark-text {
+  color: #3a5a4a !important;
+}
+
+/* 强制深色链接（浅色章节）- 不受明暗模式影响 */
+.force-dark-link {
+  color: #3a5a4a !important;
+}
+
+.force-dark-link:hover {
+  color: #2d4a3a !important;
+  background-color: rgba(58, 90, 74, 0.1) !important;
+}
+
+.force-dark-link.active {
+  color: #2d4a3a !important;
+  border-bottom-color: #3a5a4a !important;
+}
+
+/* 强制深色分隔线（浅色章节）- 不受明暗模式影响 */
+.force-dark-divider {
+  background-color: rgba(58, 90, 74, 0.3) !important;
+}
+
+/* 强制深色图标（浅色章节）- 不受明暗模式影响 */
+.force-dark-icon {
+  color: #3a5a4a !important;
+}
+
+.force-dark-icon:hover {
+  background-color: rgba(58, 90, 74, 0.1) !important;
 }
 
 /* 图标字体样式 */

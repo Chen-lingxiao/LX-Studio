@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
+const mainRef = ref<HTMLElement | null>(null)
 
 const projectList = [
   {
@@ -18,10 +19,10 @@ const projectList = [
     index: '/project/cesium-sandbox',
     title: 'Cesium 在线沙盒编辑器'
   },
-  // {
-  //   index: '/project/echarts-datav',
-  //   title: 'Echarts数据大屏'
-  // },
+  {
+    index: '/project/echarts-datav',
+    title: 'Echarts数据大屏'
+  },
   {
     index: '/project/example',
     title: '示例项目'
@@ -47,6 +48,11 @@ onMounted(() => {
 watch(() => route.path, () => {
   activeMenu.value = route.path
   redirectToDefault()
+  nextTick(() => {
+    if (mainRef.value) {
+      mainRef.value.scrollTop = 0
+    }
+  })
 })
 </script>
 
@@ -68,7 +74,7 @@ watch(() => route.path, () => {
         </el-menu-item>
       </el-menu>
     </el-aside>
-    <main class="project-main">
+    <main class="project-main custom-scrollbar" ref="mainRef">
       <router-view />
     </main>
   </div>

@@ -24,10 +24,20 @@ export function useHomeSection() {
 
   const isHeroSection = computed(() => state.isOnHome && state.currentSection === 0)
 
+  const isLightSection = computed(() => {
+    return state.isOnHome && (state.currentSection === 1 || state.currentSection === 2)
+  })
+
+  const isDarkSection = computed(() => {
+    return state.isOnHome && (state.currentSection === 0 || state.currentSection === 3)
+  })
+
   return {
     state,
     setCurrentSection,
     setIsOnHome,
-    isHeroSection
+    isHeroSection,
+    isLightSection,
+    isDarkSection
   }
 }

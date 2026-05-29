@@ -14,7 +14,7 @@
  * 事件：
  * - close: 关闭面板
  */
-import { useSettings, themeColorPresets, type ThemeColorPreset } from '../composables/useSettings'
+import { useSettings, themeColorPresets, type ThemeColorPreset } from '../../composables/useSettings'
 
 const props = defineProps({
   visible: {
@@ -112,7 +112,7 @@ const handleClose = () => {
 
 <style scoped>
 /* 引入图标字体样式 */
-@import '../assets/fonts/iconfont.css';
+@import '../../assets/fonts/iconfont.css';
 
 /* 设置容器 */
 .settings-container {

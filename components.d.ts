@@ -13,12 +13,21 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
-    DandelionBackground: typeof import('./src/components/DandelionBackground.vue')['default']
+    ArticleListItem: typeof import('./src/components/blog/ArticleListItem.vue')['default']
+    BlogCard: typeof import('./src/components/blog/BlogCard.vue')['default']
+    BlogPagination: typeof import('./src/components/blog/BlogPagination.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
+    FieldBackground: typeof import('./src/components/background/FieldBackground.vue')['default']
+    MiniPlayer: typeof import('./src/components/MiniPlayer.vue')['default']
+    MusicPlayer: typeof import('./src/components/relax/MusicPlayer.vue')['default']
+    RelaxSection: typeof import('./src/components/relax/RelaxSection.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SettingsPanel: typeof import('./src/components/SettingsPanel.vue')['default']
+    SettingsPanel: typeof import('./src/components/settings/SettingsPanel.vue')['default']
+    SkyBackground: typeof import('./src/components/background/SkyBackground.vue')['default']
+    StarryBackground: typeof import('./src/components/background/StarryBackground.vue')['default']
+    WaterBackground: typeof import('./src/components/background/WaterBackground.vue')['default']
   }
 }

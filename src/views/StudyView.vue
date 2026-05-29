@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { studyMenu } from './config'
+import { studyMenu } from '../data/config'
 import { ElMenu, ElMenuItem, ElSubMenu } from 'element-plus'
 import MarkdownIt from 'markdown-it'
 
@@ -63,9 +63,9 @@ function cleanHeadingText(raw: string): string {
 
 // Markdown解析器配置
 const md = new MarkdownIt({
-  html: false,
-  linkify: true,
-  typographer: true
+  html: false, // 禁用HTML解析
+  linkify: true, // 开启自动链接识别
+  typographer: true  // 开启智能引号替换
 })
 
 // 自定义标题渲染器，添加ID
@@ -214,7 +214,7 @@ function buildTree(items: Array<{ level: number; text: string; id: string }>): A
   const stack: any[] = []
 
   items.forEach(item => {
-    const node = { ...item, expanded: false, children: [] }
+    const node = { ...item, expanded: true, children: [] }
 
     while (stack.length > 0 && stack[stack.length - 1].level >= item.level) {
       stack.pop()
@@ -432,7 +432,7 @@ watch(activeMenu, (newPath) => {
     </button>
 
     <!-- 中间内容区域 -->
-    <main class="content-area" ref="contentRef" @scroll="handleContentScroll">
+    <main class="content-area custom-scrollbar" ref="contentRef" @scroll="handleContentScroll">
       <article class="markdown-content" v-html="markdownContent"></article>
     </main>
 
@@ -456,7 +456,7 @@ watch(activeMenu, (newPath) => {
         </div>
       </header>
 
-      <nav class="outline-content" ref="outlineRef">
+      <nav class="outline-content custom-scrollbar" ref="outlineRef">
         <ul class="outline-list">
           <template v-for="item in outline" :key="item.id">
             <li class="outline-item">
@@ -1203,6 +1203,16 @@ $menu-padding: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 2px 6px;
+  margin: -2px -6px;
+  border-radius: 4px;
+  transition: color $transition-fast, background-color $transition-fast;
+
+  &.active {
+    color: var(--color-primary);
+    font-weight: 600;
+    background-color: var(--color-primary-bg-hover);
+  }
 }
 
 .outline-empty {
