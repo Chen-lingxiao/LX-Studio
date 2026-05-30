@@ -67,7 +67,7 @@ const setStoredData = <T>(key: string, data: T): void => {
   }
 }
 
-export const fetchHistoryEvents = async (month: number, day: number): Promise<HistoryEvent[]> => {
+export const fetchHistoryEvents = async (month: number, day: number): Promise<HistoryEvent[] | null> => {
   const dateStr = `${month}/${day}`
   const storageKey = `history_events_${dateStr}`
   
