@@ -1,6 +1,6 @@
 # 揽星河 | LX-Studio
 
-一个基于 Vue 3 的个人技术博客与项目展示平台，集成了地理信息系统（GIS）可视化、现代前端技术与交互式文档功能。平台融合了技术文章分享、项目案例展示、学习笔记记录三大核心功能，为开发者提供一个优雅、高效的知识管理与展示空间。
+一个基于 Vue 3 的现代化个人技术博客与项目展示平台，集成了现代前端技术与交互式文档功能。平台融合了技术文章分享、项目案例展示、学习笔记记录等核心功能
 
 ## 目录
 
@@ -21,11 +21,11 @@
 
 ## 项目概述
 
-揽星河 | LX-Studio 是一个面向开发者的个人技术站点，旨在记录技术成长、分享项目经验与展示 GIS 开发成果。平台名称取自"揽星河"——寓意在技术的星河中探索与收获。
+揽星河 | LX-Studio 是一个面向开发者的个人技术站点，旨在记录技术成长、分享项目经验与展示开发成果。
 
 ### 核心理念
 
-- **技术沉淀**：通过博客文章系统地记录前端开发、GIS 技术等领域的实践经验
+- **技术沉淀**：通过博客文章系统地记录前端开发、Web 技术等领域的实践经验
 - **项目展示**：以详尽的案例展示项目背景、技术栈、开发过程与个人贡献
 - **知识积累**：构建结构化的学习笔记体系，便于知识回顾与分享
 - **美学体验**：追求极致的视觉设计与交互体验，展现技术与人文的融合
@@ -38,10 +38,10 @@
 
 | 功能 | 描述 |
 |------|------|
-| **蒲公英动画背景** | 首页顶部全屏蒲公英飘落动画，营造沉浸式视觉体验 |
+| **星空动画背景** | 首页顶部全屏星空粒子动画，包含星星闪烁、流星划过效果，营造沉浸式宇宙视觉体验 |
 | **滚动视差效果** | 支持滚轮滚动切换章节，实现平滑的视差过渡效果 |
 | **文章推荐展示** | 展示最新技术文章，支持分类筛选与分页浏览 |
-| **技术生态链接** | 收录 Leaflet、OpenLayers、Mapbox、Cesium、ECharts 等常用技术平台链接 |
+| **技术生态链接** | 收录常用技术平台链接，包含 Leaflet、OpenLayers、Mapbox、Cesium、ECharts 等 |
 | **动态水面效果** | 首页底部沉浸式水波动画，增强视觉层次感 |
 
 ### 文章模块
@@ -57,7 +57,7 @@
 
 | 功能 | 描述 |
 |------|------|
-| **知识目录** | 分类展示 Web开发、GIS框架等学习路径 |
+| **知识目录** | 分类展示 Web 开发、GIS 学习等学习路径与笔记 |
 | **Markdown 渲染** | 支持完整的 Markdown 语法解析与渲染 |
 | **标题目录** | 自动提取文章标题生成目录导航，支持点击跳转 |
 | **搜索功能** | 支持按标题或路径搜索学习内容 |
@@ -73,6 +73,14 @@
 | **职责描述** | 结构化描述在项目中的具体工作内容与贡献 |
 | **图片轮播** | 支持多张项目截图轮播展示，自适应高度 |
 | **链接跳转** | 提供 GitHub、Gitee 仓库地址与在线演示地址 |
+
+### 音乐模块
+
+| 功能 | 描述 |
+|------|------|
+| **迷你播放器** | 全局浮动迷你音乐播放器，支持播放/暂停、切歌 |
+| **播放动画** | 播放状态下显示动态均衡器效果与呼吸光晕 |
+| **展开控制** | 点击展开完整播放器，显示歌曲列表 |
 
 ### 设置与主题
 
@@ -196,12 +204,12 @@ pnpm preview
 
 ### 首页（Home）
 
-首页采用全屏滚动章节设计，包含四个主要部分：
+首页采用全屏滚动设计，包含四个主要部分：
 
-1. **英雄章节**：蒲公英背景动画，展示站点名称与标语
-2. **文章章节**：天空背景，展示精选技术文章，支持分类筛选
-3. **技术生态章节**：草地背景，展示常用技术平台链接卡片
-4. **水底章节**：水波动画效果，作为首页收尾
+1. **首屏**：星空背景动画，展示站点名称与标语
+2. **文章区**：天空背景，展示精选技术文章，支持分类筛选
+3. **技术生态区**：草地背景，展示常用技术平台链接卡片
+4. **休息区**：水波动画效果，作为首页收尾
 
 ### 文章页面（Articles）
 
@@ -235,78 +243,50 @@ pnpm preview
 ```
 LX-Studio/
 ├── public/                          # 静态资源目录
-│   └── data/                        # 静态数据目录
-│       └── content/                  # 文章内容目录
-│           └── *.md                  # Markdown 文章文件
+│   ├── Preview/                     # 项目预览图片
+│   ├── docs/                        # 学习笔记文档
+│   ├── music/                       # 音乐文件
+│   └── favicon.ico                  # 网站图标
 │
 ├── src/                             # 源代码目录
 │   │
 │   ├── assets/                       # 资源文件
 │   │   ├── fonts/                    # 字体文件
-│   │   │   ├── iconfont.css          # 图标字体样式
-│   │   │   ├── iconfont.js           # 图标字体数据
-│   │   │   ├── iconfont.json         # 图标配置
-│   │   │   └── iconfont.*            # 字体文件（woff/ttf）
 │   │   └── styles/                   # 样式文件
-│   │       └── main.scss             # 全局样式与主题变量
 │   │
 │   ├── components/                   # Vue 组件
-│   │   ├── background/                # 背景动画组件
-│   │   │   ├── DandelionBackground.vue  # 蒲公英背景
-│   │   │   ├── FieldBackground.vue     # 草地背景
-│   │   │   ├── SkyBackground.vue       # 天空背景
-│   │   │   └── WaterBackground.vue     # 水面背景
+│   │   ├── background/               # 背景动画组件
 │   │   ├── blog/                     # 博客相关组件
-│   │   │   ├── BlogCard.vue           # 博客文章卡片
-│   │   │   └── BlogPagination.vue     # 博客分页组件
+│   │   ├── relax/                    # 放松模块组件
 │   │   ├── layout/                   # 布局组件
-│   │   │   ├── AppHeader.vue          # 顶部导航栏
-│   │   │   └── AppFooter.vue          # 底部页脚
-│   │   ├── settings/                 # 设置组件
-│   │   │   └── SettingsPanel.vue      # 设置面板
-│   │   ├── AppHeader.vue              # 顶部导航栏（根组件用）
-│   │   └── AppFooter.vue              # 底部页脚（根组件用）
+│   │   └── settings/                 # 设置组件
 │   │
 │   ├── composables/                  # 可组合函数
 │   │   ├── useSettings.ts            # 设置管理（主题、偏好）
-│   │   └── useHomeSection.js         # 首页章节状态管理
+│   │   ├── useHomeSection.js         # 首页章节状态管理
+│   │   └── useAudioPlayer.ts         # 音乐播放器状态管理
 │   │
 │   ├── data/                         # 数据文件
 │   │   ├── articles.js               # 文章数据配置
 │   │   ├── config.js                 # 学习模块配置
-│   │   ├── study.js                  # 学习模块数据
 │   │   └── content/                  # 文章内容
-│   │       └── *.md                   # Markdown 文章
 │   │
 │   ├── router/                       # 路由配置
-│   │   └── index.js                  # 路由规则定义
-│   │
-│   ├── stores/                       # 状态管理（预留）
-│   │
-│   ├── types/                        # TypeScript 类型定义
-│   │   └── markdown-it.d.ts          # markdown-it 类型声明
-│   │
-│   ├── utils/                        # 工具函数（预留）
-│   │
 │   ├── views/                        # 页面组件
+│   │   ├── project/                  # 项目子页面
 │   │   ├── HomeView.vue              # 首页
 │   │   ├── ArticlesView.vue          # 文章页面
-│   │   ├── StudyView.vue             # 学习页面
-│   │   └── project/                  # 项目子页面
-│   │       ├── ProjectView.vue       # 项目列表
-│   │       ├── DigitalCampusDetail.vue  # 数字校园项目
-│   │       ├── GraduationProject.vue    # 毕业设计项目
-│   │       ├── CesiumSandboxDetail.vue # Cesium 沙盒
-│   │       ├── EchartsDatav.vue        # ECharts 数据大屏
-│   │       └── ExampleProject.vue       # 示例项目
+│   │   └── StudyView.vue             # 学习页面
 │   │
-│   ├── App.vue                       # 根组件（布局管理）
-│   ├── main.js                       # 应用入口文件
+│   ├── utils/                        # 工具函数
+│   ├── App.vue                       # 根组件
+│   ├── main.js                       # 应用入口
 │   └── env.d.ts                      # TypeScript 环境声明
 │
-├── index.html                        # HTML 入口文件
+├── .env                             # 环境变量（API 密钥等）
+├── index.html                        # HTML 入口
 ├── vite.config.ts                    # Vite 配置
-├── package.json                      # 项目依赖配置
+├── package.json                      # 依赖配置
 ├── tsconfig.json                     # TypeScript 配置
 └── .gitignore                       # Git 忽略配置
 ```
@@ -319,7 +299,7 @@ LX-Studio/
 
 | 组件 | 文件位置 | 描述 |
 |------|----------|------|
-| 蒲公英背景 | [DandelionBackground.vue](src/components/background/DandelionBackground.vue) | 全屏蒲公英飘落动画，支持暗色模式适配 |
+| 星空背景 | [StarryBackground.vue](src/components/background/StarryBackground.vue) | 全屏星空粒子动画，包含星星闪烁、流星划过效果，支持暗色模式适配 |
 | 天空背景 | [SkyBackground.vue](src/components/background/SkyBackground.vue) | 渐变天空背景，带云朵漂浮动画 |
 | 草地背景 | [FieldBackground.vue](src/components/background/FieldBackground.vue) | 草地渐变背景，带草动效果 |
 | 水面背景 | [WaterBackground.vue](src/components/background/WaterBackground.vue) | 水波纹动画背景，支持暗色模式 |
@@ -330,6 +310,14 @@ LX-Studio/
 |------|----------|------|
 | 博客卡片 | [BlogCard.vue](src/components/blog/BlogCard.vue) | 文章列表卡片，展示封面、标题、摘要等信息 |
 | 博客分页 | [BlogPagination.vue](src/components/blog/BlogPagination.vue) | 文章列表分页控件 |
+
+### 放松模块组件
+
+| 组件 | 文件位置 | 描述 |
+|------|----------|------|
+| 放松区域 | [RelaxSection.vue](src/components/relax/RelaxSection.vue) | 历史上的今天、日历、音乐播放器组合区域 |
+| 迷你播放器 | [MiniPlayer.vue](src/components/MiniPlayer.vue) | 全局浮动迷你音乐播放器 |
+| 音乐播放器 | [MusicPlayer.vue](src/components/relax/MusicPlayer.vue) | 完整音乐播放器组件 |
 
 ### 布局组件
 
@@ -381,7 +369,6 @@ LX-Studio/
 src/data/content/
 ├── article-1.md
 ├── article-2.md
-├── article-3.md
 └── my-new-article.md    ← 新建文件
 ```
 
@@ -397,7 +384,7 @@ src/data/content/
   title: '我的新文章标题',
   excerpt: '文章摘要，显示在卡片列表中...',
   category: '技术',                    // 分类名，需与 categories 中一致
-  tags: ['Vue', 'GIS'],               // 文章标签
+  tags: ['Vue', 'JavaScript'],         // 文章标签
   readTime: '15分钟',                  // 预计阅读时间
   views: 0,                           // 阅读量
   likes: 0,                           // 点赞数
@@ -430,15 +417,14 @@ export const categories = [
 
 #### 1. 编写 Markdown 文档
 
-在 `docs/` 目录下按分类创建文件：
+在 `public/docs/` 目录下按分类创建文件：
 
 ```
-docs/
+public/docs/
 ├── frontend/
 │   ├── web-intro.md
 │   ├── HTML.md
-│   ├── CSS.md
-│   └── JavaScript.md
+│   └── CSS.md
 ├── GIS/
 │   ├── webgis-basic.md
 │   ├── Leaflet.md
@@ -474,7 +460,7 @@ docs/
 }
 ```
 
-> **路径说明**：`path` 以 `/docs/` 开头，对应项目根目录下的 `docs/` 文件夹。文档会通过 `fetch` 加载，确保文件路径正确。
+> **路径说明**：`path` 以 `/docs/` 开头，对应 `public/docs/` 文件夹。
 
 ---
 
@@ -489,71 +475,23 @@ docs/
 ```
 public/Preview/
 ├── DigitalCampus/
-│   ├── DigitalCampus1.png
-│   └── DigitalCampus2.png
-├── MyNewProject/          ← 新建文件夹
-│   ├── preview1.png
-│   ├── preview2.png
-│   └── preview3.png
+│   └── DigitalCampus1.png
+└── MyNewProject/          ← 新建文件夹
+    ├── preview1.png
+    └── preview2.png
 ```
 
 #### 2. 创建详情组件
 
-在 `src/views/project/` 目录下创建 Vue 组件，参考现有组件结构：
-
-```vue
-<!-- src/views/project/MyNewProject.vue -->
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-
-const project = {
-  name: '项目名称',
-  url: 'https://example.com',           // 在线演示地址（可选）
-  description: '项目简介...',
-  techStack: ['Vue 3', 'Cesium', 'Node.js'],
-  responsibilities: [
-    {
-      title: '职责标题',
-      content: '具体工作内容描述...'
-    }
-  ],
-  github: 'https://github.com/xxx/xxx',  // GitHub 地址（可选）
-  gitee: 'https://gitee.com/xxx/xxx'     // Gitee 地址（可选）
-}
-
-const images = [
-  '../Preview/MyNewProject/preview1.png',
-  '../Preview/MyNewProject/preview2.png'
-]
-
-// 图片轮播逻辑（参考现有组件实现）
-const currentIndex = ref(0)
-// ...
-</script>
-```
+在 `src/views/project/` 目录下创建 Vue 组件，参考现有组件结构。
 
 #### 3. 注册路由
 
-编辑 [src/router/index.js](src/router/index.js)，在 `project` 的 `children` 中添加：
-
-```javascript
-{
-  path: 'my-new-project',
-  name: 'MyNewProject',
-  component: () => import('../views/project/MyNewProject.vue')
-}
-```
+编辑 [src/router/index.js](src/router/index.js)，在 `project` 的 `children` 中添加新路由。
 
 #### 4. 添加侧边栏菜单项
 
-编辑 [src/views/project/ProjectView.vue](src/views/project/ProjectView.vue)，在 `projectList` 中添加：
-
-```javascript
-{
-  index: '/project/my-new-project',
-  title: '我的新项目'
-}
-```
+编辑 [src/views/project/ProjectView.vue](src/views/project/ProjectView.vue)，在 `projectList` 中添加新条目。
 
 ---
 
@@ -564,8 +502,7 @@ const currentIndex = ref(0)
 ```
 public/music/
 ├── song-name.mp3        ← 音频文件
-├── song-name.png        ← 封面图片（支持 png/jpg）
-└── ...
+└── song-name.png        ← 封面图片
 ```
 
 #### 注册歌曲
@@ -576,12 +513,10 @@ public/music/
 {
   name: '歌曲名称',
   artist: '艺术家',
-  url: '/music/song-name.mp3',       // 路径相对于 public 目录
+  url: '/music/song-name.mp3',
   cover: '/music/song-name.png'
 }
 ```
-
-> **注意**：迷你播放器在所有页面都可用，歌曲数据在应用启动时自动加载。
 
 ---
 
@@ -597,41 +532,22 @@ public/music/
 }
 ```
 
-添加新条目即可在首页展示。
-
 ---
 
 ### 六、主题色配置
 
-主题色预设定义在 [src/composables/useSettings.ts](src/composables/useSettings.ts) 的 `themeColorPresets` 对象中：
-
-```typescript
-'my-theme': {
-  name: '我的主题',
-  colors: {
-    bgBase: '#ffffff',       // 页面底色
-    bgSurface: '#ffffff',    // 卡片/面板背景
-    bgElevated: '#f5f5f5',   // 悬浮背景
-    bgHover: '#e8e8e8',      // 悬停背景
-    border: '#eeeeee',       // 边框颜色
-    borderMuted: '#dddddd'   // 次要边框颜色
-  }
-}
-```
-
-添加后会在设置面板中自动出现对应选项。
+主题色预设定义在 [src/composables/useSettings.ts](src/composables/useSettings.ts) 的 `themeColorPresets` 对象中。
 
 ---
 
-### 七、站点基本信息
+### 七、环境变量配置
 
-| 配置项 | 文件位置 | 说明 |
-|--------|----------|------|
-| 站点标题 | `index.html` 的 `<title>` | 浏览器标签页标题 |
-| 导航栏版本号 | `src/components/AppHeader.vue` | 头部显示的版本标识 |
-| 首页标语 | `src/views/HomeView.vue` | 首页英雄区的文字内容 |
-| 底部版权 | `src/components/AppFooter.vue` | 页脚版权信息 |
-| API 代理 | `vite.config.ts` 的 `server.proxy` | 开发环境接口代理配置 |
+API 密钥等敏感信息通过 `.env` 文件配置：
+
+```env
+VITE_JUHE_API_KEY_CALENDAR=your-calendar-api-key
+VITE_JUHE_API_KEY_HISTORY=your-history-api-key
+```
 
 ---
 
@@ -640,7 +556,7 @@ public/music/
 | 资源类型 | 目录路径 | 说明 |
 |----------|----------|------|
 | 文章内容 | `src/data/content/` | 文章 Markdown 文件 |
-| 学习笔记 | `docs/` | 学习文档 Markdown 文件 |
+| 学习笔记 | `public/docs/` | 学习文档 Markdown 文件 |
 | 项目截图 | `public/Preview/` | 项目预览图片（按项目分文件夹） |
 | 音乐文件 | `public/music/` | MP3 音频 + 封面图片 |
 | 图标字体 | `src/assets/fonts/` | iconfont 图标文件 |
