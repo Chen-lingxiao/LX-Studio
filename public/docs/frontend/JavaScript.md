@@ -1,6 +1,6 @@
 # JavaScript 简介
 ## JavaScript 概念
-**概念**：JavaScript 是一种运行在**客户端（浏览器）**的编程语言
+**概念**：JavaScript 是一种运行在**客户端（浏览器）** 的编程语言
 
 **作用**：
 
