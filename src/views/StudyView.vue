@@ -3,6 +3,30 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { studyMenu } from '../data/config'
 import { ElMenu, ElMenuItem, ElSubMenu } from 'element-plus'
 import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js/lib/core'
+import javascript from 'highlight.js/lib/languages/javascript'
+import typescript from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
+import css from 'highlight.js/lib/languages/css'
+import java from 'highlight.js/lib/languages/java'
+import python from 'highlight.js/lib/languages/python'
+import bash from 'highlight.js/lib/languages/bash'
+import json from 'highlight.js/lib/languages/json'
+import sql from 'highlight.js/lib/languages/sql'
+import yaml from 'highlight.js/lib/languages/yaml'
+import 'highlight.js/styles/github.css'
+
+// 注册常用语言
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('html', html)
+hljs.registerLanguage('css', css)
+hljs.registerLanguage('java', java)
+hljs.registerLanguage('python', python)
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('json', json)
+hljs.registerLanguage('sql', sql)
+hljs.registerLanguage('yaml', yaml)
 
 // 状态管理
 const activeMenu = ref('')
@@ -61,11 +85,19 @@ function cleanHeadingText(raw: string): string {
   return text
 }
 
-// Markdown解析器配置
+// Markdown 解析器配置
 const md = new MarkdownIt({
-  html: false, // 禁用HTML解析
+  html: false, // 禁用 HTML 解析
   linkify: true, // 开启自动链接识别
-  typographer: true  // 开启智能引号替换
+  typographer: true,  // 开启智能引号替换
+  highlight: (str, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(str, { language: lang }).value
+      } catch (__) {}
+    }
+    return ''
+  }
 })
 
 // 自定义标题渲染器，添加ID
@@ -941,8 +973,81 @@ $menu-padding: 8px;
     code {
       background: none;
       padding: 0;
-      color: var(--color-text-primary);
+      color: inherit;
       @include theme-transition(color);
+    }
+
+    // 代码高亮样式
+    :deep(.hljs) {
+      background: transparent;
+      padding: 0;
+      color: var(--color-text-primary);
+    }
+
+    :deep(.hljs-comment),
+    :deep(.hljs-quote) {
+      color: #6a737d;
+      font-style: italic;
+    }
+
+    :deep(.hljs-keyword),
+    :deep(.hljs-selector-tag) {
+      color: #d73a49;
+      font-weight: 600;
+    }
+
+    :deep(.hljs-string),
+    :deep(.hljs-doctag),
+    :deep(.hljs-template-variable) {
+      color: #032f62;
+    }
+
+    :deep(.hljs-title),
+    :deep(.hljs-section),
+    :deep(.hljs-selector-id) {
+      color: #6f42c1;
+      font-weight: 600;
+    }
+
+    :deep(.hljs-variable),
+    :deep(.hljs-template-variable) {
+      color: #e36209;
+    }
+
+    :deep(.hljs-type),
+    :deep(.hljs-class) {
+      color: #22863a;
+    }
+
+    :deep(.hljs-number) {
+      color: #005cc5;
+    }
+
+    :deep(.hljs-built_in),
+    :deep(.hljs-builtin-name) {
+      color: #005cc5;
+    }
+
+    :deep(.hljs-attr) {
+      color: #005cc5;
+    }
+
+    :deep(.hljs-symbol),
+    :deep(.hljs-bullet) {
+      color: #005cc5;
+    }
+
+    :deep(.hljs-link) {
+      color: #032f62;
+      text-decoration: underline;
+    }
+
+    :deep(.hljs-deletion) {
+      background: #ffeef0;
+    }
+
+    :deep(.hljs-addition) {
+      background: #e6ffed;
     }
   }
 

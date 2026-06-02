@@ -24,8 +24,8 @@ const project = {
       content: '全程使用 AI 进行代码生成、Bug 排查与问题修复；自主验证功能逻辑与三维效果，形成“核心自研+AI提效”的现代化开发模式'
     }
   ],
-  github: 'https://github.com/Chen-lingxiao/Studio-LX',
-  gitee: 'https://gitee.com/lxrelic/Studio-LX'
+  github: 'https://github.com/Chen-lingxiao/CesiumSandbox--LX',
+  gitee: 'https://gitee.com/lxrelic/cesium-sandbox-lx'
 }
 
 const images = [

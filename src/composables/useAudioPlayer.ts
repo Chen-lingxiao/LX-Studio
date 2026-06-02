@@ -51,7 +51,7 @@ const defaultSongs: Song[] = [
 
 const currentSong = ref<Song | null>(defaultSongs[0] || null)
 const isPlaying = ref(false)
-const volume = ref(40)
+const volume = ref(20)
 const isMuted = ref(false)
 const currentTime = ref(0)
 const duration = ref(0)

@@ -259,7 +259,7 @@ onUnmounted(() => {
       
       <!-- 版权信息 -->
       <div class="copyright">
-        <span>Music provided by Pixabay, licensed under the Pixabay Content License.</span>
+        <span>音乐来源 Pixabay，遵循 Pixabay 内容许可协议</span>
       </div>
     </div>
   </div>

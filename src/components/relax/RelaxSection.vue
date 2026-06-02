@@ -237,7 +237,7 @@ onUnmounted(() => {
 
           <!-- 免责声明 -->
           <div class="disclaimer">
-            <span>内容来自第三方接口，可能存在误差，仅供娱乐与参考，不构成史实依据</span>
+            <span>内容来自第三方接口，可能存在误差，仅供参考，不构成史实依据</span>
           </div>
         </div>
       </div>

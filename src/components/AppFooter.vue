@@ -57,9 +57,11 @@ const useWhiteTextStyle = computed(() => {
 <template>
   <footer class="app-footer" :class="{ 'transparent-footer': showTransparent }">
     <div class="footer-content">
-      <span class="footer-copyright" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }">© {{ currentYear }} LX. All rights reserved.</span>
+      <span class="footer-copyright" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }">© {{ currentYear }} LX 版权所有</span>
       <span class="footer-divider" :class="{ 'white-divider': useWhiteTextStyle, 'dark-divider': !useWhiteTextStyle && showTransparent }">|</span>
-      <span class="footer-icp" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }">备案号预留位</span>
+      <a class="footer-icp" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">陇ICP备2026004546号</a>
+      <span class="footer-divider" :class="{ 'white-divider': useWhiteTextStyle, 'dark-divider': !useWhiteTextStyle && showTransparent }">|</span>
+      <a class="footer-icp" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }" href="http://www.beian.gov.cn/" target="_blank" rel="noopener noreferrer">公安备案号预留</a>
     </div>
   </footer>
 </template>
@@ -87,7 +89,8 @@ const useWhiteTextStyle = computed(() => {
   color: var(--color-text-muted);
 }
 
-.footer-content span {
+.footer-content span,
+.footer-content a {
   transition: color 0.3s;
 }
 
