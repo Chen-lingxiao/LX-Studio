@@ -101,13 +101,15 @@ class Particle {
  }
  reset() {
  this.x = Math.random() * this.canvas.width;
- this.y = this.canvas.height * (0.2 + Math.random() * 0.5);
+ // 天空占39%，绿地占61%；萤火虫主要在绿地，少量在天空底部
+ const heightRand = Math.random();
+ this.y = this.canvas.height * (0.38 + heightRand * heightRand * 0.55); // 38%-93%高度，下方绿地更密集
  this.baseSize = Math.random() * 1.75 + 1.2;
  this.size = this.baseSize;
  this.speedX = (Math.random() - 0.5) * 0.25;
  this.speedY = (Math.random() - 0.5) * 0.15;
- this.brightness = Math.random() * 0.4 + 0.3;
- this.breathSpeed = Math.random() * 0.03 + 0.015;
+ this.brightness = Math.random() * 0.5 + 0.5;
+ this.breathSpeed = Math.random() * 0.4 + 0.5; // 呼吸速度（周期约6-10秒）
  this.breathOffset = Math.random() * Math.PI * 2;
  this.glowSize = Math.random() * 7.2 + 5;
  this.colorType = Math.random() > 0.6 ? 'warm' : 'cool';
@@ -116,9 +118,9 @@ class Particle {
  this.x += this.speedX + Math.sin(time * 0.5 + this.breathOffset) * 0.15;
  this.y += this.speedY + Math.cos(time * 0.3 + this.breathOffset) * 0.1;
  const breath = Math.sin(time * this.breathSpeed + this.breathOffset);
- this.size = this.baseSize * (0.6 + breath * 0.4);
- this.currentBrightness = this.brightness * (0.4 + breath * 0.6);
- if (this.y < this.canvas.height * 0.15 || this.y > this.canvas.height * 0.7 || this.x < -20 || this.x > this.canvas.width + 20) {
+ this.size = this.baseSize * (0.5 + breath * 0.5);
+ this.currentBrightness = this.brightness * (0.2 + breath * 0.8); // 呼吸亮度范围加大
+ if (this.y < this.canvas.height * 0.3 || this.y > this.canvas.height * 0.95 || this.x < -20 || this.x > this.canvas.width + 20) {
  this.reset();
  }
  }
@@ -145,9 +147,9 @@ const init = () => {
  for (let i = 0; i < flowerCount; i++) {
  flowers.value.push(new Flower(canvas));
  }
- // 漂浮粒子
+ // 漂浮粒子 - 增加数量
  particles.value = [];
- const particleCount = Math.min(Math.floor(canvas.width / 100), 25);
+ const particleCount = Math.min(Math.floor(canvas.width / 50), 50);
  for (let i = 0; i < particleCount; i++) {
  particles.value.push(new Particle(canvas));
  }
@@ -301,20 +303,29 @@ const drawParticle = (ctx, particle) => {
  ? { r: 255, g: 230, b: 120 }
  : { r: 180, g: 255, b: 200 };
  ctx.save();
+ 
+ // 多层渐变，让发光更自然柔和
+ const glowSize = particle.glowSize * 1.5; // 扩大发光范围
  const gradient = ctx.createRadialGradient(
- particle.x, particle.y, 0,
- particle.x, particle.y, particle.glowSize
+   particle.x, particle.y, 0,
+   particle.x, particle.y, glowSize
  );
- gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`);
- gradient.addColorStop(0.3, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.5})`);
+ // 更平滑的渐变过渡
+ gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.8})`);
+ gradient.addColorStop(0.15, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.5})`);
+ gradient.addColorStop(0.35, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.25})`);
+ gradient.addColorStop(0.6, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.1})`);
+ gradient.addColorStop(0.85, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.03})`);
  gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
  ctx.fillStyle = gradient;
  ctx.beginPath();
- ctx.arc(particle.x, particle.y, particle.glowSize, 0, Math.PI * 2);
+ ctx.arc(particle.x, particle.y, glowSize, 0, Math.PI * 2);
  ctx.fill();
- ctx.fillStyle = `rgba(255, 255, 240, ${alpha * 0.9})`;
+ 
+ // 核心亮点
+ ctx.fillStyle = `rgba(255, 255, 240, ${alpha * 0.85})`;
  ctx.beginPath();
- ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+ ctx.arc(particle.x, particle.y, particle.size * 0.7, 0, Math.PI * 2);
  ctx.fill();
  ctx.restore();
 };

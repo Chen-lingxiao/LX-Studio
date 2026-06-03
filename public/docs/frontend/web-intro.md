@@ -109,7 +109,7 @@ JavaScript ：负责网页行为
 
 + 简体中文
 
-**翻译(英汉词典) **
+**翻译(英汉词典)**
 
 + 翻译本地77万词条英汉词典，不依赖任何在线翻译API
 
@@ -117,11 +117,11 @@ JavaScript ：负责网页行为
 
 + 自动重命名成对的 HTML/XML 标签
 
-**JavaScript (ES6) code snippets **
+**JavaScript (ES6) code snippets**
 
 + 支持ES6语法提示
 
-**Path Intellisense  **
+**Path Intellisense**
 
 + 路径提示插件
 
@@ -145,7 +145,7 @@ Auto Close Tag
 
 + 代码格式化工具
 
-**any-rule  **
+**any-rule**
 
 + 正则表达式
 
@@ -153,15 +153,15 @@ Auto Close Tag
 
 + 轻松处理 LESS 文件
 
-**ESLint **
+**ESLint**
 
 + ESLint 集成到 VS Code 中
 
-**TRAE AI  **
+**TRAE AI**
 
 + 字节跳动豆包旗下的智能编程助手
 
-**TONGYI Lingma **
+**TONGYI Lingma**
 
 + 基于通义大模型的智能编码辅助工具
 

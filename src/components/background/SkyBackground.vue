@@ -16,7 +16,7 @@ const props = defineProps({
 
 const currentTheme = computed(() => props.isDark);
 
-// 暗色模式星星类
+// 暗色模式星星类 - 从地面仰望星空效果
 class Star {
  constructor(canvas) {
  this.canvas = canvas;
@@ -24,10 +24,51 @@ class Star {
  }
  reset() {
  this.x = Math.random() * this.canvas.width;
- this.y = Math.random() * this.canvas.height * 0.7;
- this.size = Math.random() * 1.5 + 0.5;
- this.brightness = Math.random() * 0.4 + 0.3;
- this.twinkleSpeed = Math.random() * 0.02 + 0.008;
+ // 分布在整个天空，但越靠近地平线越稀疏
+ const heightRand = Math.random();
+ this.y = heightRand * heightRand * this.canvas.height * 0.85; // 二次分布，上半部分更密集
+ 
+ // 大小层次：大部分小星星，少数大星星
+ const sizeRand = Math.random();
+ if (sizeRand < 0.75) {
+   this.size = Math.random() * 0.6 + 0.2; // 小星星（多数）
+ } else if (sizeRand < 0.92) {
+   this.size = Math.random() * 0.8 + 0.6; // 中星星
+ } else if (sizeRand < 0.98) {
+   this.size = Math.random() * 1.0 + 1.0; // 大星星
+ } else {
+   this.size = Math.random() * 1.5 + 1.8; // 特亮星（极少数）
+ }
+ 
+ // 大气消光效果：越靠近地平线越暗
+ const heightFactor = this.y / (this.canvas.height * 0.85);
+ this.baseBrightness = (Math.random() * 0.3 + 0.15) * (0.3 + heightFactor * 0.7);
+ 
+ // 特亮星更亮
+ if (sizeRand >= 0.98) {
+   this.baseBrightness = Math.random() * 0.3 + 0.5;
+ }
+ 
+ // 颜色类型：白、淡蓝、淡黄、橙色
+ const colorRand = Math.random();
+ if (colorRand < 0.5) {
+   this.color = { r: 255, g: 255, b: 255 }; // 白色
+ } else if (colorRand < 0.75) {
+   this.color = { r: 200, g: 220, b: 255 }; // 淡蓝
+ } else if (colorRand < 0.9) {
+   this.color = { r: 255, g: 250, b: 220 }; // 淡黄
+ } else {
+   this.color = { r: 255, g: 200, b: 150 }; // 橙色（少数）
+ }
+ 
+ // 闪烁：大部分不闪或轻微闪，少数明显闪
+ if (sizeRand >= 0.92) {
+   this.twinkleSpeed = Math.random() * 0.08 + 0.04; // 明显闪烁
+   this.twinkleAmount = 0.3;
+ } else {
+   this.twinkleSpeed = Math.random() * 0.04 + 0.02; // 轻微闪烁
+   this.twinkleAmount = 0.15;
+ }
  this.twinkleOffset = Math.random() * Math.PI * 2;
  }
  update(time) {
@@ -38,7 +79,8 @@ const initStars = () => {
  const canvas = canvasRef.value;
  if (!canvas) return;
  stars.value = [];
- const starCount = Math.min(Math.floor(canvas.width / 120), 30);
+ // 增加星星数量，模拟仰望星空的密集感
+ const starCount = Math.min(Math.floor(canvas.width * canvas.height / 8000), 150);
  for (let i = 0; i < starCount; i++) {
  stars.value.push(new Star(canvas));
  }
@@ -165,12 +207,13 @@ const animate = () => {
 const drawSkyGradient = (ctx, canvas) => {
  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
  if (currentTheme.value) {
- // 暗色模式 - 夜空渐变
- gradient.addColorStop(0, '#0a0a1a');
- gradient.addColorStop(0.3, '#1a1a3e');
- gradient.addColorStop(0.6, '#2a2a4e');
- gradient.addColorStop(0.85, '#1a1a3a');
- gradient.addColorStop(1, '#0f0f28');
+ // 暗色模式 - 从地面仰望夜空
+ gradient.addColorStop(0, '#050510'); // 天顶深邃
+ gradient.addColorStop(0.2, '#0a0a20');
+ gradient.addColorStop(0.5, '#0f0f2a');
+ gradient.addColorStop(0.75, '#141430');
+ gradient.addColorStop(0.9, '#1a1a35'); // 接近地平线稍亮
+ gradient.addColorStop(1, '#15152a'); // 地平线
  } else {
  // 亮色模式 - 白天天空渐变
  gradient.addColorStop(0, '#87CEEB');
@@ -223,21 +266,68 @@ const drawGround = (ctx, canvas) => {
  ctx.fillRect(0, groundStart, canvas.width, groundHeight);
 };
 
-// 绘制星星（暗色模式）
+// 绘制星星（暗色模式）- 从地面仰望星空效果
 const drawStars = (ctx, time) => {
  if (!currentTheme.value) return;
- stars.value.forEach(star => {
- const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset) * 0.3 + 0.7;
- const alpha = star.brightness * twinkle;
- if (alpha < 0.1) return;
- const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 3);
- gradient.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
- gradient.addColorStop(0.4, `rgba(220, 230, 255, ${alpha * 0.5})`);
- gradient.addColorStop(1, 'rgba(200, 220, 255, 0)');
- ctx.fillStyle = gradient;
- ctx.beginPath();
- ctx.arc(star.x, star.y, star.size * 3, 0, Math.PI * 2);
- ctx.fill();
+ 
+ // 按大小排序，先画小的再画大的（正确的遮挡关系）
+ const sortedStars = [...stars.value].sort((a, b) => a.size - b.size);
+ 
+ sortedStars.forEach(star => {
+ // 闪烁效果
+ const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset) * star.twinkleAmount + (1 - star.twinkleAmount);
+ const alpha = star.baseBrightness * twinkle;
+ if (alpha < 0.03) return;
+ 
+ const { r, g, b } = star.color;
+ 
+ // 特亮星：更大的光晕和十字光芒
+ if (star.size >= 1.8) {
+   // 外层大光晕
+   const outerGlow = star.size * 6;
+   const outerGradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, outerGlow);
+   outerGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha * 0.15})`);
+   outerGradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${alpha * 0.05})`);
+   outerGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+   ctx.fillStyle = outerGradient;
+   ctx.beginPath();
+   ctx.arc(star.x, star.y, outerGlow, 0, Math.PI * 2);
+   ctx.fill();
+   
+   // 内层光晕
+   const innerGlow = star.size * 3;
+   const innerGradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, innerGlow);
+   innerGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+   innerGradient.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${alpha * 0.4})`);
+   innerGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+   ctx.fillStyle = innerGradient;
+   ctx.beginPath();
+   ctx.arc(star.x, star.y, innerGlow, 0, Math.PI * 2);
+   ctx.fill();
+   
+   // 核心亮点
+   ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.9})`;
+   ctx.beginPath();
+   ctx.arc(star.x, star.y, star.size * 0.4, 0, Math.PI * 2);
+   ctx.fill();
+ } else {
+   // 普通星星：柔和发光
+   const glowSize = star.size * 2;
+   const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowSize);
+   gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+   gradient.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${alpha * 0.3})`);
+   gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+   ctx.fillStyle = gradient;
+   ctx.beginPath();
+   ctx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
+   ctx.fill();
+   
+   // 核心
+   ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.8})`;
+   ctx.beginPath();
+   ctx.arc(star.x, star.y, star.size * 0.4, 0, Math.PI * 2);
+   ctx.fill();
+ }
  });
 };
 const drawLightPoint = (ctx, point, offsetX, time) => {

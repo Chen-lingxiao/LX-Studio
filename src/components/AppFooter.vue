@@ -61,7 +61,7 @@ const useWhiteTextStyle = computed(() => {
       <span class="footer-divider" :class="{ 'white-divider': useWhiteTextStyle, 'dark-divider': !useWhiteTextStyle && showTransparent }">|</span>
       <a class="footer-icp" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">陇ICP备2026004546号</a>
       <span class="footer-divider" :class="{ 'white-divider': useWhiteTextStyle, 'dark-divider': !useWhiteTextStyle && showTransparent }">|</span>
-      <a class="footer-icp" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }" href="http://www.beian.gov.cn/" target="_blank" rel="noopener noreferrer">公安备案号预留</a>
+      <a class="footer-icp" :class="{ 'white-text': useWhiteTextStyle, 'dark-text': !useWhiteTextStyle && showTransparent }" href="http://www.beian.gov.cn/" target="_blank" rel="noopener noreferrer">预留</a>
     </div>
   </footer>
 </template>

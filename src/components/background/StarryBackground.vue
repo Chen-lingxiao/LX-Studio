@@ -24,8 +24,6 @@ class Star {
  // 简化属性
  this.size = Math.random() * 2.1 + 0.5;
  this.brightness = Math.random() * 0.55 + 0.45;
- this.twinkleSpeed = Math.random() * 0.03 + 0.01;
- this.twinkleOffset = Math.random() * Math.PI * 2;
  // 颜色索引，避免对象创建
  this.colorIndex = Math.random() < 0.7 ? 0 : (Math.random() < 0.85 ? 1 : 2);
  }
@@ -72,8 +70,8 @@ class Meteor {
  const speed = 3 + Math.random() * 3;
  this.vx = Math.cos(angle) * speed;
  this.vy = Math.sin(angle) * speed;
- // 流星视觉长度（屏幕像素）
- this.length = 200 + Math.random() * 150;
+ // 流星视觉长度（屏幕像素）- 加长尾巴
+ this.length = 350 + Math.random() * 200;
  this.width = 1.5 + Math.random() * 1;
  // 透明度更明亮
  this.alpha = 0.42 + Math.random() * 0.35;
@@ -94,9 +92,9 @@ class Meteor {
  // 流星头部位置
  const headX = this.canvas.width / 2 + (this.x + offsetX) * scale;
  const headY = this.canvas.height / 2 + (this.y + offsetY) * scale;
- // 流星尾迹方向（沿移动方向的反方向）
- const tailOffsetX = -this.vx * this.length * 0.02;
- const tailOffsetY = -this.vy * this.length * 0.02;
+ // 流星尾迹方向（沿移动方向的反方向）- 增加尾迹长度
+ const tailOffsetX = -this.vx * this.length * 0.035;
+ const tailOffsetY = -this.vy * this.length * 0.035;
  const tailX = headX + tailOffsetX * scale;
  const tailY = headY + tailOffsetY * scale;
  return {
@@ -112,11 +110,11 @@ class Meteor {
  const progress = this.age / this.maxAge;
  const fadeAlpha = progress < 0.15 ? progress * 6.67 : (progress > 0.85 ? (1 - progress) * 6.67 : 1);
  const alpha = proj.alpha * fadeAlpha;
- // 创建渐变拖尾效果
+ // 创建渐变拖尾效果 - 增强尾部可见性
  const gradient = ctx.createLinearGradient(proj.tailX, proj.tailY, proj.headX, proj.headY);
- gradient.addColorStop(0, `rgba(100, 140, 200, 0)`);
- gradient.addColorStop(0.3, `rgba(140, 180, 230, ${alpha * 0.25})`);
- gradient.addColorStop(0.7, `rgba(200, 220, 255, ${alpha * 0.55})`);
+ gradient.addColorStop(0, `rgba(100, 140, 200, ${alpha * 0.05})`);
+ gradient.addColorStop(0.3, `rgba(140, 180, 230, ${alpha * 0.3})`);
+ gradient.addColorStop(0.7, `rgba(200, 220, 255, ${alpha * 0.6})`);
  gradient.addColorStop(1, `rgba(240, 245, 255, ${alpha})`);
  ctx.strokeStyle = gradient;
  ctx.lineWidth = proj.width;
@@ -144,13 +142,25 @@ const init = () => {
  for (let i = 0; i < starCount; i++) {
  stars.value.push(new Star(canvas));
  }
- // 初始化流星（12颗）
+ // 初始化流星（12颗）- 均匀分布避免聚集
  meteors.value = [];
- for (let i = 0; i < 12; i++) {
- const meteor = new Meteor(canvas);
- // 错开流星的出现时间
- meteor.age = Math.floor(Math.random() * meteor.maxAge);
- meteors.value.push(meteor);
+ const meteorCount = 12;
+ for (let i = 0; i < meteorCount; i++) {
+   const meteor = new Meteor(canvas);
+   // 将流星均匀分布到不同区域（网格分布）
+   const gridCols = 4; // 4列
+   const gridRows = 3; // 3行
+   const col = i % gridCols;
+   const row = Math.floor(i / gridCols);
+   // 在对应网格区域内随机分布
+   const cellWidth = canvas.width * 2 / gridCols;
+   const cellHeight = canvas.height * 1.5 / gridRows;
+   meteor.x = (col * cellWidth) + (Math.random() * cellWidth) - canvas.width;
+   meteor.y = (row * cellHeight) + (Math.random() * cellHeight) - canvas.height * 0.75;
+   meteor.z = 100 + Math.random() * 400;
+   // 错开流星的出现时间
+   meteor.age = Math.floor(Math.random() * meteor.maxAge);
+   meteors.value.push(meteor);
  }
  mouse.value = { x: canvas.width / 2, y: canvas.height / 2 };
  targetMouse.value = { x: canvas.width / 2, y: canvas.height / 2 };
@@ -215,8 +225,7 @@ const drawStars = (ctx, starList, offsetX, offsetY, canvasHalfW, canvasHalfH) =>
  if (proj.x < boundLeft || proj.x > boundRight || proj.y < boundTop || proj.y > boundBottom) {
  continue;
  }
- const twinkle = Math.sin(time.value * star.twinkleSpeed + star.twinkleOffset) * 0.2 + 0.8;
- const alpha = proj.alpha * twinkle;
+ const alpha = proj.alpha;
  if (alpha < 0.05)
  continue;
  const color = colors[star.colorIndex];

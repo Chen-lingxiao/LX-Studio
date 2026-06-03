@@ -14,7 +14,7 @@ import bash from 'highlight.js/lib/languages/bash'
 import json from 'highlight.js/lib/languages/json'
 import sql from 'highlight.js/lib/languages/sql'
 import yaml from 'highlight.js/lib/languages/yaml'
-import 'highlight.js/styles/github.css'
+import 'highlight.js/styles/github-dark.css'
 
 // 注册常用语言
 hljs.registerLanguage('javascript', javascript)
@@ -39,6 +39,17 @@ const activeHeadingId = ref('')
 const sidebarCollapsed = ref(false)
 const outlineCollapsed = ref(false)
 const currentFileDir = ref('')
+const isThemeSwitching = ref(false)
+let themeSwitchTimer: ReturnType<typeof setTimeout> | null = null
+
+// 监听主题切换，显示遮罩层掩盖卡顿
+function handleThemeChange() {
+  isThemeSwitching.value = true
+  if (themeSwitchTimer) clearTimeout(themeSwitchTimer)
+  themeSwitchTimer = setTimeout(() => {
+    isThemeSwitching.value = false
+  }, 250) // 匹配统一过渡时间 0.2s + 缓冲
+}
 
 // 过滤菜单搜索
 const filteredMenu = computed(() => {
@@ -385,11 +396,24 @@ onMounted(() => {
   }
   handleResize()
   window.addEventListener('resize', handleResize)
+  
+  // 监听主题切换（html class变化）
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'class') {
+        handleThemeChange()
+      }
+    })
+  })
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  ;(window as any).__themeObserver = observer
 })
 
 onUnmounted(() => {
   if (scrollTimer) cancelAnimationFrame(scrollTimer)
+  if (themeSwitchTimer) clearTimeout(themeSwitchTimer)
   window.removeEventListener('resize', handleResize)
+  ;(window as any).__themeObserver?.disconnect()
 })
 
 // 监听菜单变化
@@ -403,6 +427,9 @@ watch(activeMenu, (newPath) => {
 
 <template>
   <div class="study-page">
+    <!-- 主题切换遮罩层，掩盖切换卡顿 -->
+    <div class="theme-switch-mask" :class="{ active: isThemeSwitching }"></div>
+    
     <!-- 左侧菜单区域 -->
     <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
       <header class="sidebar-header">
@@ -589,9 +616,11 @@ watch(activeMenu, (newPath) => {
 // ============================================
 // Sass 变量体系
 // ============================================
-$transition-fast: 0.15s ease-out;
+// 统一过渡时间，避免时序不一致导致视觉割裂
+$transition-theme: 0.2s ease-out;
+$transition-fast: 0.2s ease-out;
 $transition-normal: 0.2s ease-out;
-$transition-medium: 0.3s ease;
+$transition-medium: 0.2s ease-out;
 
 $sidebar-width: 240px;
 $outline-width: 220px;
@@ -607,13 +636,10 @@ $menu-padding: 8px;
 // Mixins
 // ============================================
 @mixin theme-transition($properties...) {
-  will-change: $properties;
-  transition: $properties $transition-normal;
+  transition: $properties $transition-theme;
 }
 
 @mixin gpu-optimize {
-  transform: translateZ(0);
-  backface-visibility: hidden;
   contain: style layout paint;
 }
 
@@ -646,7 +672,7 @@ $menu-padding: 8px;
   justify-content: center;
   color: var(--color-text-secondary);
   z-index: 100;
-  transition: background-color $transition-fast, color $transition-fast, #{$position} $transition-medium, transform $transition-medium;
+  transition: background-color $transition-theme, color $transition-theme, border-color $transition-theme, #{$position} $transition-medium, transform $transition-medium;
   
   &:hover {
     background-color: var(--color-bg-hover);
@@ -671,7 +697,6 @@ $menu-padding: 8px;
     font-weight: 500;
   }
   color: var(--color-text-primary);
-  @include theme-transition(color, border-color);
 }
 
 // ============================================
@@ -896,12 +921,11 @@ $menu-padding: 8px;
   line-height: 1.8;
   color: var(--color-text-primary);
   min-height: 100%;
-  @include theme-transition(color);
-  @include gpu-optimize;
+  // 使用 contain 限制重绘范围，避免主题切换时全量重排
+  contain: layout style;
 
   // 标题样式
   :deep(h1), :deep(h2), :deep(h3), :deep(h4) {
-    @include theme-transition(color);
   }
 
   :deep(h1) {
@@ -910,7 +934,6 @@ $menu-padding: 8px;
     margin: 24px 0 16px;
     padding-bottom: 12px;
     border-bottom: 2px solid var(--color-primary);
-    @include theme-transition(color, border-color);
   }
 
   :deep(h2) {
@@ -938,17 +961,25 @@ $menu-padding: 8px;
   }
 
   // 正文内容
-  :deep(p), :deep(ul), :deep(ol) {
+  :deep(p) {
     margin: 12px 0;
     padding-left: 20px;
     color: var(--color-text-secondary);
-    @include theme-transition(color);
+  }
+
+  :deep(ul), :deep(ol) {
+    margin: 12px 0;
+    padding-left: 46px;
+    color: var(--color-text-secondary);
+  }
+
+  :deep(ul ul), :deep(ol ol), :deep(ul ol), :deep(ol ul) {
+    padding-left: 62px;
   }
 
   :deep(strong) {
     font-weight: 600;
     color: var(--color-text-primary);
-    @include theme-transition(color);
   }
 
   :deep(code) {
@@ -958,96 +989,98 @@ $menu-padding: 8px;
     font-family: 'Fira Code', 'Monaco', monospace;
     font-size: 0.9em;
     color: var(--color-primary);
-    @include theme-transition(background-color, color);
   }
 
   :deep(pre) {
     background-color: var(--color-bg-elevated);
     padding: 16px;
+    padding-left: 36px;
+    margin: 16px 0;
+    margin-left: 20px;
     border-radius: 8px;
     overflow-x: auto;
-    margin: 16px 0;
-    @include theme-transition(background-color);
-    @include gpu-optimize;
+    // 限制每个代码块的重绘范围，避免主题切换时级联重绘
+    contain: paint;
 
     code {
       background: none;
       padding: 0;
       color: inherit;
-      @include theme-transition(color);
     }
 
-    // 代码高亮样式
+    // 代码高亮样式 - 适配暗色主题
     :deep(.hljs) {
       background: transparent;
       padding: 0;
-      color: var(--color-text-primary);
+      color: #e6edf3;
     }
 
     :deep(.hljs-comment),
     :deep(.hljs-quote) {
-      color: #6a737d;
+      color: #8b949e;
       font-style: italic;
     }
 
     :deep(.hljs-keyword),
     :deep(.hljs-selector-tag) {
-      color: #d73a49;
+      color: #ff7b72;
       font-weight: 600;
     }
 
     :deep(.hljs-string),
     :deep(.hljs-doctag),
     :deep(.hljs-template-variable) {
-      color: #032f62;
+      color: #a5d6ff;
     }
 
     :deep(.hljs-title),
     :deep(.hljs-section),
     :deep(.hljs-selector-id) {
-      color: #6f42c1;
+      color: #d2a8ff;
       font-weight: 600;
     }
 
     :deep(.hljs-variable),
     :deep(.hljs-template-variable) {
-      color: #e36209;
+      color: #ffa657;
     }
 
     :deep(.hljs-type),
     :deep(.hljs-class) {
-      color: #22863a;
+      color: #89d185;
     }
 
     :deep(.hljs-number) {
-      color: #005cc5;
+      color: #79c0ff;
     }
 
     :deep(.hljs-built_in),
     :deep(.hljs-builtin-name) {
-      color: #005cc5;
+      color: #d2a8ff;
     }
 
     :deep(.hljs-attr) {
-      color: #005cc5;
+      color: #79c0ff;
     }
 
     :deep(.hljs-symbol),
     :deep(.hljs-bullet) {
-      color: #005cc5;
+      color: #79c0ff;
     }
 
     :deep(.hljs-link) {
-      color: #032f62;
+      color: #a5d6ff;
       text-decoration: underline;
     }
 
     :deep(.hljs-deletion) {
-      background: #ffeef0;
+      background: rgba(248, 81, 73, 0.2);
+      color: #ff7b72;
     }
 
     :deep(.hljs-addition) {
-      background: #e6ffed;
+      background: rgba(48, 211, 99, 0.2);
+      color: #89d185;
     }
   }
 
@@ -1058,7 +1091,6 @@ $menu-padding: 8px;
   :deep(a) {
     color: var(--color-primary);
     text-decoration: none;
-    @include theme-transition(color);
 
     &:hover {
       text-decoration: underline;
@@ -1071,30 +1103,28 @@ $menu-padding: 8px;
     margin: 16px 0;
     background-color: var(--color-primary-bg-light);
     color: var(--color-text-secondary);
-    @include theme-transition(border-color, background-color, color);
   }
 
   :deep(table) {
-    width: 100%;
+    width: calc(100% - 20px);
     border-collapse: collapse;
     margin: 16px 0;
+    margin-left: 20px;
+    contain: paint;
 
     th, td {
       border: 1px solid var(--color-border);
       padding: 10px 12px;
       text-align: left;
-      @include theme-transition(border-color);
     }
 
     th {
       background-color: var(--color-bg-elevated);
       font-weight: 600;
-      @include theme-transition(background-color);
     }
 
     tr:hover {
       background-color: var(--color-bg-hover);
-      @include theme-transition(background-color);
     }
   }
 
@@ -1129,7 +1159,7 @@ $menu-padding: 8px;
   justify-content: center;
   color: var(--color-text-secondary);
   z-index: 100;
-  transition: background-color $transition-fast, color $transition-fast, right $transition-medium, transform $transition-medium;
+  transition: background-color $transition-theme, color $transition-theme, border-color $transition-theme, right $transition-medium, transform $transition-medium;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
   
   &:hover {
@@ -1209,7 +1239,7 @@ $menu-padding: 8px;
   padding: 2px;
   border-radius: 4px;
   color: var(--color-primary);
-  transition: background-color $transition-fast;
+  transition: background-color $transition-theme;
 
   &:hover {
     background-color: var(--color-bg-hover);
@@ -1311,7 +1341,7 @@ $menu-padding: 8px;
   padding: 2px 6px;
   margin: -2px -6px;
   border-radius: 4px;
-  transition: color $transition-fast, background-color $transition-fast;
+  transition: color $transition-theme, background-color $transition-theme;
 
   &.active {
     color: var(--color-primary);
@@ -1328,6 +1358,27 @@ $menu-padding: 8px;
   color: var(--color-text-muted);
   font-size: 13px;
   @include theme-transition(color);
+}
+
+// ============================================
+// 主题切换遮罩层
+// ============================================
+.theme-switch-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
+  transition: opacity 0.1s ease-in;
+  
+  &.active {
+    opacity: 1;
+    transition: opacity 0.15s ease-out;
+  }
 }
 
 // ============================================

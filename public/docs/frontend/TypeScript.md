@@ -77,12 +77,12 @@ TS 的类型标注相当于 “自文档化”，配合 IDE（如 VSCode）能�
 
 TypeScript 的一些关键特性：
 
-+ **静态类型检查：**TypeScript 在编译时就会检查代码的类型是否匹配，能够发现很多潜在的错误。即使是简单的错误（例如拼写错误或类型不一致），也可以在编写代码时被捕获到
-+ **类型推断：**TypeScript 能够自动推断变量的类型。比如当你声明一个变量并赋值时，TypeScript 会根据赋值来推断这个变量的类型，不需要每次都显式声明类型
-+ **接口和类型定义：**TypeScript 提供了 `interface` 和 `type` 关键字，允许你定义复杂的数据结构。这对于项目中不同部分的代码协作和数据交互来说非常重要
-+ **类和模块支持：**TypeScript 支持面向对象编程中的类（class）概念，增加了构造函数、继承、访问控制修饰符（如 `public`、`private`、`protected`），并且支持 ES 模块化规范
-+ **工具和编辑器支持：**TypeScript 拥有良好的编辑器支持，特别是与 Visual Studio Code 集成时，能提供智能提示、自动补全、重构等工具，使开发过程更高效
-+ **兼容 JavaScript：**TypeScript 是 JavaScript 的超集，这意味着所有合法的 JavaScript 代码都是合法的 TypeScript 代码。这使得 JavaScript 项目可以逐步迁移到 TypeScript，而无需完全重写
++ **静态类型检查：** TypeScript 在编译时就会检查代码的类型是否匹配，能够发现很多潜在的错误。即使是简单的错误（例如拼写错误或类型不一致），也可以在编写代码时被捕获到
++ **类型推断：** TypeScript 能够自动推断变量的类型。比如当你声明一个变量并赋值时，TypeScript 会根据赋值来推断这个变量的类型，不需要每次都显式声明类型
++ **接口和类型定义：** TypeScript 提供了 `interface` 和 `type` 关键字，允许你定义复杂的数据结构。这对于项目中不同部分的代码协作和数据交互来说非常重要
++ **类和模块支持：** TypeScript 支持面向对象编程中的类（class）概念，增加了构造函数、继承、访问控制修饰符（如 `public`、`private`、`protected`），并且支持 ES 模块化规范
++ **工具和编辑器支持：** TypeScript 拥有良好的编辑器支持，特别是与 Visual Studio Code 集成时，能提供智能提示、自动补全、重构等工具，使开发过程更高效
++ **兼容 JavaScript：** TypeScript 是 JavaScript 的超集，这意味着所有合法的 JavaScript 代码都是合法的 TypeScript 代码。这使得 JavaScript 项目可以逐步迁移到 TypeScript，而无需完全重写
 
 # TypeScript 入门
 浏览器和 Node.js 只能直接运行 JavaScript，TypeScript 代码最终需要通过编译器（`tsc`）编译成纯 JavaScript 代码才能执行（编译过程会移除类型相关的语法）
@@ -94,7 +94,7 @@ TypeScript 的一些关键特性：
 
 **安装 Node.js**
 
-TypeScript 的**编译器（`tsc`）**依赖 Node.js 环境，因此首先需要安装 Node.js：
+TypeScript 的**编译器（`tsc`）** 依赖 Node.js 环境，因此首先需要安装 Node.js：
 
 + 访问 Node.js 官网（[nodejs.org](https://nodejs.org/)），下载「LTS 版本」（长期支持版，更稳定）
 + 安装时按默认选项即可（Windows 系统注意勾选「Add to PATH」，方便后续在终端调用命令）
@@ -413,9 +413,9 @@ console.log(((x as unknown) as number).length);
 
 **symbol** 符号类型，可创建唯一且不可变的值，常用于对象属性的键，以避免属性名冲突
 
-**TypeScript 中的数据类型： **
+**TypeScript 中的数据类型：**
 
-+ **以上所有 **
++ **以上所有**
 + **四个新类型：** void 、 never 、 unknown 、any 、  enum 、  tuple  
 + **⾃定义类型：** type 、  interface  
 
@@ -654,7 +654,7 @@ function demo():never{
 ```
 
 ## void 无返回值
-void 的含义是：**  空 或  undefined **，严格模式下不能将  null 赋值给  void 类型
+void 的含义是：**空 或  undefined**，严格模式下不能将  null 赋值给  void 类型
 
 ```typescript
 let a:void = undefined
@@ -761,7 +761,7 @@ let ourTuple: [number, boolean, string];
 ourTuple = [false, 'Coding God was mistaken', 5];
 ```
 
-一个好的做法是将**元组设置为只读，**元组只对初始值有严格定义的类型：
+一个好的做法是将**元组设置为只读，** 元组只对初始值有严格定义的类型：
 
 ```typescript
 // 定义元组  
@@ -893,7 +893,7 @@ printStatusCode('404');
 ```
 
 ## 联合类型错误
-**注意：**当使用联合类型时，需要知道类型是什么，以避免类型错误：
+**注意：** 当使用联合类型时，需要知道类型是什么，以避免类型错误：
 
 ```typescript
 function printStatusCode(code: string | number) {  
@@ -981,16 +981,16 @@ s2 = {name:'李四',age:18,gender:Gender.Female,grade:2}
 而在 ES6 中迎来了 `class`
 
 ## 类的概念
-+ **类（Class）：**定义了一件事物的抽象特点，包含它的属性和方法
-+ **对象（Object）：**类的实例，通过 `new` 生成
-+ **面向对象（OOP）的三大特性：**封装、继承、多态
-+ **封装（Encapsulation）：**将对数据的操作细节隐藏起来，只暴露对外的接口。外界调用端不需要（也不可能）知道细节，就能通过对外提供的接口来访问该对象，同时也保证了外界无法任意更改对象内部的数据
-+ **继承（Inheritance）：**子类继承父类，子类除了拥有父类的所有特性外，还有一些更具体的特性
-+ **多态（Polymorphism）：**由继承而产生了相关的不同的类，对同一个方法可以有不同的响应。比如 `Cat` 和 `Dog` 都继承自 `Animal`，但是分别实现了自己的 `eat` 方法。此时针对某一个实例，我们无需了解它是 `Cat` 还是 `Dog`，就可以直接调用 `eat` 方法，程序会自动判断出来应该如何执行 `eat`
-+ **存取器（getter & setter）：**用以改变属性的读取和赋值行为
-+ **修饰符（Modifiers）：**修饰符是一些关键字，用于限定成员或类型的性质。比如 `public` 表示公有属性或方法
-+ **抽象类（Abstract Class）：**抽象类是供其他类继承的基类，抽象类不允许被实例化。抽象类中的抽象方法必须在子类中被实现
-+ **接口（Interfaces）：**不同类之间公有的属性或方法，可以抽象成一个接口。接口可以被类实现（implements）。一个类只能继承自另一个类，但是可以实现多个接口
++ **类（Class）：** 定义了一件事物的抽象特点，包含它的属性和方法
++ **对象（Object）：** 类的实例，通过 `new` 生成
++ **面向对象（OOP）的三大特性：** 封装、继承、多态
++ **封装（Encapsulation）：** 将对数据的操作细节隐藏起来，只暴露对外的接口。外界调用端不需要（也不可能）知道细节，就能通过对外提供的接口来访问该对象，同时也保证了外界无法任意更改对象内部的数据
++ **继承（Inheritance）：** 子类继承父类，子类除了拥有父类的所有特性外，还有一些更具体的特性
++ **多态（Polymorphism）：** 由继承而产生了相关的不同的类，对同一个方法可以有不同的响应。比如 `Cat` 和 `Dog` 都继承自 `Animal`，但是分别实现了自己的 `eat` 方法。此时针对某一个实例，我们无需了解它是 `Cat` 还是 `Dog`，就可以直接调用 `eat` 方法，程序会自动判断出来应该如何执行 `eat`
++ **存取器（getter & setter）：** 用以改变属性的读取和赋值行为
++ **修饰符（Modifiers）：** 修饰符是一些关键字，用于限定成员或类型的性质。比如 `public` 表示公有属性或方法
++ **抽象类（Abstract Class）：** 抽象类是供其他类继承的基类，抽象类不允许被实例化。抽象类中的抽象方法必须在子类中被实现
++ **接口（Interfaces）：** 不同类之间公有的属性或方法，可以抽象成一个接口。接口可以被类实现（implements）。一个类只能继承自另一个类，但是可以实现多个接口
 
 ## ES6 中类的用法
 ### 属性和方法
@@ -2042,7 +2042,7 @@ const negateFunction: Negate = (value) => value * -1;
 + 你说装**苹果**，它就变成苹果盒，只能放苹果；
 + 你说装**书**，它就变成书盒，只能放书
 
-**泛型 = 这个万能盒子的「类型模板」**`<T>` 就是那个**占位符**，用的时候再指定具体类型
+**泛型 = 这个万能盒子的「类型模板」** `<T>` 就是那个**占位符**，用的时候再指定具体类型
 
 反面教材：`any` 类型，**类型丢失了**，TS 不知道返回的是啥，没有智能提示，也不检查错误  
 

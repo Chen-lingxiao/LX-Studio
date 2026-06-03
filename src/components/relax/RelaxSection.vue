@@ -293,7 +293,7 @@ onUnmounted(() => {
 
 .relax-main {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 60% 40%;
   gap: 40px;
 }
 
@@ -346,7 +346,7 @@ onUnmounted(() => {
 }
 
 .date-main {
-  font-size: 2.4rem;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 16px;
 }

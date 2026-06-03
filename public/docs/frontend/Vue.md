@@ -1,6 +1,10 @@
 # Vue2 基础入门
 ## Vue 基础概念
-**定义：** Vue是一个用于**构建用户界面**（UI）的**渐进式**JavaScript**框架特点：简单易用**、**组件化**和**响应式数据绑定核心思想：**通过**声明式语法**将数据映射到 DOM 上，当数据变化时，DOM 会自动更新
+**定义：** Vue是一个用于**构建用户界面**（UI）的**渐进式**JavaScript
+
+**框架特点：简单易用**、**组件化**和**响应式数据绑定**
+
+**核心思想：** 通过**声明式语法**将数据映射到 DOM 上，当数据变化时，DOM 会自动更新
 
 **核心概念**
 
@@ -69,7 +73,7 @@ Vue核心包&Vue插件&工程化
 
 **创建Vue 实例**：`new Vue()`
 
-**Vue2 官网：**[**https://v2.cn.vuejs.org/**](https://v2.cn.vuejs.org/)
+**Vue2 官网：**[**https://v2.cn.vuejs.org/** ](https://v2.cn.vuejs.org/)
 
 **配置项**：
 
@@ -139,7 +143,7 @@ Chrome/Firefox浏览器插件，用于调试Vue应用
 ## 模板语法
 **插值表达式 (`{{ }}`)**
 
-**表达式：是可以被求值的代码，JS引擎会将其计算出一个结果  **
+**表达式：是可以被求值的代码，JS引擎会将其计算出一个结果**
 
 **作用：** 将Vue实例中的数据**渲染**到HTML文本内容中
 
@@ -147,7 +151,7 @@ Chrome/Firefox浏览器插件，用于调试Vue应用
 
 **特点：**
 
-+ 内部可以是**变量名**、**简单表达式**（如 **`a * b`**）、**三元表达式**（如 **`isA ? '是' : '否'`**）
++ 内部可以是**变量名、简单表达式（如 **`a * b`**）、三元表达式（如`isA ? '是' : '否'`）**
 + 内部**不能**写复杂的逻辑（如 **if/for** 语句）或声明变量
 
 ```html
@@ -185,7 +189,7 @@ Chrome/Firefox浏览器插件，用于调试Vue应用
 不能在标签属性里面使用，有专门的动态渲染 v-bind
 
 ## 响应式特性
-**响应式：数据变化，视图自动更新,**专注于**业务逻辑**
+**响应式：数据变化，视图自动更新,** 专注于**业务逻辑**
 
 
 ![](assets/1750579391058-e7d93a2d-4642-4c2b-86de-4f942ab51b0a.png)
@@ -196,7 +200,7 @@ data中的数据， 最终会被添加到实例上
 
 修改数据： "实例.属性名" = "值"  
 
-```vue
+```html
 <script>
   // 创建Vue实例,实例赋值给 app 变量
   const app = new Vue({
@@ -220,7 +224,7 @@ data中的数据， 最终会被添加到实例上
 ## Object.defineProperty()
 “Property” 常见含义为 “财产；资产”，尤指个人或团体拥有的财物、房地产等。它还可表示 “特性；性质”，指人或事物所具备的独特特点、品质。在计算机编程领域，**“Property” 常指属性，用于描述对象的特征或状态**。例如，在面向对象编程中，一个类的对象可能有各种属性来定义其特性
 
-**Object.defineProperty()**是 JavaScript 中一个非常重要的方法，允许直接在一个对象上定义一个新属性，或者修改一个现有属性的配置，并返回这个对象
+**Object.defineProperty()** 是 JavaScript 中一个非常重要的方法，允许直接在一个对象上定义一个新属性，或者修改一个现有属性的配置，并返回这个对象
 
 ```javascript
 Object.defineProperty(obj, prop, descriptor)
@@ -363,10 +367,10 @@ data: {
 
 最终渲染的 HTML 中，它会替换掉元素原本的文本内容
 
-## v-html  元素innerHTML 
+## v-html  元素 innerHTML 
 作用：设置元素的 innerHTML 
 
-**语法：v-html = "表达式 "  **
+**语法：v-html = "表达式 "**
 
 ```html
 <!-- v-html 指令 修改元素innerHTML属性 -->
@@ -412,7 +416,7 @@ data: {
 
 根据变量的值决定是否显示某个元素，如表单中的错误提示：
 
-```vue
+```html
 <template>
   <div>
     <input v-model="email" type="email">
@@ -425,7 +429,7 @@ data: {
 
 在多个内容区域间切换，如标签页：
 
-```vue
+```html
 <template>
   <div>
     <button @click="tab = 'home'">首页</button>
@@ -441,7 +445,7 @@ data: {
 
 在数据加载完成前显示加载状态：
 
-```vue
+```html
 <template>
   <div>
     <div v-show="loading">加载中...</div>
@@ -454,7 +458,7 @@ data: {
 
 在移动设备上点击按钮显示 / 隐藏导航菜单：
 
-```vue
+```html
 <template>
   <div>
     <button @click="menuOpen = !menuOpen">菜单</button>
@@ -473,7 +477,7 @@ data: {
 
 在多步骤表单中显示当前步骤：
 
-```vue
+```html
 <template>
   <div>
     <div v-show="step === 1">步骤1：基本信息</div>
@@ -487,7 +491,7 @@ data: {
 
 根据用户权限显示特定功能：
 
-```vue
+```html
 <template>
   <div>
     <button v-show="hasAdminPermission">管理设置</button>
@@ -500,7 +504,7 @@ data: {
 
 与 Vue 的过渡系统结合使用，实现平滑的显示 / 隐藏动画：
 
-```vue
+```html
 <template>
   <div>
     <button @click="show = !show">切换</button>
@@ -524,7 +528,7 @@ data: {
 
 根据多个条件的组合决定显示状态：
 
-```vue
+```html
 <template>
   <div>
     <div v-show="isLoggedIn && !isGuest && hasPermission">
@@ -545,7 +549,7 @@ data: {
 
 **特点：切换开销较大（涉及创建/销毁）**
 
-```vue
+```html
 <!-- v-if 指令 条件渲染元素 -->
 <p v-if="isShow">v-if 指令 条件渲染元素</p>
 data: {
@@ -575,7 +579,7 @@ data: {
 
 根据变量的值**互斥地显示**不同元素，如登录状态判断：
 
-```vue
+```html
 <template>
   <div>
     <p v-if="isLoggedIn">欢迎回来，{{ username }}!</p>
@@ -588,7 +592,7 @@ data: {
 
 类似 JavaScript 的 `if-else if-else`，适用于多种状态的切换：
 
-```vue
+```html
 <template>
   <div>
     <div v-if="status === 'loading'">加载中...</div>
@@ -603,7 +607,7 @@ data: {
 
 根据条件渲染不同组件，常用于路由视图或复杂交互：
 
-```vue
+```html
 <template>
   <div>
     <LoginForm v-if="currentView === 'login'" />
@@ -617,7 +621,7 @@ data: {
 
 根据用户角色显示不同内容，如管理后台的菜单：
 
-```vue
+```html
 <template>
   <div>
     <AdminPanel v-if="userRole === 'admin'" />
@@ -645,7 +649,7 @@ data: {
 
 对于复杂或资源密集的组件，使用 `v-if` 避免不必要的初始化：
 
-```vue
+```html
 <template>
   <div>
     <HeavyComponent v-if="userConfirmed" />
@@ -670,13 +674,15 @@ data: {
 }
 ```
 
-**动态绑定Class原生 JavaScript 需要 Classlist.进行类名操作**
+**动态绑定Class**
+
+**原生 JavaScript 需要 Classlist.进行类名操作**
 
 ```javascript
 document.getElementById("app").classList.add("textColor");
 ```
 
-**对象语法：:class="{ 类名: 布尔表达式 }"**当布尔表达式为 **true** 时，添加该类名
+**对象语法：:class="{ 类名: 布尔表达式 }"** 当布尔表达式为 **true** 时，添加该类名
 
 适用场景：tab 栏高亮一个类名来回切换
 
@@ -685,7 +691,7 @@ document.getElementById("app").classList.add("textColor");
 <!-- 如果isActive为true，添加'active'类；如果hasError为true，添加'text-danger'类 -->
 ```
 
-**数组语法：:class="[classA, classB]"**，直接应用数组中的类名
+**数组语法：:class="[classA, classB]"** ，直接应用数组中的类名
 
 适用场景：批量添加或删除类名
 
@@ -736,7 +742,7 @@ document.getElementById("app").classList.add("textColor");
 
 #### :key 的最佳实践
 
-+ 使用**唯一标识符**作为 `key`，例如数据库中的** ID**
++ 使用**唯一标识符**作为 `key`，例如数据库中的<strong> ID</strong>
 + 避免使用索引作为 `key`，除非列表不会发生变化
 + **key 必须是稳定的、可预测的，并且是唯一的**
 + 不要使用随机数或 Math.random () 作为 `key`，因为它们不是稳定的
@@ -859,14 +865,14 @@ new Vue({
 </script>
 ```
 
-**动态绑定Style对象语法：:style="{ css属性名: 属性值 }"**，属性值可以是变量或表达式
+**动态绑定Style对象语法：:style="{ css属性名: 属性值 }"** ，属性值可以是变量或表达式
 
 ```html
 <div :style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
 <!-- 在data中：activeColor: 'red', fontSize: 14 -->
 ```
 
-**数组语法：:style="[styleObjectA, styleObjectB]"**。应用多个样式对象
+**数组语法：:style="[styleObjectA, styleObjectB]"** 。应用多个样式对象
 
 ```html
 <div :style="[baseStyles, overridingStyles]"></div>
@@ -944,9 +950,9 @@ methods: {
 
 当用户**输入**时，自动更新Vue实例中的**数据**；当Vue实例中的**数据**改变时，表单**元素的值**也会自动更新
 
-**数据变化 → 视图自动更新  **
+**数据变化 → 视图自动更新**
 
-**视图变化 → 数据自动更新  **
+**视图变化 → 数据自动更新**
 
 **语法：v-model="数据变量名"**
 
@@ -956,7 +962,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 
 **本质：`v-model` 是 `:value(v-bind)` 和 `@input` 的语法糖，用于简化双向数据绑定**
 
-```vue
+```html
 <!-- 这是使用 v-model 的简写形式 -->
 <input v-model="message">
 
@@ -1010,9 +1016,9 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 ## 指令修饰符  
 **通过 "." 指明一些指令后缀**，不同后缀封装了不同的处理操作 → 简化代码  
 
-**按键修饰符 **
+**按键修饰符**
 
-**@keyup.enter **: 键盘回车监听
+**@keyup.enter**: 键盘回车监听
 
 ```html
 <div id="app">
@@ -1047,15 +1053,15 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 
 @keyup.enter 相当于封装了if (e.key === "Enter")判断是否按下回车按键这一步
 
-**`v-model`修饰符 **
+**`v-model`修饰符**
 
-**`v-model.lazy`**：
+**`v-model.lazy`** ：
 
 将 **input** 事件（输入时实时触发）改为 **change** 事件（失去焦点或按回车时触发）才同步数据
 
-**`v-model.number`**：自动将用户输入值转**换为数字**类型
+**`v-model.number`** ：自动将用户输入值转**换为数字**类型
 
-**`v-model.trim`**：自动去除用户输入内容**首位两端的空白字符**
+**`v-model.trim`** ：自动去除用户输入内容**首位两端的空白字符**
 
 ```html
 <p>v-model.lazy 实时同步改为失去焦点同步</p>
@@ -1071,7 +1077,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 <input type="text"  v-model.trim="name" />
 ```
 
-**事件修饰符 **
+**事件修饰符**
 
 简化常见事件处理逻辑（如阻止默认行为、停止冒泡）
 
@@ -1084,7 +1090,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 <form @submit.prevent="onSubmit">...</form> <!-- 提交表单不会刷新页面 -->
 ```
 
-**@事件名.stop **: 阻止冒泡 
+**@事件名.stop**: 阻止冒泡 
 
 ```html
 <p>@事件名.stop : 阻止冒泡</p>
@@ -1101,7 +1107,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 </script>
 ```
 
-**@事件名.prevent **: 阻止默认行为  
+**@事件名.prevent**: 阻止默认行为  
 
 ```html
 <p>@事件名.prevent阻止默认事件</p>
@@ -1114,9 +1120,9 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 ## 基础语法
 声明在**computed 配置项**中，一个计算属性对应一个函数 
 
-使用起来和普通属性一样使用**{{ 计算属性名 }}**
+使用起来和普通属性一样使用 **{{ 计算属性名 }}**
 
-**计算属性可以将一段求值的代码进行封装  **
+**计算属性可以将一段求值的代码进行封装**
 
 ```html
 <!-- 统计礼物总数 计算属性不是函数 而是一个属性 -->
@@ -1151,7 +1157,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 ```
 
 ## 计算属性 vs 方法
-**computed 计算属性： **
+**computed 计算属性：**
 
 作用：封装了一段对于数据的处理，求得一个结果
 
@@ -1161,7 +1167,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 
 作为**属性**，直接**使用**：this.计算属性 {{ 计算属性 }} 
 
-**methods 方法： **
+**methods 方法：**
 
 作用：给实例提供一个方法，调用以处理业务逻辑
 
@@ -1169,7 +1175,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 
 写在 **methods** 配置项中
 
-作为**方法**，需要**调用** ：**this.方法名( )  {{ 方法名() }}  @事件名="方法名"  **
+作为**方法**，需要**调用** ：**this.方法名( )  {{ 方法名() }}  @事件名="方法名"**
 
 ```html
 <div id="app">
@@ -1224,7 +1230,7 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 
 ![](assets/1750210693399-b9950eca-72d1-484c-acfd-380d0487fffa.png)
 
-**缓存特性（提升性能）： **
+**缓存特性（提升性能）：**
 
 计算属性会对计算出来的**结果缓存**，再次使用直接读取缓存，
 
@@ -1281,13 +1287,13 @@ v-model 应用于其他表单元素，它会**根据控件类型**自动选取�
 ```
 
 # 侦听器  watch
- 作用：监视数据变化，执行一些 **业务逻辑** 或 **异步操作 ** 
+ 作用：监视数据变化，执行一些 **业务逻辑** 或 **异步操作** 
 ![](assets/1750215772979-7aa389f8-ab6e-43e2-90a0-bdc432412c4b.png)
 
 ## 基础语法
  简单写法 → 简单类型数据，直接监视   
 
-```vue
+```typescript
 data: {
   words: '苹果',
     obj: {
@@ -1327,11 +1333,13 @@ data: {
 ```
 
 ## 完整写法  
-完整写法 - **添加额外配置项  deep: true **对复杂类型深度监视
+完整写法 - **添加额外配置项  **
+
+**deep: true**对复杂类型深度监视
 
 **immediate: true** 初始化立刻执行一次handler方法  
 
-```vue
+```typescript
 data: {
   obj: {
     words: '苹果',
@@ -1377,20 +1385,18 @@ watch: {
 6. 持久化到本地：watch监视,localStorage,JSON.stringify, JSON.parse
 
 # 生命周期  
-**避免 “DOM 还没渲染就操作”“请求发太晚拖慢界面” 等问题**
+**避免 DOM 还没渲染就操作，请求发太晚拖慢界面 等问题**
 
 Vue 实例从 **创建** 到 **销毁** 的完整过程，通过 **钩子函数** 暴露不同阶段的执行时机
 
 ## 生命周期阶段
 Vue 生命周期分为 **创建、挂载、更新、销毁** 四个阶段，每个阶段对应关键钩子：
-
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750334145504-bba65d44-218e-48e9-b04c-ba9cd76109fb.png)
+![](assets/1750334145504-bba65d44-218e-48e9-b04c-ba9cd76109fb.png)
 
 ## 生命周期钩子
- Vue生命周期过程中会自动运行一些函数，被称为**【生命周期钩子】**
+ Vue生命周期过程中会自动运行一些函数，被称为 **【生命周期钩子】**
 
-让开发者可以在**【特定阶段】**运行自己的代码  
+让开发者可以在 **【特定阶段】** 运行自己的代码  
 
 | **状态** | **阶段周期** |
 | :--- | :--- |
@@ -1403,8 +1409,8 @@ Vue 生命周期分为 **创建、挂载、更新、销毁** 四个阶段，每�
 | **beforeDestroy** | **销毁前** |
 | **destroyed** | **销毁后** |
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750334675081-f840474f-a88d-4a16-b2da-d435c49352e4.png)
+
+![](assets/1750334675081-f840474f-a88d-4a16-b2da-d435c49352e4.png)
 
 **1. 创建阶段（数据初始化）beforeCreate**：
 
@@ -1479,12 +1485,12 @@ mounted() {
 
 + 状态：实例完全销毁，所有绑定自动解除（框架内部清理，无需手动操作）
 
-**高频问题：时机怎么选？初始化请求何时发？**→** 选 `created`：创建阶段**
+**高频问题：时机怎么选？初始化请求何时发？** →<strong> 选 `created`：创建阶段</strong>
 
 + 理由：`created` 时**数据已就绪**，虽 DOM 未渲染，但请求可 “提前启动”，与 DOM 渲染并行，减少整体耗时
 + 反例：若放到 `mounted`，会等 DOM 渲染完再请求，延迟更久
 
-**DOM 操作何时做？**→ **选 `mounted`：挂载阶段**
+**DOM 操作何时做？** → **选 `mounted`：挂载阶段**
 
 + 理由：只有 `mounted` 阶段，真实 DOM 才存在（`beforeMount` 是虚拟 DOM，无法操作）
 + 示例：`mounted() { console.log(document.getElementById('app').offsetHeight) }`（获取元素高度）
@@ -1597,8 +1603,8 @@ mounted() {
 
 **工程化开发模式（基于构建工具，如 webpack）**
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750733419701-9b6e0ade-06db-42c2-96fd-ffc3ac15fd98.png)
+
+![](assets/1750733419701-9b6e0ade-06db-42c2-96fd-ffc3ac15fd98.png)
 
 **方式**：用 ES6/TS 写逻辑，Less/Sass 写样式，通过 **webpack 编译** 成浏览器支持的 ES5、CSS
 
@@ -1715,8 +1721,8 @@ vue-demo
 **public/index.html**：提供挂载点（如 `<div id="app"></div>`），最终 Vue 会把 `App.vue` 渲染到这里
 
 ## 项目运行流程  
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750342012034-ca54f757-7ef5-4467-8b2a-dd3c679b70da.png)
+
+![](assets/1750342012034-ca54f757-7ef5-4467-8b2a-dd3c679b70da.png)
 
 # 组件化开发
 ## 组件概念
@@ -1736,8 +1742,8 @@ vue-demo
 | 功能复用 | 复制粘贴代码，冗余且难维护 | 组件可跨页面复用，改一处全更新 |
 | 团队协作 | 多人改同一文件，冲突频发 | 分工开发不同组件，并行效率高 |
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750744476017-376e91c0-978e-48b7-88aa-d8fc7e87845f.png)
+
+![](assets/1750744476017-376e91c0-978e-48b7-88aa-d8fc7e87845f.png)
 
 ## 组件结构
 一个 Vue 应用是 **组件树**：
@@ -1750,14 +1756,14 @@ vue-demo
 ## 根组件 App.vue
 **定位**：整个应用的 **顶层容器**，所有普通组件最终都嵌套在它内部
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750342537361-ba0bbe0a-aa93-4224-9c13-cbab7bbb3595.png)
+
+![](assets/1750342537361-ba0bbe0a-aa93-4224-9c13-cbab7bbb3595.png)
 
 ## 组件定义
 Vue 中，组件以 **.vue 单文件** 形式存在，必须包含以下三部分：
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750342592759-d1080747-fb4a-44ad-9994-0a95dd7b46eb.png)
+
+![](assets/1750342592759-d1080747-fb4a-44ad-9994-0a95dd7b46eb.png)
 
 ### template：结构层（HTML 模板）
 **作用**：编写组件的 DOM 结构，支持 Vue 指令（如 `v-if`、`@click`）
@@ -1779,7 +1785,7 @@ Vue 中，组件以 **.vue 单文件** 形式存在，必须包含以下三部�
 ### script：行为层（JS 逻辑）
 **作用**：编写组件的 **数据、方法、生命周期**等逻辑，需导出一个 **组件配置对象**
 
-```vue
+```html
 <script>
   // 导出当前组件的配置项
   // 里面可以提供数据data、methods、watch、computed、生命周期等
@@ -1796,16 +1802,16 @@ Vue 中，组件以 **.vue 单文件** 形式存在，必须包含以下三部�
 </script>
 ```
 
-> **el 根实例独有, data 是一个函数, 其他配置项一致 **
+> **el 根实例独有, data 是一个函数, 其他配置项一致**
 >
-> **一个组件的 data 必须是一个函数，保证每个组件实例维护独立的一份数据对象 **
+> **一个组件的 data 必须是一个函数，保证每个组件实例维护独立的一份数据对象**
 >
-> ** 每次创建新的组件实例，都会新执行一次 data 函数，得到一个新对象  **
+> <strong> 每次创建新的组件实例，都会新执行一次 data 函数，得到一个新对象</strong>
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750465850855-11415363-3ec9-436d-b090-656e18b86ea9.png)
 
-```vue
+![](assets/1750465850855-11415363-3ec9-436d-b090-656e18b86ea9.png)
+
+```html
 <template>
   <div class="base-count">
     <button @click="count--">-</button>
@@ -1826,7 +1832,7 @@ export default {
 </script>
 ```
 
-```vue
+```html
 <template>
   <div class="hm-main">
     我是主题组件
@@ -1838,8 +1844,8 @@ export default {
 </template>
 ```
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750465696322-1651f224-a26d-4070-922b-f1ec05661e76.png)
+
+![](assets/1750465696322-1651f224-a26d-4070-922b-f1ec05661e76.png)
 
 ### style：样式层（CSS/Less/Sass）
 > **全局样式**：编写组件的样式，默认组件中的样式**会作用到全局**，容易造成样式冲突
@@ -1851,13 +1857,15 @@ export default {
 > **推荐使用时添加 scoped 作为局部样式scoped 原理：**
 
 + 给当前组价内所有元素，都会被添加上一个**自定义属性 data-v-hash 值**区分不同组件
-+ <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750465053741-508de9a6-1ec0-4c2b-ae39-a6236c4a26f2.png)
-+ css 选择器后面被自动处理添加上了**属性选择器 div[data-v-hash]**
-+ <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750465163356-08e22219-536d-4703-bcee-277dd8dd60c5.png)
 
-```vue
+
+  ![](assets/1750465053741-508de9a6-1ec0-4c2b-ae39-a6236c4a26f2.png)
+
++ css 选择器后面被自动处理添加上了**属性选择器 div[data-v-hash]**
+
+![](assets/1750465163356-08e22219-536d-4703-bcee-277dd8dd60c5.png)
+
+```html
 <!-- hm-Header部分 -->
 <template>>
   <div>
@@ -1877,7 +1885,7 @@ div{
 
 组件添加**scoped** 属性的 style 样式，只作用于**当前组件**
 
-```vue
+```html
 <template>
   <div>
     局部样式
@@ -1894,6 +1902,7 @@ div{
 ```
 
 **扩展：支持 Less**（需两步）：  
+
 ① 在 `<style>` 标签添加 `lang="less"`：
 
 ```css
@@ -1916,7 +1925,7 @@ yarn add less less-loader  # 或 npm install less less-loader
 
 > 注意
 >
-> + 一个项目通常只有 **一个根组件（App.vue）**，是所有组件的 “入口”
+> + 一个项目通常只有 **一个根组件（App.vue）** ，是所有组件的 “入口”
 > + `<template>` 必须有 **唯一根元素**（Vue 2 强制，Vue 3 支持多根但建议单根）
 > + `<script>` 需导出 **组件配置对象**（包含 `data`、`methods` 等选项）
 > + `<style scoped>`：样式仅作用于当前组件（避免全局污染）
@@ -1944,7 +1953,7 @@ scoped 样式默认无法修改子组件 / 第三方组件样式，需穿透打�
 ### 穿透场景示例
 修改子组件样式（Less/Sass）
 
-```vue
+```html
 <style lang="less" scoped>
   .parent-box{
     // 主流写法
@@ -1958,7 +1967,7 @@ scoped 样式默认无法修改子组件 / 第三方组件样式，需穿透打�
 
 修改第三方 UI 组件
 
-```vue
+```html
 <style lang="less" scoped>
   ::v-deep(.el-button){
     background: orange;
@@ -1969,7 +1978,7 @@ scoped 样式默认无法修改子组件 / 第三方组件样式，需穿透打�
 
 原生 CSS 穿透
 
-```vue
+```html
 <style scoped>
   .parent-box >>> .child-class{
     color: red;
@@ -1979,7 +1988,7 @@ scoped 样式默认无法修改子组件 / 第三方组件样式，需穿透打�
 
 旧版兼容写法
 
-```vue
+```html
 <style lang="less" scoped>
   .parent-box /deep/ .child-class{
     color: green;
@@ -1992,17 +2001,17 @@ scoped 样式默认无法修改子组件 / 第三方组件样式，需穿透打�
 
 组件名规范：**大驼峰命名法**，如：HmHeader  
 
-当成** html 标签**使用  **`<组件名>`   `< /  组件名>`  一般都用局部注册，如果发现确实是通用组件，再定义到全局  **
+当成<strong> html 标签</strong>使用  **`<组件名>`   `< /  组件名>`  一般都用局部注册，如果发现确实是通用组件，再定义到全局**
 
 组件需要注册后才能使用，有两种注册方式：
 
 ### 全局注册
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750425662347-8f157c19-18bf-4e9a-a638-348656b77b66.png)
+![](assets/1750425662347-8f157c19-18bf-4e9a-a638-348656b77b66.png)
+**特点**：**注册后可在应用内任意组件中使用方法**：在**main.js**中使用**app.component()**
 
-**特点**：**注册后可在应用内任意组件中使用方法**：在**main.js**中使用**app.component()使用**：在任何组件的template中直接使用 **<HmButton></HmButton>**
+**使用**：在任何组件的template中直接使用 `<HmButton></HmButton>`
 
-```vue
+```javascript
 //main.js
 // 导入组件
 import HmButton from "./components/HmButton.vue";
@@ -2010,7 +2019,7 @@ import HmButton from "./components/HmButton.vue";
 Vue.component("HmButton", HmButton);
 ```
 
-```vue
+```html
 // HmFooter.vue
 <template>
   <div class="hm-Footer">
@@ -2022,14 +2031,14 @@ Vue.component("HmButton", HmButton);
 ```
 
 ### 局部注册
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750425677222-bcba4008-5b07-4b2f-b42c-d1ab54fa4ffe.png)
+
+![](assets/1750425677222-bcba4008-5b07-4b2f-b42c-d1ab54fa4ffe.png)
 
 **特点**：**只在当前组件内可用方法**：在父组件的**components**选项中注册
 
 **使用**：在当前组件的template中当做 html 标签进行使用
 
-```vue
+```html
 <template>
   <div class="App">
     <!-- 头部组件 -->
@@ -2056,8 +2065,8 @@ export default {
 ```
 
 ## 综合案例 -小兔仙儿
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750426730618-ce26d232-dd66-468c-a15e-0f3668561558.png)
+
+![](assets/1750426730618-ce26d232-dd66-468c-a15e-0f3668561558.png)
 
  页面开发思路： 
 
@@ -2086,7 +2095,7 @@ kebab-case 是一种命名规范，**用连字符（`-`）连接小写字母**�
 + 在 JavaScript 中推荐使用驼峰式（PascalCase），如 `MyComponent.vue`
 + 在模板中引用时，可使用 kebab-case（`<my-component>`）或驼峰式（`<MyComponent>`），但推荐 kebab-case 保持与 HTML 一致
 
-```vue
+```html
 <!-- MyComponent.vue -->
 <template>
   <div>这是一个组件</div>
@@ -2103,16 +2112,16 @@ export default {
 <MyComponent></MyComponent> <!-- 驼峰式也可，但不推荐 -->
 ```
 
-
 **匿名组件命名**：  
+
 如果组件未通过 `name` 选项声明，在 DevTools 中会显示为 `无名氏`，建议始终声明 `name`
 
 ## props 与模板属性
-JavaScript 中 **props 用驼峰式（camelCase）**，**模板中用 kebab-case：**
+JavaScript 中 **props 用驼峰式（camelCase）** ，**模板中用 kebab-case：**
 
 + 子组件 props 接收建议使用 camelCase，例如：
 
-```vue
+```javascript
 props: {
   fatherCount: Number
 }
@@ -2120,7 +2129,7 @@ props: {
 
 + 父组件模板中使用 kebab-case，例如：
 
-```vue
+```html
 <SonComponent :father-count="fatherCount" />
 ```
 
@@ -2141,7 +2150,7 @@ Vue 会自动将 kebab-case 的模板属性转换为驼峰式的 props，无需�
 ## 事件名称
 **自定义事件**在 JavaScript 中用驼峰式，**模板中用 kebab-case：**
 
-```vue
+```html
 <template>
   <!-- 模板中用 kebab-case 监听自定义事件 -->
   <child-component @custom-event="handleEvent"></child-component>
@@ -2204,17 +2213,17 @@ this.$emit('customEvent') // 驼峰式
 + **跨层级关系**：祖先 → 后代（中间隔多层，如曾祖父 → 孙子组件）
 + **特点**：层级复杂，无法直接传递
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750466254184-78ab2d65-678c-41d0-b5ac-27ec0de6afae.png)
+
+![](assets/1750466254184-78ab2d65-678c-41d0-b5ac-27ec0de6afae.png)
 
 ## 父子组件通信 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750756896796-3caf8cb2-d353-4adf-9472-330d0eeb9197.png)
+
+![](assets/1750756896796-3caf8cb2-d353-4adf-9472-330d0eeb9197.png)
 
 **props +  $emit逻辑**：
 
-+ **父 → 子**：父通过 **props** 传数据**（单向流入）**
-+ **子 → 父**：子通过 **$emit** 触发事件，通知父修改数据**（反向通知）**
++ **父 → 子**：父通过 **props** 传数据 **（单向流入）**
++ **子 → 父**：子通过 **$emit** 触发事件，通知父修改数据 **（反向通知）**
 
 ## 父传子通信（props）
 “props” 是 “properties” 的缩写，原意是 “属性、特性、性质”（复数形式）,在编程尤其是前端开发框架（如 React 等）中，它用于实现父组件向子组件传递数据 
@@ -2223,7 +2232,7 @@ this.$emit('customEvent') // 驼峰式
 
 给当前组件标签，**v-bind ----- : 属性名="属性值 "添加属性**方式传值
 
-```vue
+```html
 <!-- 父组件 -->
 <template>
   <!-- 1. 给当前组件标签，已添加属性方式传值 -->
@@ -2246,7 +2255,7 @@ export default {
 
 **子组件**
 
-子组件通过** props **接受，属性名需要和父组件标签属性值一样
+子组件通过` props`接受，属性名需要和父组件标签属性值一样
 
 ```vue
 <!-- 子组件 -->
@@ -2333,15 +2342,15 @@ prop 特点：
 + 传递**任意数量**：父组件可给子组件传多个 Prop
 + 传递**任意类型**：支持字符串、数字、对象、数组、布尔值，甚至函数
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750468592210-466385bf-8922-431d-8e8f-64eae8052b69.png)
+
+![](assets/1750468592210-466385bf-8922-431d-8e8f-64eae8052b69.png)
 
 ## 使用流程
 **步骤 1：子组件 声明 Props**
 
 在子组件的 `props` 选项中定义接收的属性（两种写法）：
 
-```vue
+```html
 <!-- 写法 1：简单数组（仅声明名称，无校验） -->
 <script>
 export default {
@@ -2369,7 +2378,7 @@ export default {
 
 在子组件标签上，通过 `:prop(属性名）` 绑定数据（动态传值），或直接写值（静态传值）：
 
-```vue
+```html
 <!-- 父组件 Parent.vue -->
 <template>
   <!-- 动态传值（绑定父组件的 data） -->
@@ -2405,7 +2414,7 @@ export default {
 
 强制 Prop 的数据类型（如数字、字符串），防止父组件传错类型导致逻辑错误
 
-```vue
+```javascript
 props: {
   age: Number // 要求 age 必须是数字类型
 }
@@ -2419,7 +2428,7 @@ props: {
 
 强制父组件 **必须传递该 Prop**，否则开发环境报错（提醒漏传问题）
 
-```vue
+```javascript
 props: {
   name: {
     type: String,    // 先指定类型
@@ -2435,7 +2444,7 @@ props: {
 
 父组件未传递 Prop 时，自动使用 **默认值** 兜底，避免 undefined 错误
 
-```vue
+```javascript
 props: {
   gender: {
     type: String,
@@ -2447,7 +2456,7 @@ props: {
 + **基本类型**（String/Number 等）：直接写值（如 `default: 'male'`）
 + **复杂类型**（Object/Array）：必须用 **函数返回值**（避免所有实例共享同一对象）
 
-```vue
+```javascript
 props: {
   user: {
     type: Object,
@@ -2456,12 +2465,11 @@ props: {
 }
 ```
 
-
 **自定义校验：复杂规则验证**
 
 处理 **类型 + 范围 / 格式** 等复杂校验（如 “分数必须 0~100”“密码含大写字母”）
 
-```vue
+```javascript
 props: {
   score: {
     type: Number,
@@ -2476,7 +2484,7 @@ props: {
 
 + **validator** 是一个函数，参数 `val` 是父组件传入的值
 + “validator” 常见意思为 “验证者；检验器；审定者” 。在计算机领域，常指用于验证数据是否符合特定规则或格式的程序、函数或模块等，比如在数据输入时，validator 可检查输入数据是否有效，像邮箱格式是否正确等；
-+ **返回 `true**`：校验通过；**返回 `false**`：控制台报错（提示数据非法）
++ 返回 `true`：校验通过；返回 `false`：控制台报错（提示数据非法）
 
 > 注意事项
 >
@@ -2486,7 +2494,7 @@ props: {
 > + **默认值覆盖边缘场景**：如分页组件的 `pageSize` 默认值设为 `10`
 > + **复杂规则用自定义校验**：如手机号格式、日期范围等，减少业务层的判断逻辑
 
-```vue
+```html
 <script>
 export default {
   props:{
@@ -2523,20 +2531,20 @@ export default {
 ## 单向数据流
 > 父组件的 **Prop 数据**更新后，会**自动向下传递** 给子组件
 >
-> 但**子组件不能直接修改 Prop 的值**，必须遵循 **“谁的数据谁负责”**：
+> 但**子组件不能直接修改 Prop 的值**，必须遵循 **“谁的数据谁负责”** ：
 >
 > + **子组件想修改 Prop → 通知 父组件 去修改（通过 `$emit` 触发事件）**
 >
 > 保证 **数据流向清晰**：父组件是唯一数据源，子组件只负责展示或 “通知更新”，避免多组件修改同一份数据导致的混乱
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750471561975-669d478b-a2a4-467b-b2fe-3b815074466a.png)
+
+![](assets/1750471561975-669d478b-a2a4-467b-b2fe-3b815074466a.png)
 
 合法修改 Prop 的两种方案
 
 方案 1：复制到 Data（仅用于 “展示型” 修改）
 
-```vue
+```html
 <!-- 子组件：把 Prop 复制到 Data，修改本地副本 -->
 <script>
 export default {
@@ -2555,7 +2563,7 @@ export default {
 
 方案 2：通知父组件修改（真正改变数据源）
 
-```vue
+```html
 <!-- 子组件：通过 $emit 通知父组件 -->
 <template>
   <button @click="updateTitle">修改标题</button>
@@ -2573,7 +2581,7 @@ export default {
 }
 </script>
 
-。。-----------------------------------------------------------
+-----------------------------------------------------------
 <!-- 父组件：监听事件，修改自己的数据源 -->
 <Child 
   :title="parentTitle" 
@@ -2597,8 +2605,8 @@ export default {
 > 3. **永远别直接改 Prop**：遵循单向数据流，通过 `$emit` 让父组件处理更新
 
 ## 案例-记事本组件版
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750899862347-81100810-d228-4e00-9c94-bea55d08fe7d.png)
+
+![](assets/1750899862347-81100810-d228-4e00-9c94-bea55d08fe7d.png)
 
 核心步骤：
 
@@ -2608,7 +2616,7 @@ export default {
 
 ②渲染待办任务
 
-提供数据**(公共父组件）**→父传子传递list→v-for渲染
+提供数据 **(公共父组件）** →父传子传递list→v-for渲染
 
 ③添加任务
 
@@ -2626,7 +2634,7 @@ export default {
 
 ⑥持久化存储：watch监视数据变化，持久化到本地
 
-## 跨层级`provide / inject`
+## 跨层级 provide / inject
 （祖 → 后代） 
 
 **逻辑**：
@@ -2634,10 +2642,10 @@ export default {
 + 祖先组件通过 `provide` 提供数据；
 + 任意后代组件通过 `inject` 接收数据（无需逐级传递）
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750473789765-506836a4-6135-4773-b375-fa28a1078bb0.png)
 
-```vue
+![](assets/1750473789765-506836a4-6135-4773-b375-fa28a1078bb0.png)
+
+```html
 <!-- 祖先组件 GrandParent.vue -->
 <template>
   <Parent />
@@ -2684,8 +2692,8 @@ export default {
 + 若需响应式，需提供 **可修改的方法**（如示例中的 `updateAncestor`）或绑定 `data` 中的属性
 
 ##  `Event Bus`（事件总线）
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1750472564868-949be307-618f-4d05-826e-490fbddcf5d4.png)
+
+![](assets/1750472564868-949be307-618f-4d05-826e-490fbddcf5d4.png)
 
 + 创建 **全局事件总线**（空 Vue 实例）；
 + 发送方用 `$emit` 触发事件，接收方用 `$on` 监听事件
@@ -2738,29 +2746,31 @@ export default {
 
 > 拆解 v-model：
 >
->   **v-model = v-bind:value + v-on:change/input**
+> **v-model = v-bind:value + v-on:change/input**
 >
->   v-on:change  @change="value = $event.target.value" 
+> v-on:change  @change="value = $event.target.value" 
 >
->   v-on:input     @input="value = $event.target.value" 
+> v-on:input     @input="value = $event.target.value" 
 >
->   **如果要实现组件通信，则需要使用v-model拆解  原因：v-model 实现双向绑定，但子组件不能直接改变父组件的数据**
+> **如果要实现组件通信，则需要使用v-model拆解  **
 >
->   所以需要使用v-bind:value + v-on:change实现
+> **原因：v-model 实现双向绑定，但子组件不能直接改变父组件的数据**
 >
->   v-bind:value 获取父组件传递的数据，并绑定给select的value属性
+> 所以需要使用v-bind:value + v-on:change实现
 >
->   v-on:change 监听select的change事件，并获取select的value属性的值，
+> v-bind:value 获取父组件传递的数据，并绑定给select的value属性
 >
->   并调用$emit()方法，将数据发送给父组件
+> v-on:change 监听select的change事件，并获取select的value属性的值，
+>
+> 并调用$emit()方法，将数据发送给父组件
 >
 > 复选框（checkbox）和单选按钮（radio）：使用 **:checked + @change**
 >
 > 下拉框（select）和文本框（input[type=text]）：使用 **:value + @input**
 
-> 拆分v-model后**$emit()**方法名要在**文本框与下拉框**使用**input**，在**复选框**使用**change**
+> 拆分v-model后`$emit()`方法名要在**文本框与下拉框**使用**input**，在**复选框**使用**change**
 
-数据变，视图跟着变：**value **
+数据变，视图跟着变：**value**
 
 视图变，数据跟着变：**@input  、@change**
 
@@ -2786,7 +2796,7 @@ export default {
 
 + 父组件通过 `props` 向子组件传递初始数据（ `cityId`）
 
-```vue
+```html
 <base-select
   :city-id="cityId"
   @update-value="handleChangeCityId"
@@ -2809,7 +2819,7 @@ methods:{
 
 + 子组件监听输入事件（ `change`），通过 **$emit 触发自定义事件**，将新值传给父组件
 
-```vue
+```html
 <!-- 拆解v-model
   v-model = v-bind:value + v-on:change
   v-on:change  @input="value = $event.target.value" 
@@ -2841,15 +2851,15 @@ methods: {
 
 **v-model 语法糖**
 
-> ** 子组件 $meit()方法名要使用input (下拉框）**
+> **子组件 $meit()方法名要使用input (下拉框）**
 >
-> ** 父组件 props接受名要使用 value**
+> **父组件 props接受名要使用 value**
 
 父组件传值
 
 + 绑定到子组件的 **value props**；
 
-```vue
+```html
 <!-- v-model简化-->
  <base-select-two v-model="cityId"></base-select-two>
 ```
@@ -2858,7 +2868,7 @@ methods: {
 
 + 自动监听 **input 事件**，更新父组件数据
 
-```vue
+```html
   <!-- 父组件 props接受名要使用value -->
   <select name="" id="" :value="value" @change="handleChange2">
     <option value="10001">北京</option>
@@ -2866,7 +2876,7 @@ methods: {
     <option value="10003">广州</option>
     <option value="10004">深圳</option>
   </select>
-
+<script>
 props: {
   // 父组件 props接受名要使用value
   value: String
@@ -2876,7 +2886,9 @@ methods: {
   handleChange2(e){
     this.$emit('input', e.target.value)
   }
-}
+
+</script>
+
 ```
 
 **Input 输入框子组件约定**：
@@ -2884,7 +2896,7 @@ methods: {
 + 用 **value** 接收父组件数据（`props` 声明 `value`）
 + 触发 **input 事件** 传递新值（`this.$emit('input', 新值)`）
 
-```vue
+```html
 <template>
   <input :value="value" @input="handleInput" placeholder="请输入..." />
 </template>
@@ -2907,7 +2919,7 @@ export default {
 
 + 直接用 `v-model` 绑定数据，替代 `:value + @input`
 
-```vue
+```html
 <!-- 父组件：Parent.vue -->
 <template>
   <BaseInput v-model="username" />
@@ -2928,9 +2940,13 @@ export default {
 ## .sync 修饰符
 灵活的双向绑定
 
-**实现 父子组件数据双向同步，且支持自定义属性名突破 v-model 的 prop 属性名必须为 `value` 限制本质是 `:属性名` + `@update:属性名` 的语法糖：**
+**实现 父子组件数据双向同步，且支持自定义属性名**
 
-```vue
+**突破 v-model 的 prop 属性名必须为 `value` 限制**
+
+**本质是 `:属性名` + `@update:属性名` 的语法糖：**
+
+```html
 <!-- 父组件写法 -->
 <BaseDialog :visible.sync="isShow" /> 
 
@@ -2940,7 +2956,7 @@ export default {
 
 **典型场景：弹窗组件（控制显示 / 隐藏）**
 
-```vue
+```html
 <!-- 子组件：BaseDialog.vue -->
 <template>
   <div v-if="visible" class="dialog">...</div>
@@ -2973,11 +2989,13 @@ data(){
 ## ref & $refs
 精准获取 DOM / 组件实例
 
-**ref & $refs** 查询**当前组件内**，精准获取 **DOM 元素** 或 **子组件实例document.querySelector** 查询**整个页面**不安全，容易全局污染
+**ref & $refs** 查询**当前组件内**，精准获取 **DOM 元素** 或 **子组件实例**
+
+**document.querySelector** 查询**整个页面**不安全，容易全局污染
 
 **场景 1：获取 DOM（操作 DOM 行为，如 ECharts 初始化）**
 
-```vue
+```html
 <template>
   <!-- 1. 给 DOM 加 ref 属性 -->
   <div ref="chartRef"></div> 
@@ -2996,7 +3014,7 @@ export default {
 
 **场景 2：获取子组件（调用子组件方法）**
 
-```vue
+```html
 <template>
   <!-- 1. 给子组件加 ref 属性 -->
   <BaseForm ref="formRef"></BaseForm> 
@@ -3044,7 +3062,7 @@ Vue **异步更新 DOM**（批量更新，提升性能），导致 “数据改�
 8. 此时回调内可拿到最新 DOM
 9. 使用场景修改数据后立即操作 / 获取 DOM，必须放在 `$nextTick` 回调中
 
-```vue
+```html
 <template>
   <input v-if="isShowEdit" ref="inp" />
   <button @click="showEdit">编辑</button>
@@ -3075,7 +3093,7 @@ export default {
   
 
 # 自定义指令
-**指令（Directives）**是 `Vue` 提供的**特殊属性**，用于在模板中声明式地**操作DOM行为**（如样式、事件、属性等）
+**指令（Directives）** 是 `Vue` 提供的**特殊属性**，用于在模板中声明式地**操作DOM行为**（如样式、事件、属性等）
 
 **指令分类**
 
@@ -3122,7 +3140,7 @@ new Vue({
 
 ```
 
-```vue
+```html
 <template>
   <!-- 输入框加载后自动聚焦 -->
   <input v-focus type="text" /> 
@@ -3135,7 +3153,7 @@ new Vue({
 
 **指令名：{指令配置项}**
 
-```vue
+```html
 <template>
   <div id="app">
     <!-- 1. 自动聚焦指令：v-focus -->
@@ -3190,13 +3208,13 @@ export default {
 }
 ```
 
-**示例：**自动聚焦与颜色设置
+**示例：** 自动聚焦与颜色设置
 
 在绑定指令时，可以通过“等号”的形式为指令绑定具体的参数值
 
 通过binding.value可以拿到指令值，指令值修改会触发update函数
 
-```vue
+```html
 <template>
   <input v - focus type="text" />
   <div v - color="'red'">红色文本</div>
@@ -3236,13 +3254,13 @@ export default {
 
 > **参数：**
 >
-> **el（**指令绑定的 DOM 元素**）**
+> **el（** 指令绑定的 DOM 元素 **）**
 >
-> **binding（**包含指令参数的对象（如 `value`、`arg`、`modifiers`**）**
+> **binding（** 包含指令参数的对象（如 `value`、`arg`、`modifiers` **）**
 >
-> **vnode（**当前虚拟节点**）**
+> **vnode（** 当前虚拟节点 **）**
 >
-> **oldVnode（**上一个虚拟节点 首次绑定为 `undefined`**）bind(el, binding, vnode, oldVnode)**
+> **oldVnode（** 上一个虚拟节点 首次绑定为 `undefined` **）bind(el, binding, vnode, oldVnode)**
 
 + **触发时机**：指令第一次绑定到元素时调用（仅执行一次）
 + **核心作用**：完成初始化设置（如添加样式类、初始化数据）
@@ -3296,7 +3314,7 @@ Vue.directive('demo', {
 })
 ```
 
-## 
+
 
 ## 实践案例
 ### 自动聚焦指令（v-focus）
@@ -3346,7 +3364,7 @@ export default {
 ```
 
 ### 权限控制指令（v-permission）
-```javascript
+```html
 // 全局指令
 Vue.directive('permission', {
   inserted: function (el, binding) {
@@ -3461,7 +3479,7 @@ Slot是`Vue` 提供的**内容分发机制**，用于在**组件模板**中**预
 <base-dialog></base-dialog>
 ```
 
-**默认内容（后备内容）：**在 `<slot>` 标签内提供默认内容，当父组件没有传递内容时会显示默认内容
+**默认内容（后备内容）：** 在 `<slot>` 标签内提供默认内容，当父组件没有传递内容时会显示默认内容
 
 ## 具名插槽
 当组件需要 **多个预留位置**（如头部、内容区、底部）时，可使用 **具名插槽**，通过 `name` 属性为插槽命名，父组件通过 `v - slot` 或 `#` 语法指定内容插入到哪个插槽
@@ -3472,7 +3490,7 @@ Slot是`Vue` 提供的**内容分发机制**，用于在**组件模板**中**预
 
 在 Vue2.6.0 之前，使用 `slot` 属性指定内容要放入哪个插槽：
 
-从 Vue2.6.0 开始，引入了 **v-slot` 指令（简写为 `#）**作为具名插槽的统一语法：
+从 Vue2.6.0 开始，引入了 `v-slot 指令（简写为 #）`作为具名插槽的统一语法：
 
 ```html
  <div class="modal">
@@ -3535,9 +3553,9 @@ Slot是`Vue` 提供的**内容分发机制**，用于在**组件模板**中**预
 
 通过作用域插槽传值绑定
 
-在 插槽 slot 中，通过 **<slot :属性名="数据"></slot>** 将数据绑定到插槽：
+在 插槽 slot 中，通过 `<slot :属性名="数据"></slot>` 将数据绑定到插槽：
 
-```vue
+```html
 <!-- 子组件：UserList.vue -->
 <template>
   <div>
@@ -3575,7 +3593,7 @@ export default {
 </script>
 ```
 
-父组件template使用 `v-slot="props"` 或**解构语法**（如**v-slot="{ user }"**）接收子组件数据：
+父组件template使用 `v-slot="props"` 或**解构语法**（如**v-slot="{ user }"** ）接收子组件数据：
 
 **简化： #插槽名="{ user }"**
 
@@ -3595,7 +3613,7 @@ export default {
 </user-list>
 ```
 
-```vue
+```javascript
 data() {
   return {
     userList1: [
@@ -3652,8 +3670,8 @@ data() {
 ```
 
 ## 综合案例-商品列表
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751031990337-39447e81-246d-4577-9fa2-09b2ec1b3b94.png)
+
+![](assets/1751031990337-39447e81-246d-4577-9fa2-09b2ec1b3b94.png)
 
 # 单页多页应用程序
 ## 单页应用程序
@@ -3666,11 +3684,13 @@ SPA，Single Page Application
 所有交互（如页面跳转、内容更新）都通过 **JavaScript 动态操作 DOM** 实现，无需刷新整个页面
 
 **页面结构**：  
+
 共享同一个 HTML 骨架，初始加载后通过**前端路由（如 Vue Router）** 切换组件渲染内容
 
-页面**按需更新**，需要明确**访问路径与组件（路由）**的关系
+页面**按需更新**，需要明确**访问路径与组件（路由）** 的关系
 
 **URL 变化但页面不刷新路由机制**：  
+
 依赖 Vue Router 等前端路由库，通过`history`或`hash`模式模拟页面跳转（本质是组件切换）
 
 **性能表现**：
@@ -3680,12 +3700,14 @@ SPA，Single Page Application
 + **交互阶段**：切换页面仅**更新局部内容**，无需重新请求 HTML，性能流畅（如后台弹窗、表格交互）
 
 **用户体验**：  
+
 操作流畅如原生 App（无 “白屏刷新” 感），**交互密集型场景**（后台管理、社交应用点赞 / 评论）
 
 **SEO 支持**：  
+
 天然劣势（内容动态渲染，爬虫难抓取）
 
-需通过 **服务端渲染（SSR，如 Nuxt.js）**或 **预渲染（Prerender SPA Plugin）**优化
+需通过 **服务端渲染（SSR，如 Nuxt.js）** 或 **预渲染（Prerender SPA Plugin）** 优化
 
 **开发与学习：**
 
@@ -3731,10 +3753,12 @@ MPA，Multi Page Application
 多页应用中，**每个页面对应独立的 HTML 文件**，跳转时需向服务器重新请求完整的 HTML、JS、CSS 资源，浏览器全页刷新
 
 **页面结构**：  
+
 每个页面是独立 “资源包”（HTML+JS+CSS），公共资源（如 UI 库、工具函数）可通过构建工具提取为共享 chunk。
 
 **路由机制**：  
-依赖 **服务端路由**（如 Node.js/PHP 的模板引擎）或 **多前端入口**（每个页面单独配置 JS 入口），跳转时全页刷新。
+
+依赖 **服务端路由**（如 Node.js/PHP 的模板引擎）或 **多前端入口**（每个页面单独配置 JS 入口），跳转时全页刷新
 
 **性能表现**：
 
@@ -3742,9 +3766,11 @@ MPA，Multi Page Application
 + **交互阶段**：页面切换需重新加载所有资源，体验有 “刷新感”，性能低于 SPA。
 
 **用户体验**：  
+
 适合 **页面独立、交互简单** 的场景（如电商商品列表、新闻详情页），但切换流畅度逊于 SPA
 
 **SEO 支持**：  
+
 天然优势（每个页面的 HTML 内容可直接被搜索引擎抓取，无需额外优化）
 
 **开发与学习**：
@@ -3754,20 +3780,20 @@ MPA，Multi Page Application
 
 **技术栈**：Vue + 多入口构建配置（Vite/Webpack） + 可选服务端路由（如 Express、Nginx）
 
-**关键配置（Vite 多入口）**：
+**关键配置（Vite 多入口）** ：
 
-```vue
+```javascript
 // vite.config.js
-    import { defineConfig } from 'vite'
-    import vue from '@vitejs/plugin-vue'
-    export default defineConfig({
-    plugins: [vue()],
-    build: {
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+export default defineConfig({
+  plugins: [vue()],
+  build: {
     rollupOptions: {
-    input: {
-    index: './src/pages/index/main.js', // 首页入口
-    about: './src/pages/about/main.js'  // 关于页入口
-    }
+      input: {
+        index: './src/pages/index/main.js', // 首页入口
+        about: './src/pages/about/main.js'  // 关于页入口
+      }
     }
   }
 })
@@ -3817,8 +3843,8 @@ SPA 的 SEO 补充方案
 
 若必须用 SPA 但需 SEO，可选：
 
-1. **服务端渲染（SSR）**：用 Nuxt.js（Vue 生态的 SSR 框架），服务端生成 HTML 后返回，兼顾 SEO 和交互
-2. **预渲染（Prerender）**：构建时预先生成静态 HTML 文件（适合页面少、内容固定的场景，如官网）
+1. **服务端渲染（SSR）** ：用 Nuxt.js（Vue 生态的 SSR 框架），服务端生成 HTML 后返回，兼顾 SEO 和交互
+2. **预渲染（Prerender）** ：构建时预先生成静态 HTML 文件（适合页面少、内容固定的场景，如官网）
 
 ## 核心对比
 | **对比维度** | **SPA 特点** | **MPA 特点** |
@@ -3834,68 +3860,26 @@ SPA 的 SEO 补充方案
 可根据 **交互需求、SEO 优先级、性能目标** 灵活选择架构，Vue 生态对两者均提供完善支持
 
 # Vue 路由 Router
-## 物理路由
-**网络层路由，硬件层面定义：**物理路由是指通过硬件设备（如路由器）实现的**网络数据包转发**过程，属于 OSI 模型的网络层（第三层），负责决定数据包从源网络到目标网络的传输路径。
+## 路由
+是指在单页应用（SPA）中，通过 JavaScript 监听**URL 变化**，动态更新页面内容（无刷新跳转）的逻辑
 
-**核心原理作用**：作为网络节点，根据 IP 地址将数据包从一个网络转发到另一个网络（类似快递分拣中心）
+假设一个单页应用（SPA）里面有两个界面：**首页**和**关于页**
 
-**工作流程**：
+**传统多页应用：** 访问 `/` 加载 `index.html`，访问 `/about` 加载 `about.html`（跳转时页面刷新）
 
-1. 接收数据包，解析目标 IP 地址
-2. 查询路由表，找到对应的 “下一跳” 地址（下一个路由器或目标设备）
-3. 从相应网络接口转发数据包。
+**单页应用（SPA）** ：全程只加载 **1 个index.html**， JavaScript 动态切换界面（跳转时页面不刷新）
 
-**路由表**：存储 “**目标网络地址 → 转发接口 / 下一跳 IP”** 的**映射**，可手动配置（静态路由）或通过协议自动生成（动态路由，如 OSPF、BGP）
-
-**关键组件与功能**
-
-+ **硬件组件**：CPU（处理路由逻辑）、内存（缓存路由表）、网络接口（连接不同网络）
-+ **NAT（网络地址转换）**：将内网私有 IP 转换为公网 IP，实现多设备共享一个公网 IP 上网（如家庭路由器场景）
-+ **DHCP（动态主机配置）**：自动为设备分配 IP 地址、网关等网络参数（如手机连 Wi-Fi 自动获取 IP）
-
-## 后端路由
-**服务器端路由，服务端逻辑定义：**后端路由是指服务器根据客户端请求的**URL 路径**，返回对应资源（如 HTML 页面、数据接口）的逻辑，属于服务端开发范畴。
-
-**核心原理传统 Web 开发模式**：  
-用户访问 URL（如`https://example.com/blog`），浏览器向服务器发送请求，服务器根据 URL 路径找到对应的文件（如`blog.html`）或接口（如`/api/blog`），返回完整的响应内容（HTML、JSON 等），浏览器解析后渲染页面（全页刷新）
-
-**路由框架**：  
-后端通过框架（如 Node.js 的 Express、Python 的 Django）配置 “URL 路径 → 处理函数” 的映射
-
-```javascript
-// Express 示例：配置后端路由
-app.get('/api/users', (req, res) => {
-  res.json(usersData); // 访问/api/users时返回用户数据
-});
-```
-
-**关键特点**
-
-+ **URL 对应物理资源**：每个 URL 通常对应服务器上的一个文件或接口
-+ **全页刷新**：页面跳转时浏览器重新请求服务器，获取新内容
-+ **SEO 友好**：搜索引擎可直接抓取服务器返回的 HTML 内容
-
-**应用场景**
-
-+ **传统多页网站**：如企业官网、新闻门户（每个页面是独立 HTML 文件）
-+ **API 接口服务**：如`/api/products`返回商品数据，供前端调用
-+ **服务端渲染（SSR）**：如 Nuxt.js 结合后端路由，生成 SEO 友好的 HTML 页面
-
-## 前端路由
-**客户端路由，SPA 逻辑定义：**前端路由是指在单页应用（SPA）中，通过 JavaScript 监听**URL 变化**，动态更新页面内容（无刷新跳转）的逻辑，属于前端开发范畴
-
-假设一个单页应用（SPA）里面有两个界面：**首页**和**关于页传统多页应用：**访问 `/` 加载 `index.html`，访问 `/about` 加载 `about.html`（跳转时页面刷新）
-
-**单页应用（SPA）**：全程只加载 **1 个index.html**， JavaScript 动态切换界面（跳转时页面不刷新）
-
-**作用：**让 URL 路径变化 对应 不同组件渲染，实现 SPA 的 “无刷新跳转”
+**作用：** 让 URL 路径变化 对应 不同组件渲染，实现 SPA 的 “无刷新跳转”
 
 **核心原理实现方式**：
 
-+ **哈希模式（Hash）**：URL 中`#`后的内容为路由标识（如`#/about`），通过监听`hashchange`事件更新页面
-+ **历史模式（History）**：利用 HTML5 的`history.pushState()`修改 URL，通过监听`popstate`事件响应路由变化
++ **哈希模式（Hash）** ：URL 中`#`后的内容为路由标识（如`#/about`），通过监听`hashchange`事件更新页面
++ **历史模式（History）** ：利用 HTML5 的`history.pushState()`修改 URL，通过监听`popstate`事件响应路由变化
+
+**! ! ! ! 哈希模式必须后端配合配置路由兜底（否则刷新 404）! ! ! !**
 
 **Vue Router 示例**：  
+
 配置 “路径 → 组件” 映射，通过`<router-view>`渲染对应组件，无需刷新页面
 
 ```javascript
@@ -3917,7 +3901,10 @@ const routes = [
 + **单页应用**：如后台管理系统、社交 App（微信公众号 H5、企业 OA）
 + **复杂交互场景**：如电商网站的商品详情页（图片预览、评论区动态加载）
 
-## 总结
+
+
+----
+
 **物理路由**：硬件层面的数据包转发，由路由器实现，是网络通信的基础
 
 **后端路由**：服务端根据 URL 返回资源，决定 “请求→响应” 的映射关系，用于传统网站和 API 接口
@@ -3939,7 +3926,9 @@ const routes = [
 + 后端路由负责**数据接口**和**SEO 敏感页面**的响应（如返回 JSON 数据、服务器渲染的 HTML）
 + 前端路由负责**页面交互逻辑**（如单页内的组件切换、动态内容加载）
 
-**开发中的实践关联前端开发**：使用 Vue Router 等库实现 SPA 路由，需配合后端 API 接口（由后端路由提供）
+**开发中的实践关联**
+
+**前端开发**：使用 Vue Router 等库实现 SPA 路由，需配合后端 API 接口（由后端路由提供）
 
 **后端开发**：配置路由处理接口请求，同时可能需要支持前端路由的 History 模式（服务器需配置兜底路由，避免刷新 404）
 
@@ -3952,8 +3941,8 @@ location / {
 }
 ```
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751245250785-8dab4d5e-f97f-461b-883d-60e0fbfad9db.png)
+
+![](assets/1751245250785-8dab4d5e-f97f-461b-883d-60e0fbfad9db.png)
 
 ## Vue Router
 Vue Router 是 Vue 官方的 **路由库**，实现 SPA 的路由功能
@@ -3972,7 +3961,11 @@ Vue Router 是 Vue 官方的 **路由库**，实现 SPA 的路由功能
 + **Vue 3**：`npm install vue-router@4`
 + **Vue 2**：`npm install vue-router@3`
 
-**2. 引入路由 import（核心文件：`src/main.js`）3. 安装注册 Vue.use(VueRouter) 4. 创建路由对象  const router = new VueRouter5. 挂载路由**
+**2. 引入路由 import（核心文件：`src/main.js`）**
+
+**3. 安装注册 Vue.use(VueRouter) **
+
+**4. 创建路由对象  const router = new VueRouter5. 挂载路由**
 
 以 Vue 2 为例，代码如下：
 
@@ -4014,12 +4007,12 @@ new Vue({
 }).$mount("#app");
 ```
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751247621785-6b04c9be-9430-4719-a8d5-ae5c0c34a35b.png)
 
-**6. 配置路由规则 创建需要的组件（views）目录 **
+![](assets/1751247621785-6b04c9be-9430-4719-a8d5-ae5c0c34a35b.png)
 
-Find.vue       My.vue           Friend.vue
+**6. 配置路由规则 创建需要的组件（views）目录**
+
+Find.vue / My.vue / Friend.vue
 
 ```javascript
 import Vue from "vue";
@@ -4051,10 +4044,10 @@ new Vue({
 
 **7. 配置导航，配置路由出口（路径匹配的组件显示的位置）**
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751248608496-432c7f2e-3f40-4178-aa54-1b723e177516.png)
 
-```vue
+![](assets/1751248608496-432c7f2e-3f40-4178-aa54-1b723e177516.png)
+
+```html
 <template>
   <div id="app">
     <nav class="music-nav">
@@ -4088,7 +4081,7 @@ Vue 项目中，`.vue` 文件虽本质相同，但按**功能和复用性**可�
 | **分类** | **页面级组件（views 目录）** | **通用组件（components 目录）** |
 | :--- | :--- | :--- |
 | **关联对象** | 和**路由**直接绑定（一个组件对应一个路径） | 不直接关联路由，供多个页面 / 组件复用 |
-| **功能定位** | 承载完整页面逻辑（如 `/find`<br/> 路径对应 `Find.vue`） | 实现局部功能（如按钮、卡片、弹窗） |
+| **功能定位** | 承载完整页面逻辑（如 `/find` 路径对应 `Find.vue`） | 实现局部功能（如按钮、卡片、弹窗） |
 | **复用性** | 通常不复用（每个路由对应唯一页面） | 高复用性（多个地方调用） |
 
 `views` 目录的存在意义：明确 “页面边界”
@@ -4097,7 +4090,7 @@ Vue 项目中，`.vue` 文件虽本质相同，但按**功能和复用性**可�
 
 （如：`{ path: '/find', component: Find }`），代表一个完整的 “页面”
 
-```vue
+```javascript
 import Find from './views/Find.vue' // Find 是一个页面（对应 /find 路由）
 ```
 
@@ -4117,7 +4110,7 @@ import Find from './views/Find.vue' // Find 是一个页面（对应 /find 路�
 
 路由配置文件（如 `router/index.js`）通常和 `views` 目录强关联，导入语句清晰
 
-```vue
+```javascript
 // 路由配置里的组件，几乎都来自 views 目录
 const router = new VueRouter({
   routes: [
@@ -4127,7 +4120,6 @@ const router = new VueRouter({
   ],
 });
 ```
-
 
 **目录名可以灵活调整**
 
@@ -4145,10 +4137,10 @@ const router = new VueRouter({
 ## 路由模块封装
 将路由配置从 main.js 抽离出来，**拆分模块，利于维护**
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751259180749-9f1d926b-a840-4b79-ba7c-f06771975c2a.png)
 
-```vue
+![](assets/1751259180749-9f1d926b-a840-4b79-ba7c-f06771975c2a.png)
+
+```javascript
 <!-- index.js -->
 // @代表src目录
 import MusicFind from "@/views/MusicFind.vue";
@@ -4172,7 +4164,7 @@ const router = new VueRouter({
 export default router;
 ```
 
-```vue
+```javascript
 <!-- main.js -->
 import Vue from "vue";
 import App from "./App.vue";
@@ -4189,7 +4181,7 @@ new Vue({
 ```
 
 ## 声明式跳转&高亮类名（`<router-link>`）
-```vue
+```html
 <router-link to="/">首页</router-link>
 <router-link to="/about">关于页</router-link>
 
@@ -4201,7 +4193,7 @@ new Vue({
 
 ```
 
-**router-link **本质还是 **a **标签，添加了两个 class 属性
+**router-link**本质还是 **a**标签，添加了两个 class 属性
 
 **router-link-exact-active 精确匹配**
 
@@ -4230,15 +4222,14 @@ new Vue({
 </style>
 ```
 
-**精确匹配（`router-link-exact-active`）**：
+**精确匹配（`router-link-exact-active`）** ：
 
 + 当前路由**完全等于**链接路径时触发（如当前路由是 **/find**，匹配 “发现音乐”）
 
 **模糊匹配（`router-link-active`）常用：**
 
-+ 当前路由**包含**链接路径时触发（如当前路由是 `**/my/**playlist`，匹配 “我的音乐” 的 `/my`）
-+ <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751261257020-5652716d-eb7b-4109-a126-21da876b3bb6.png)
++ 当前路由**包含**链接路径时触发（如当前路由是 `/my/playlist`，匹配 “我的音乐” 的 `/my`）![](assets/1751261257020-5652716d-eb7b-4109-a126-21da876b3bb6.png)
+
 + 匹配发现音乐  `/discover` 下的其他 `/discover/toplist` ,保持一级路由状态
 
 **自定义类名高亮**
@@ -4261,7 +4252,7 @@ const router = createRouter({
 
 **查询参数传参(适合传递多个参数）配置导航链接 to = "/path?参数名=值&参数名=值"**
 
-```vue
+```html
 <router-link to="/info?keyWords=华语流行">华语流行</router-link>
 <router-link to="/info?keyWords=欧美流行">欧美流行</router-link>
 <router-link to="/info?keyWords=日韩热门">日韩热门</router-link>
@@ -4269,7 +4260,7 @@ const router = createRouter({
 
 **页面接收：$route.query.参数名**
 
-```vue
+```javascript
 搜索关键字：{{ $route.query.keyWords }}
 ```
 
@@ -4279,7 +4270,7 @@ const router = createRouter({
 
 如果不传参数，也希望匹配，可以加个可选符"?"
 
-```vue
+```javascript
   // 路由规则
   routes: [
     { path: "/find", component: MusicFind },
@@ -4291,7 +4282,7 @@ const router = createRouter({
 
 **配置导航链接 to="/path/参数值}**
 
-```vue
+```html
 <p class="hot-search">
   热门搜索：
   <router-link to="/info/华语流行">华语流行</router-link>
@@ -4303,7 +4294,7 @@ const router = createRouter({
 
 **页面接收：$route.params.参数名**
 
-```vue
+```html
 <p>动态路由：{{ $route.params.key }}</p>
 ```
 
@@ -4316,7 +4307,7 @@ http://localhost:8080/
 
 “redirect” 常见意思为 “使改变方向；使转移；重新导向” 。在计算机领域，常指网页或程序中的重定向操作，比如将用户从一个网址自动引导到另一个网址，或者程序执行时从一个流程转向另一个流程。
 
-```vue
+```javascript
  // 路由规则
 routes: [
   // 路由重定向
@@ -4338,9 +4329,9 @@ routes: [
 ## 路由模式
 问题：路由的路径看起来不自然，有#，能否切成真正路径形式?
 
-**hash路由(默认) **例如:http://localhost:8080/**#**/home
+**hash路由(默认)** 例如:`http://localhost:8080/#/home`
 
-**history路由(常用）例如:http://localhost:8080/home(以后上线需要服务器端支持)**
+**history路由(常用）例如:`http://localhost:8080/home`(以后上线需要服务器端支持)**
 
 ```javascript
 //创建路由对象
@@ -4361,7 +4352,7 @@ const router = new VueRouter({
 ## 编程式跳转（`this.$router`）
 在方法中通过 JS 跳转（比如按钮点击）：
 
-```vue
+```html
 <template>
   <button @click="goAbout">去关于页</button>
 </template>
@@ -4403,7 +4394,7 @@ const routes = [
 
 **步骤 2：创建 User 组件，获取参数**
 
-```vue
+```html
 <!-- User.vue -->
 <template>
   <div>用户ID：{{ $route.params.id }}</div>
@@ -4433,7 +4424,7 @@ this.$router.push({
 
 获取参数：
 
-```vue
+```html
 <template>
   <div>用户名：{{ $route.query.name }}</div>
 </template>
@@ -4442,21 +4433,21 @@ this.$router.push({
 ## 传参总结
 Vue 路由传参是实现页面间数据传递的核心能力
 
-包含 **动态路由（params）**、**查询参数（query）** 等细分场景
+包含 **动态路由（params）** 、**查询参数（query）** 等细分场景
 
 搭配 **声明式导航**（`router-link`）和 **编程式导航**（`this.$router.push`）不同调用方式
 
-**传参类型是 “本质”**：
+**传参类型是 “本质”** ：
 
 + `params` 依赖路由占位符，是 **URL 路径的一部分**
 + `query` 是 **URL 的附加信息**，与路由配置无关
 
-**调用方式是 “载体”**：
+**调用方式是 “载体”** ：
 
 + 不管是 `params` 还是 `query`，都能通过 **声明式（`<router-link>`）** 或 **编程式（`$router.push`）** 实现跳转
 + 区别仅在于：`params` 用 `name` 传参更可靠（`path` 需手动拼路径），而 `query` 用 `path` 或 `name` 都可以
 
-| **维度** | `**params`（动态路由参数）** | `**query`（查询参数）** |
+| **维度** | `params`（动态路由参数） | `query`（查询参数） |
 | :--- | :--- | :--- |
 | **路由配置** | 必须定义占位符 `path: '/user/:id'` | 无特殊配置`path: '/search'` |
 | **URL 表现** | 嵌入路径`/user/123` | 附加查询串`/search?keyword=Vue` |
@@ -4493,7 +4484,7 @@ const routes = [
 
 **② 传参方式**
 
-+ **声明式（router-link）**：通过 `name` 匹配路由，`params` 传参
++ **声明式（router-link）** ：通过 `name` 匹配路由，`params` 传参
 
 ```html
 <router-link :to="{ name: 'User', params: { id: 123 }}">
@@ -4501,7 +4492,7 @@ const routes = [
 </router-link>
 ```
 
-+ **编程式（this.$router.push）**：同样需用 `name`（用 `path` 需手动拼接）
++ **编程式（this.$router.push）** ：同样需用 `name`（用 `path` 需手动拼接）
 
 ```javascript
 this.$router.push({ 
@@ -4549,7 +4540,7 @@ const routes = [
 
 **② 传参方式**
 
-+ **声明式（router-link）**：通过 `path` 或 `name` 配合 `query` 传参
++ **声明式（router-link）** ：通过 `path` 或 `name` 配合 `query` 传参
 
 ```html
 <router-link :to="{ 
@@ -4560,7 +4551,7 @@ const routes = [
 </router-link>
 ```
 
-+ **编程式（this.$router.push）**：
++ **编程式（this.$router.push）** ：
 
 ```javascript
 this.$router.push({ 
@@ -4671,19 +4662,22 @@ export default {
 
 **最佳实践总结**
 
-1. **动态路由（Params）**：优先用于 **必填的标识性参数**（如 `/user/:id`），需在路由配置占位符
-2. **查询参数（Query）**：优先用于 **可选的过滤 / 分页参数**（如 `?keyword=Vue`），灵活且 URL 可见
+1. **动态路由（Params）** ：优先用于 **必填的标识性参数**（如 `/user/:id`），需在路由配置占位符
+2. **查询参数（Query）** ：优先用于 **可选的过滤 / 分页参数**（如 `?keyword=Vue`），灵活且 URL 可见
 3. **Props 传参**：用于 **解耦组件**，让组件不依赖路由上下文（推荐在复杂项目中使用）
 4. **Meta 传参**：仅用于 **静态元信息**（如权限、标题），不适合动态数据
 
 **常见问题答疑Q：params 传参为什么刷新丢失？**  
+
 A：如果路由未配置占位符（如 `path: '/user'`），params 不会嵌入 URL，刷新时参数会丢失。必须通过 `path: '/user/:id'` 显式定义占位符
 
 **Q：query 传对象为什么变成 `[object Object]`？**  
+
 A：URL 只能传递字符串，需用 `JSON.stringify` 转字符串，接收时再 `JSON.parse` 还原
 
 **Q：声明式和编程式导航怎么选？**  
-A：页面模板中用 **声明式（router-link）**，逻辑中（如按钮点击）用 **编程式（this.$router.push）**
+
+A：页面模板中用 **声明式（router-link）** ，逻辑中（如按钮点击）用 **编程式（this.$router.push）**
 
   
 
@@ -4727,7 +4721,7 @@ const routes = [
 ```
 
 ## 嵌套路由（复杂页面结构）
-**场景**：有一个 `/parent` 页面，里面嵌套了 `/parent/child` 子页面。
+**场景**：有一个 `/parent` 页面，里面嵌套了 `/parent/child` 子页面
 
 **配置嵌套路由**
 
@@ -4744,9 +4738,9 @@ const routes = [
 ]
 ```
 
-**父组件中添加 <router-view>**
+**父组件中添加 `<router-view>`**
 
-```vue
+```html
 <!-- Parent.vue -->
 <template>
   <div>
@@ -4776,10 +4770,10 @@ const routes = [
 
 # 自定义创建项目
 ## 基于 VueCli 自定义
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751270690486-497b2d7b-1bc7-4318-960b-0bbf9aec3e18.png)
 
-```html
+![](assets/1751270690486-497b2d7b-1bc7-4318-960b-0bbf9aec3e18.png)
+
+```powershell
 Vue CLI v5.0.8
 ? Please pick a preset:
 ? 请选择一个预设：
@@ -4844,8 +4838,8 @@ Save this as a preset for future projects? (y/N) y
  $ npm run serve
 ```
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751271532898-82b3aa6c-6cae-40d5-80cf-d42b1fc43df6.png)
+
+![](assets/1751271532898-82b3aa6c-6cae-40d5-80cf-d42b1fc43df6.png)
 
 ## ESlint 代码规范 
 代码规范：一套写代码的约定规则
@@ -4879,13 +4873,13 @@ JavaScript Standard Style 规范说明
 
 ② 自动修正 基于 vscode 插件 ESLint **高亮错误**，并通过配置自动帮助我们修复错误
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751272410813-89055eaa-0651-4d32-8add-43ac1a59067f.png)
+
+![](assets/1751272410813-89055eaa-0651-4d32-8add-43ac1a59067f.png)
 
 **关提示音！**
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751274116623-4d627e85-ebb9-4b0a-9d6b-af909613d8d5.png)
+
+![](assets/1751274116623-4d627e85-ebb9-4b0a-9d6b-af909613d8d5.png)
 
 ```json
 // 当保存的时候，eslint自动帮我们修复错误
@@ -4897,7 +4891,9 @@ JavaScript Standard Style 规范说明
 ```
 
 # 状态管理  Vuex
-**定义**：Vuex 是 Vue.js 的官方**集中式状态管理库**，用于集中管理应用中多个组件共享的**状态（数据）作用**：解决多组件共享状态的问题（尤其是跨组件通信）
+**定义**：Vuex 是 Vue.js 的官方**集中式状态管理库**，用于集中管理应用中多个组件共享的**状态（数据）**
+
+**作用**：解决多组件共享状态的问题（尤其是跨组件通信）
 
 **核心原则**：单一数据源 + 可预测的状态变更
 
@@ -4912,8 +4908,8 @@ Vuex 通过**单一数据源**模式，让状态管理更清晰、可维护
 >
 > Vuex就像《近视眼镜》, 自然会知道什么时候需要用它~
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751275986891-48e5690d-09f3-4131-bfac-cd1ff58bbc2f.png)
+
+![](assets/1751275986891-48e5690d-09f3-4131-bfac-cd1ff58bbc2f.png)
 
 **核心概念**：
 
@@ -4927,14 +4923,14 @@ Vuex 通过**单一数据源**模式，让状态管理更清晰、可维护
 ## 使用步骤
 **1. 安装与引入**
 
-```bash
+```powershell
 npm install vuex@3  # Vue2 对应 Vuex 3.x
 ```
 
 **2.创建 Store** 
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751331651859-039a3173-87c5-40fa-8b60-29633441179e.png)
+
+![](assets/1751331651859-039a3173-87c5-40fa-8b60-29633441179e.png)
 
 ```javascript
 // 存放vuex相关代码
@@ -5005,11 +5001,11 @@ const store = new Vuex.Store({
 })
 ```
 
-组件内访问：**{{ $store.state.xxx }}**
+组件内访问：**`{{$store.state.xxx}}`**
 
 逻辑内访问：**this.$store.state.xxx**
 
-```vue
+```html
 <template>
   <div id="app">
     <h1>根组件 {{ $store.state.count }}</h1>
@@ -5029,7 +5025,7 @@ const store = new Vuex.Store({
 
 **相当于自动生成了计算属性**
 
-```vue
+```html
 <template>
   <div class="box">
     <h2>Son1 子组件</h2>
@@ -5051,14 +5047,14 @@ export default {
 </script>
 ```
 
-“computed” 常见词性为形容词，意思是 “计算出的；用计算机算出的” ，如 “The computed result is very accurate.（计算出的结果非常准确。）” ；也可作为 compute 的过去式和过去分词，作动词时，意为 “计算；估算；推断” ，例如 “We need to compute the cost of this project.（我们需要计算这个项目的成本。）” 。在编程领域，尤其是在 Vue.js 等框架中，“computed” 是一个特定概念，指计算属性，它是基于响应式依赖进行缓存的，只有相关依赖发生改变时才会重新求值，用于对复杂数据进行计算处理，比如在 Vue 组件中有一个计算属性根据其他数据动态计算出一个新的值。
+
 
 ## Mutations（同步修改）
 “Mutation” 常见释义为 “突变；变异；转变；变化” 。在生物学领域，它指生物体 DNA 序列的改变。在计算机编程，特别是在一些数据处理或状态管理相关的场景中，它指对数据的修改操作，例如在 Vuex 中，mutations 用于修改 Vuex 的状态。在其他领域，也可表示事物在性质、形式等方面的重大转变。
 
 **唯一修改 State 的途径vuex同样遵循单向数据流，组件中不能直接修改仓库的数据同步事务**：必须是同步函数
 
-**定义 mutations 方法：**对象中存放修改 state 的方法
+**定义 mutations 方法：** 对象中存放修改 state 的方法
 
 ```javascript
 const store = new Vuex.Store({
@@ -5083,7 +5079,7 @@ const store = new Vuex.Store({
 
 **组件中调用： this.$store.commit('addCount')**
 
-```vue
+```html
 <button @click="handleAdd()">值 + 1</button>
   
 methods: {
@@ -5094,7 +5090,11 @@ methods: {
 }
 ```
 
-**mutations 传参(载荷) this.$store.commit('addCount',参数)注意：只能接受一个参数，改为对象形式传递多个**
+**mutations 传参(载荷) **
+
+**this.$store.commit('addCount',参数)**
+
+**注意：只能接受一个参数，改为对象形式传递多个**
 
 ```javascript
 this.$store.commit('addCount', {
@@ -5103,7 +5103,7 @@ this.$store.commit('addCount', {
 })
 ```
 
-```vue
+```html
 <template>
   <div class="box">
     <h2>Son1 子组件</h2>
@@ -5129,6 +5129,7 @@ export default {
 </script>
 
 // 创建store实例
+<script>
 const store = new Vuex.Store({
   // 存放状态 响应式数据
   // data 是组件自己的数据，state是所有组件共享的数据
@@ -5144,12 +5145,13 @@ const store = new Vuex.Store({
     }
   }
 })
+</script>
 ```
 
 **辅助函数映射**：**mapMutations(['xxx'])**
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751338567584-365e62b3-73c1-4466-93a8-c3da01eef3cd.png)
+
+![](assets/1751338567584-365e62b3-73c1-4466-93a8-c3da01eef3cd.png)
 
 ```javascript
 //index.js  减法
@@ -5194,7 +5196,7 @@ export default {
 
 **处理异步逻辑：如 API 请求通过 commit 触发 mutation**
 
-```vue
+```javascript
 actions: {
   // “context” 常见含义为 “上下文”“语境”，
   addCountAsync (context, n) {
@@ -5214,10 +5216,10 @@ actions: {
 
 **辅助函数映射**：**mapActions(['xxx'])**
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751356015603-6e6e42ee-76f4-4a76-bdab-397f1ddaad5f.png)
 
-```vue
+![](assets/1751356015603-6e6e42ee-76f4-4a76-bdab-397f1ddaad5f.png)
+
+```html
 <button @click="addCountAsync(100)">一秒后 + 100</button>
   
   
@@ -5228,7 +5230,7 @@ actions: {
 ```
 
 ## Getters（计算属性）
-**派生状态**：对 State 进行加工**（类似组件的 computed）**
+**派生状态**：对 State 进行加工 **（类似组件的 computed）**
 
 相当于 state 的**计算属性**，用于对 state 中的数据进行加工处理后返回。它可以接受其他 getter 作为参数，并且会缓存计算结果，只有在它依赖的 state 发生**变化时**才会**重新计算**
 
@@ -5251,7 +5253,7 @@ actions: {
 + **this.$store.getters.xxx**
 + **mapGetters(['xxx'])**
 
-```javascript
+```html
 <p>计算属性筛选列表值{{ getList }}</p>
   
 <script>
@@ -5278,12 +5280,14 @@ export default {
 
 当应用变得复杂时，将 store 分割成模块。每个模块都有自己的 state、mutation、action、getter，使得代码结构更加清晰，便于维护
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1752816998115-b6855ced-7afe-413c-a1dd-0537efc1c164.png)
+
+![](assets/1752816998115-b6855ced-7afe-413c-a1dd-0537efc1c164.png)
 
 **拆分复杂 Store**：每个模块拥有独立 state/mutations/actions...
 
-**user 模块 ： store/modules/user.js（Vue2 + Vuex 模块）car 模块 ： store/modules/car.js（Vue2 + Vuex 模块）**
+**user 模块 ： store/modules/user.js（Vue2 + Vuex 模块）**
+
+**car 模块 ： store/modules/car.js（Vue2 + Vuex 模块）**
 
 + **解耦**：把用户相关逻辑（如登录、个人信息）和其他模块（如购物车、订单）分开，代码更清晰
 + **复用**：模块可独立维护、复用（比如多个项目的用户模块逻辑相似时）
@@ -5308,7 +5312,7 @@ export default {
 }
 ```
 
-**引入模块：**在根 `store/index.js` 中：
+**引入模块：** 在根 `store/index.js` 中：
 
 ```javascript
 import Vue from 'vue'
@@ -5328,6 +5332,7 @@ export default new Vuex.Store({
 模块拆分后，子模块的 `state` 会挂载到根级 `state` 中，属性名就是模块名，可通过两种方式访问模块内的 `state` 数据
 
 **通过 `$store.state.模块名.xxx` 直接访问**  
+
 若有 `user` 模块，访问其 `userInfo` 数据：
 
 ```javascript
@@ -5344,6 +5349,7 @@ const state = {
 ```
 
 **通过 `mapState` 映射根级别映射（默认）**  
+
 针对根 `state` 数据，直接使用：
 
 ```javascript
@@ -5358,6 +5364,7 @@ export default {
 ```
 
 **子模块映射（需开启命名空间）**  
+
 模块需先配置 `namespaced: true` 开启命名空间：
 
 ```javascript
@@ -5397,7 +5404,8 @@ export default {
 
 **直接访问**
 
-通过 `$store.getters['模块名**/**xxx']` 调用，示例：  
+通过 `$store.getters['模块名**/** xxx']` 调用，示例：  
+
 若 `user` 模块有 `fullName` getters，访问方式：
 
 ```javascript
@@ -5405,6 +5413,7 @@ this.$store.getters['user/fullName'];
 ```
 
 **通过 `mapGetters` 映射根级别映射（默认）**  
+
 针对根 getters，直接映射：
 
 ```javascript
@@ -5417,6 +5426,7 @@ export default {
 ```
 
 **子模块映射（需命名空间）推荐**  
+
 模块需开启 `namespaced: true`：
 
 ```javascript
@@ -5458,7 +5468,8 @@ const mutations = {
 }
 ```
 
-通过 `$store.commit['模块名**/**xxx',额外参数 ]` 调用  
+通过 `$store.commit['模块名/ xxx',额外参数 ]` 调用  
+
 若 `user` 模块有 `fullName` getters，访问方式：
 
 ```javascript
@@ -5467,6 +5478,7 @@ this.$store.commit('setting/setTheme', theme)
 ```
 
 **通过 `mapMutations` 映射根级别映射（默认）**  
+
 直接映射：
 
 ```javascript
@@ -5479,6 +5491,7 @@ export default {
 ```
 
 **子模块映射（需命名空间）推荐**  
+
 模块需开启 `namespaced: true`：
 
 ```javascript
@@ -5534,15 +5547,16 @@ const actions = {
 
 **直接访问**
 
-通过 `$store.dispatch['模块名**/**xxx']` 调用，
+通过 `$store.dispatch['模块名/ xxx']` 调用，
 
-**通过 **`**map**Actions`** 映射**
+**通过`mapActions`映射**
 
 根级别映射（默认）
 
 ...mapActions(['xxx']) 
 
 子模块映射（需命名空间）  
+
 模块需开启 `namespaced: true`：
 
 映射时指定模块名：
@@ -5625,22 +5639,22 @@ export default new Vuex.Store({
 **调试工具**：利用 **Vue Devtools** 查看组件的 `props`、事件触发，快速定位通信问题
 
 # Vue3 基础入门
-**Vue3 组合式 API**（Composition API）与** Vue2 选项式 API**（Options API）是 Vue.js 框架中两种不同的代码组织和逻辑复用方式，对于复杂组件，组合式 API 的优势更加明显。例如，一个同时包含表单验证、数据获取和用户权限检查的组件，使用组合式 API 可以将这些逻辑分离成独立的函数，使代码更清晰、更易于测试和维护
+**Vue3 组合式 API**（Composition API）与<strong> Vue2 选项式 API</strong>（Options API）是 Vue.js 框架中两种不同的代码组织和逻辑复用方式，对于复杂组件，组合式 API 的优势更加明显。例如，一个同时包含表单验证、数据获取和用户权限检查的组件，使用组合式 API 可以将这些逻辑分离成独立的函数，使代码更清晰、更易于测试和维护
 
 “Composition” 常见意思为 “组成；构成；成分” ，比如在描述物质成分时，可指某种物质由哪些元素或部分构成。它还有 “作品；创作” 的意思，尤指音乐、文学、艺术作品等的创作，如 a musical composition（一部音乐作品） 。此外，在摄影、绘画等艺术领域，它表示 “构图”，指画面中元素的布局和安排。、
 
-“Options” 常见意思为 “选择；选择权；选择的自由；可选择的事物；选项” 。在不同语境中，具体含义会有所不同。例如在计算机软件界面，它常指各种可选择的设置项；在商业领域，可能指期权，是一种选择权合约。如在 “ There are several options available for you to choose from.（有几个选项可供你选择）” 中，就是 “选项” 之意 。
+“Options” 常见意思为 “选择；选择权；选择的自由；可选择的事物；选项” 。在不同语境中，具体含义会有所不同。例如在计算机软件界面，它常指各种可选择的设置项；在商业领域，可能指期权，是一种选择权合约。如在 “ There are several options available for you to choose from.（有几个选项可供你选择）” 中，就是 “选项” 之意 
 
 ## Options选项式 API（Vue2）：
 + **以 `data`、`methods`、`computed`、`watch` 等选项来分割代码**
 + 逻辑被分散在不同选项中，导致复杂组件代码碎片化
 + `this` 会指向当前的组件实例，以“组件实例”的概念为中心 (即`this`)
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/gif/56143711/1752915315387-1e672ff8-3b8e-4c26-89f5-79a141eb97c4.gif)<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/gif/56143711/1752915314679-cf9fec92-bf55-46ce-9d27-cb2d86fdfbd2.gif)
+![](assets/1752915315387-1e672ff8-3b8e-4c26-89f5-79a141eb97c4.gif)
 
-```vue
+![](assets/1752915314679-cf9fec92-bf55-46ce-9d27-cb2d86fdfbd2.gif)
+
+```html
 <script>
   export default {
     // data() 返回的属性将会成为响应式的状态
@@ -5677,19 +5691,21 @@ export default new Vuex.Store({
 + 允许按逻辑关注点（如表单处理、数据获取）组织代码，提高复用性
 + 核心思想是直接在函数作用域内定义响应式状态变量，并将从多个函数中得到的状态组合起来处理复杂问题
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/gif/56143711/1752915367829-8c0d4b21-4d87-4a1b-ba18-dea1d84289e2.gif)<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/gif/56143711/1752915368229-f267ff27-6521-4cf2-8d1e-c0cb00d4c4ca.gif)
+
+![](assets/1752915367829-8c0d4b21-4d87-4a1b-ba18-dea1d84289e2.gif)
+
+
+![](assets/1752915368229-f267ff27-6521-4cf2-8d1e-c0cb00d4c4ca.gif)
 
 ## setup 概述
-`setup`是`Vue3`中一个新的配置项，值是一个函数，它是 `Composition API`**表演的舞台**__
+`setup`是`Vue3`中一个新的配置项，值是一个函数，它是 `Composition API`**表演的舞台**
 
 组件中所用到的：数据、方法、计算属性、监视......等等，均配置在`setup`中
 
 特点如下：
 
 + `setup`函数返回的对象中的内容，可直接在模板中使用
-+ **setup`中访问`this`是`undefined**
++ **`setup`中访问`this`是`undefined`**
 + `setup`函数会在`beforeCreate`之前调用，它是“领先”所有钩子执行的
 
 ```vue
@@ -5715,8 +5731,8 @@ onMounted(() => {
 </template>
 ```
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751786708080-85da6e9e-67a9-446b-8e41-1bed1761a1d6.png)
+
+![](assets/1751786708080-85da6e9e-67a9-446b-8e41-1bed1761a1d6.png)
 
 ## Vue3 核心优势
 ### 更容易维护
@@ -5725,7 +5741,7 @@ onMounted(() => {
 **组合式 API（Composition API）对比 Vue2 选项式 API**：
 
 + Vue2 按 `data`/`methods`/`computed` 等**选项分割代码**，复杂组件的逻辑会分散在不同选项中（如 “定时器逻辑” 可能分布在 `data`、`methods`、`beforeDestroy` 里），维护成本高
-+ Vue3 允许按 **功能逻辑聚合代码**（如把 “用户登录 + Token 管理” 封装为独立函数），复用更方便，代码结构更清晰
++ Vue3 允许按 **功能逻辑聚合代码**（如把 “用户登录 + Token 管理” 封装为独立函数composable 自定义hook），复用更方便，代码结构更清晰
 
 **更好的 TypeScript 支持**
 
@@ -5749,7 +5765,7 @@ onMounted(() => {
 
 **组件初始化更高效**
 
-+ 支持 **Fragment（碎片）**：组件可返回多个根节点，减少多余 DOM 层级；
++ 支持 **Fragment（碎片）** ：组件可返回多个根节点，减少多余 DOM 层级；
 + 配合 Proxy 响应式系统，**依赖收集更高效**（无需像 Vue2 一样递归遍历对象）
 
 ### 更小的体积
@@ -5765,14 +5781,14 @@ Tree-Shaking + 按需引入
 
 + 支持**细粒度导入**
 
-```vue
+```javascript
 import { ref, computed } from 'vue' // 只导入需要的 API
 ```
 
 对比 Vue2 必须整体引入 `Vue` 构造函数，进一步压缩包体积
 
 # Vue3 响应式原理
-Vue3 使用 JavaScript 的** Proxy 对象**取代了 Vue2 中的 `Object.defineProperty()`，从而实现了更强大、更高效的响应式系统
+Vue3 使用 JavaScript 的<strong> Proxy 对象</strong>取代了 Vue2 中的 `Object.defineProperty()`，从而实现了更强大、更高效的响应式系统
 
 Proxy 是 ES6 引入的新特性，它可以拦截并自定义对对象的基本操作（如属性查找、赋值、函数调用等）
 
@@ -5781,7 +5797,7 @@ Proxy 是 ES6 引入的新特性，它可以拦截并自定义对对象的基本
 “Proxy” 常见含义为 “代理”“代理人”“代理权” 等。在计算机领域，它指代理服务器，是一种重要的服务器安全功能，可作为客户端和其他服务器之间的中介，隐藏真实客户端的 IP 地址等信息，提供访问控制、缓存等功能
 
 ## Proxy
-Proxy 对象允许你创建一个对象的代理，从而可以拦截并重新定义该对象的基本操作
+Proxy 对象允许创建一个对象的代理，从而可以拦截并重新定义该对象的基本操作
 
 创建 Proxy 需要两个参数：
 
@@ -5914,11 +5930,11 @@ vue3 的响应式是基于整个对象的代理，通过 Proxy 实现更全面�
 + 真正的按需编译，不再等待整个应用编译完成
 + `webpack`构建 与 `vite`构建对比图如下：
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1752915091074-70e3a368-345a-457a-a6ef-defae09ff703.png)
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1752915097227-2fb183eb-eb04-44a1-a321-2fa0fe5d3eba.png)
+![](assets/1752915091074-70e3a368-345a-457a-a6ef-defae09ff703.png)
+
+
+![](assets/1752915097227-2fb183eb-eb04-44a1-a321-2fa0fe5d3eba.png)
 
 ## create-vue
 `create-vue` 是 **Vue 官方最新的脚手架工具**（替代旧版 `@vue/cli`）
@@ -6002,7 +6018,13 @@ import App from './App.vue'
 createApp(App).mount('#app')
 ```
 
-**App.vue变化一：脚本script和模板template顺序调整变化二：模板template不再要求唯一根元素变化三：脚本script添加setup标识支持组合式API**
+**App.vue**
+
+**变化一：脚本script和模板template顺序调整**
+
+**变化二：模板template不再要求唯一根元素**
+
+**变化三：脚本script添加setup标识支持组合式API**
 
 ```vue
 <script setup>
@@ -6036,7 +6058,7 @@ createApp(App).mount('#app')
 + 云方案：Vercel、Netlify 直接托管（自动识别 Vite 项目）
 
 ## `create-vue` 对比旧脚手架（@vue/cli）
-| **特性** | `**create-vue`（基于 Vite）** | `**@vue/cli`（基于 Webpack）** |
+| **特性** | `create-vue`（基于 Vite） | `@vue/cli`（基于 Webpack） |
 | :--- | :--- | :--- |
 | 启动速度 | 秒级冷启动（无需打包） | 依赖打包，启动慢 |
 | 热更新 | 毫秒级响应（HMR 更高效） | 秒级更新，大型项目更明显 |
@@ -6047,10 +6069,10 @@ createApp(App).mount('#app')
 
 # setup 选项  
 ## 执行时机
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751791911968-0d9e2e80-3ae8-40bd-9183-0f8852c5a7b5.png)
 
-```vue
+![](assets/1751791911968-0d9e2e80-3ae8-40bd-9183-0f8852c5a7b5.png)
+
+```html
 <script >
   export default {
     // 执行时机，比beforeCreated更早
@@ -6066,7 +6088,7 @@ createApp(App).mount('#app')
 ```
 
 ## 语法模版
-```vue
+```html
 <script >
 export default {
   // 执行时机，比beforeCreated更早
@@ -6117,7 +6139,9 @@ export default {
 </script>
 ```
 
-扩展：上述代码，还需要**编写一个不写`setup`的`script`标签，去指定组件名字可以借助`vite`中的插件简化**
+扩展：上述代码，还需要**编写一个不写`setup`的`script`标签，去指定组件名字**
+
+**可以借助`vite`中的插件简化**
 
 第一步：
 
@@ -6142,12 +6166,13 @@ export default defineConfig({
 <script setup lang="ts" name="Person">
 ```
 
-> setup 和 data,methods 等属于同一等级，它们可以同时书写使用  
+> setup 和 data,methods 等属于同一等级，它们可以同时书写使用
+>
 > data 中可以调用 setup 中的内容！！，setup 执行时间比生命周期都早
 >
 > 但 setup 中无法读取 data、methods 中的内容
 
-```vue
+```html
 <script >
   export default {
     // 执行时机，比beforeCreated更早
@@ -6174,23 +6199,25 @@ export default defineConfig({
 # reactive & ref 函数  
 用函数调用的方式生成响应式数据  
 
-**推荐使用ref函数，更加灵活统一 ** 
+**推荐使用ref函数，更加灵活统一** 
 
 ## reactive() 对象类型的响应式数据  
-**作用：**接受**对象类型**数据的参数传入并返回一个响应式的对象  
+**作用：** 接受**对象类型**数据的参数传入并返回一个响应式的对象  
 
 **步骤：**
 
 + 从 vue 包中导入 reactive 函数 
 + 执行 reactive 函数并传入类型为对象的初始值，并使用变量接收返回值  
 
-**返回值：**一个**Proxy**的实例对象，简称：**响应式对象注意：`reactive`定义的响应式数据是“深层次”的**
+**返回值：** 一个**Proxy**的实例对象，简称：**响应式对象**
+
+**注意：`reactive`定义的响应式数据是“深层次”的**
 
 基于 ES6 的 Proxy 实现深层响应式，会递归监听对象的所有属性
 
 + **当嵌套对象的属性**变化时，也会触发响应式更新
 
-```vue
+```html
 <script setup>
   // 数据
   import { reactive } from 'vue'
@@ -6211,7 +6238,9 @@ export default defineConfig({
 </script>
 ```
 
-**reactive**：**直接访问和修改对象属性reactive**：**解构后会失去响应式**（因为 Proxy 代理的是原对象）
+**reactive**：**直接访问和修改对象属性**
+
+**reactive**：**解构后会失去响应式**（因为 Proxy 代理的是原对象）
 
 ```javascript
 const state = reactive({ count: 0 });
@@ -6219,16 +6248,16 @@ const { count } = state; // 解构后count不再是响应式的
 ```
 
 ## ref() 简单或对象类型的响应式数据  
-**作用：**接收**简单类型**或者**对象类型**的数据传入并返回一个响应式的对象  
+**作用：** 接收**简单类型**或者**对象类型**的数据传入并返回一个响应式的对象  
 
-**本质：**原有传入数据的基础上，外层包了一层对象变为复杂类型，再借助 **reactive **实现响应式
+**本质：** 原有传入数据的基础上，外层包了一层对象变为复杂类型，再借助 **reactive**实现响应式
 
 **注意：**
 
-+ **脚本 script **中必须通过**.value**访问修改，**模版 template **中直接使用
-+ 对于`let name = ref('张三')`来说，`**name`不是响应式**的，`**name.value`是响应式**的
++ **脚本 script**中必须通过 **.value**访问修改，**模版 template**中直接使用
++ 对于`let name = ref('张三')`来说，`name`不是响应式的，`name.value`是响应式的
 
-**ref**：需要通过**.value**操作数据访问和修改值（在模板中除外）
+**ref**：需要通过 **.value**操作数据访问和修改值（在模板中除外）
 
 ```javascript
 // name和age是一个RefImpl的实例对象，简称ref对象，它们的value属性是响应式的
@@ -6257,7 +6286,7 @@ name = ref('zhang-san')
 + 从 vue 包中导入 ref 函数
 + 执行 ref 函数并传入初始值，使用变量接收ref 函数的返回值  
 
-```vue
+```html
 <script setup>
     import { ref } from 'vue'
     const count = ref(0)
@@ -6358,7 +6387,7 @@ Object.assign({barand:'特斯拉',price:100})
 + 导入computed 函数
 + 执行函数在回调参数中return基于响应式数据做计算的值，用变量接收 
 
-```vue
+```html
 <script setup>
   import { ref } from 'vue'
   const count = ref(100)
@@ -6382,7 +6411,7 @@ Object.assign({barand:'特斯拉',price:100})
 
  避免直接修改计算属性的值  
 
- **计算属性应该是只读的，特殊情况可以配置get set  **
+ **计算属性应该是只读的，特殊情况可以配置get set**
 
 ```javascript
 // 这么定义的fullName是一个计算属性，可读可写
@@ -6412,7 +6441,7 @@ let fullName = computed({
 + 导入watch 函数
 + 执行watch 函数传入要侦听的响应式数据( ref对象 )和回调函数  
 
-```vue
+```html
 <script setup>
   import { ref } from 'vue'
   const count = ref(100)
@@ -6429,7 +6458,7 @@ let fullName = computed({
 
 旧 undefined
 
-```vue
+```html
 <script setup>
   // 数据
   import { ref } from 'vue'
@@ -6460,9 +6489,9 @@ let fullName = computed({
 ## deep 深度监听  
 通过watch监听的ref对象默认是浅层侦听的，直接修改**嵌套的对象属性不会触发回调执行**
 
-> **原理：**使用 `ref` 创建一个对象时，该对象的值被包裹在一个 `ref` 容器中，其 `.value` 属性保存了实际的值，如果监听的是整个 `ref` 对象（而不是它的 `.value`），Vue 只会追踪对 `ref` 本身赋值的操作（例如 `obj = newValue`）；
+> **原理：** 使用 `ref` 创建一个对象时，该对象的值被包裹在一个 `ref` 容器中，其 `.value` 属性保存了实际的值，如果监听的是整个 `ref` 对象（而不是它的 `.value`），Vue 只会追踪对 `ref` 本身赋值的操作（例如 `obj = newValue`）；
 >
-> 默认情况下，`watch` 是“浅层”监听的。这意味着它只监听**引用地址的变化，**如果修改了对象内部的属性（如 `obj.value.name = '新值'`），由于对象的引用地址没有改变，`watch` 不会触发
+> 默认情况下，`watch` 是“浅层”监听的。这意味着它只监听**引用地址的变化，** 如果修改了对象内部的属性（如 `obj.value.name = '新值'`），由于对象的引用地址没有改变，`watch` 不会触发
 
 Vue **不会**自动追踪对象内部属性的变化并**保留旧值**
 
@@ -7181,7 +7210,7 @@ export default function useDog() {
 
 父组件中给**子组件绑定属性方式传值**
 
-子组件内部通过**props选项接收  **
+子组件内部通过**props选项接收**
 
 ```vue
 <script setup>
@@ -7237,7 +7266,7 @@ export default function useDog() {
 在编程语境中，“define” 通常表示定义的意思。比如在 C 语言中，“#define” 是预处理指令，用于定义常量或宏
 
 ## 组合式API下的子传父  
-父组件中给子组件标签通过**@绑定事件**
+父组件中给子组件标签通过 **@绑定事件**
 
 子组件内部通过 **emit 方法**触发事件  
 
@@ -7306,7 +7335,7 @@ const subMoney = () => {
 ```
 
 # 模版引用 标签 ref 属性
-通过 **ref 标识**获取真实的 **dom 对象或者组件实例对象  **
+通过 **ref 标识**获取真实的 **dom 对象或者组件实例对象**
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751802458723-58fe1ba9-ad8f-4278-bd92-d6306f216915.png)
@@ -8205,14 +8234,14 @@ console.log(route.params)
 ## 路由导航
 在组件中使用 `useRouter` 和 `useRoute` 组合式 API：
 
-**useRouter()**：返回当前**路由实例**，等同于Vue 2 中的 `this.$router`，用于导航操作（如跳转、后退）
+**useRouter()** ：返回当前**路由实例**，等同于Vue 2 中的 `this.$router`，用于导航操作（如跳转、后退）
 
-**useRoute()**：返回当前**路由对象**，等同 Vue 2 中的 `this.$route`，用于获取当前路由的参数、查询、哈希等信息
+**useRoute()** ：返回当前**路由对象**，等同 Vue 2 中的 `this.$route`，用于获取当前路由的参数、查询、哈希等信息
 
 ### 常见导航方法
-+ **router.push()：**导航到新路由，增加历史记录（等同于浏览器的前进）
-+ **router.replace()：**替换当前路由，不增加历史记录（等同于浏览器的替换当前页面）
-+ **router.go(n)：**在历史记录中前进或后退（如 `router.go(-1)` 等同于后退）
++ **router.push()：** 导航到新路由，增加历史记录（等同于浏览器的前进）
++ **router.replace()：** 替换当前路由，不增加历史记录（等同于浏览器的替换当前页面）
++ **router.go(n)：** 在历史记录中前进或后退（如 `router.go(-1)` 等同于后退）
 
 ```vue
 <template>
@@ -8504,7 +8533,7 @@ component: () => import(/* webpackChunkName: "admin" */ '../views/Admin.vue')
 ## 路由元信息 (meta)
 路由元信息（`meta`）是 Vue Router 中用于为路由添加**自定义数据的字段**。它允许你在路由配置中附加额外信息，这些信息可以在导航守卫、组件或其他地方访问，常用于权限控制、布局切换、页面标题设置等场景，为路由添加额外信息，常用于权限控制或布局切换：
 
-**基本用法：**在路由配置中添加 `meta` 字段：
+**基本用法：** 在路由配置中添加 `meta` 字段：
 
 ```javascript
 const routes = [
@@ -8529,7 +8558,7 @@ const routes = [
 ]
 ```
 
-**权限控制：**结合全局前置守卫实现权限验证：
+**权限控制：** 结合全局前置守卫实现权限验证：
 
 ```javascript
 router.beforeEach((to, from, next) => {
@@ -8542,7 +8571,7 @@ router.beforeEach((to, from, next) => {
 })
 ```
 
-**布局切换示例：**根据 `meta` 动态加载不同布局组件：
+**布局切换示例：** 根据 `meta` 动态加载不同布局组件：
 
 ```vue
 <!-- App.vue -->
@@ -8568,7 +8597,7 @@ const layout = computed(() => {
 </script>
 ```
 
-**访问路由元信息：**在组件中使用 `useRoute()` 获取当前路由的 `meta`：
+**访问路由元信息：** 在组件中使用 `useRoute()` 获取当前路由的 `meta`：
 
 ```vue
 <script setup>
@@ -8979,7 +9008,7 @@ Pinia 也支持更简洁的 Composition 组合式 API 风格定义 Store：可�
 ```
 
 
-要让 pinia 正确识别 `state`，必须在 setup store 中**返回 **`state` 的所有属性
+要让 pinia 正确识别 `state`，必须在 setup store 中**返回**`state` 的所有属性
 
 这意味着不能在 store 中使用私有属性。不完整返回会影响 [SSR](https://pinia.vuejs.org/zh/cookbook/composables.html) ，开发工具和其他插件的正常运行
 
