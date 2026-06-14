@@ -986,8 +986,9 @@ $menu-padding: 8px;
     background-color: var(--color-bg-elevated);
     padding: 2px 6px;
     border-radius: 4px;
-    font-family: 'Fira Code', 'Monaco', monospace;
+    font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
     font-size: 0.9em;
+    font-weight: 600;
     color: var(--color-primary);
   }
 
@@ -1005,6 +1006,7 @@ $menu-padding: 8px;
     code {
       background: none;
       padding: 0;
+      font-weight: 500;
       color: inherit;
     }
 

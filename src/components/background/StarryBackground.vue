@@ -65,8 +65,8 @@ class Meteor {
  this.x = (Math.random() - 0.5) * canvasWidth * 2;
  this.y = (Math.random() - 0.5) * canvasHeight * 1.5;
  this.z = Math.random() * 400 + 100;
- // 向右下方向移动，角度约30-45度
- const angle = (Math.PI / 4) + (Math.random() * Math.PI / 12);
+ // 统一向右下方向移动，角度约38-42度
+ const angle = (Math.PI * 0.22) + (Math.random() * Math.PI * 0.02);
  const speed = 3 + Math.random() * 3;
  this.vx = Math.cos(angle) * speed;
  this.vy = Math.sin(angle) * speed;

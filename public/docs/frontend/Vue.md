@@ -6928,7 +6928,7 @@ Vue3 中`beforeCreate` 和 `created` **被 `setup()` 替代**：
 
 从 `vue` 包中按需导入（Tree-Shaking 友好）：
 
-```vue
+```javascript
 import { onMounted, onUnmounted } from 'vue'
 ```
 
@@ -6936,7 +6936,7 @@ import { onMounted, onUnmounted } from 'vue'
 
 在 `<script setup>` 或 `setup()` 中使用，回调会在对应生命周期触发：
 
-```vue
+```html
 <script setup lang="ts">
 import { onMounted } from 'vue'
 
@@ -6947,14 +6947,18 @@ onMounted(() => {
 </script>
 ```
 
-## **各阶段钩子详解（组合式 API ）创建阶段：setup()执行时机**：组件实例初始化后，`beforeCreate` 之前
+## 各阶段钩子详解（组合式 API ）
+
+**创建阶段：setup()**
+
+**执行时机**：组件实例初始化后，`beforeCreate` 之前
 
 **作用**：
 
 + 初始化响应式数据（`ref`/`reactive`）、定义方法、引入依赖
 + 替代 `beforeCreate` 和 `created` 的逻辑（无需再写这两个钩子）
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue'
 // 响应式数据
@@ -6966,19 +6970,21 @@ console.log('组件初始化，数据已定义')
 </script>
 ```
 
-**挂载阶段onBeforeMount**
+**挂载阶段**
+
+`onBeforeMount`
 
 + **时机**：组件即将挂载到 DOM 前（虚拟 DOM 已创建，未渲染到页面）
 + **适用场景**：预处理数据（如计算 DOM 渲染所需的初始值）
 
-**onMounted**
+`onMounted`
 
 + **时机**：组件已挂载到 DOM（可访问真实 DOM 元素）
 + **适用场景**：
     - 操作 DOM（如初始化地图、图表库，绑定事件监听）
     - 发起异步请求（确保 DOM 存在后渲染数据）
 
-```vue
+```html
 <script setup>
 import { onMounted } from 'vue'
 onMounted(() => {
@@ -6989,8 +6995,9 @@ onMounted(() => {
 </script>
 ```
 
+**更新阶段**
 
-**更新阶段onBeforeUpdate**
+**onBeforeUpdate**
 
 + **时机**：响应式数据变化后，DOM 更新前
 + **作用**：拦截更新，预处理数据（如格式化、验证）
@@ -7000,7 +7007,9 @@ onMounted(() => {
 + **时机**：DOM 已完成更新（数据和 DOM 同步）
 + **作用**：同步 DOM 状态（如滚动位置、动画触发）
 
-**卸载阶段onBeforeUnmount**
+**卸载阶段**
+
+**onBeforeUnmount**
 
 + **时机**：组件即将卸载（DOM 仍存在，组件仍可用）
 + **必做操作**：清理资源（定时器、事件监听、第三方库实例），防止内存泄漏
@@ -7084,6 +7093,7 @@ onMounted(() => {
 + 组合式 API 中，**无 this**，直接通过 `ref`/`reactive` 访问响应式数据
 
 **卸载阶段必做清理**：  
+
 务必在 `onBeforeUnmount`/`onUnmounted` 中清理：
 
 + 定时器（`setInterval`/`setTimeout`）；
@@ -7174,7 +7184,7 @@ export default function useDog() {
 
 组件使用
 
-```vue
+```html
 <template>
   <h2>当前求和为：{{sum}}</h2>
   <button @click="increment">点我+1</button>
@@ -7202,7 +7212,7 @@ export default function useDog() {
 | 复用性 | 弱 | 极强 |
 | 逻辑拆分 | 难 | 简单 |
 
-**结论：Hook 完全替代了 mixin，是 Vue3 推荐的复用方式。**
+**结论：Hook 完全替代了 mixin，是 Vue3 推荐的复用方式**
 
 # 父子通信  
 ## 组合式API下的父传子  
@@ -7212,7 +7222,7 @@ export default function useDog() {
 
 子组件内部通过**props选项接收**
 
-```vue
+```html
 <script setup>
   // 导入子组件
   import SonDemo from '@/components/SonDemo.vue'
@@ -7237,7 +7247,7 @@ export default function useDog() {
 </template>
 ```
 
-```vue
+```html
 <!-- 子组件 -->
 <script setup>
   // setup 无法直接配置props
@@ -7270,10 +7280,10 @@ export default function useDog() {
 
 子组件内部通过 **emit 方法**触发事件  
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751799836190-a244ec0b-3ddb-486e-9138-6506b0855f7f.png)
 
-```vue
+![](assets/1751799836190-a244ec0b-3ddb-486e-9138-6506b0855f7f.png)
+
+```html
 <script setup>
 // setup 无法直接配置props
 // 需要借助编译器宏 defineProps
@@ -7302,7 +7312,7 @@ const subMoney = () => {
 </template>
 ```
 
-```vue
+```html
 <script setup>
     import { ref } from 'vue'
     const money = ref(999)
@@ -7337,8 +7347,8 @@ const subMoney = () => {
 # 模版引用 标签 ref 属性
 通过 **ref 标识**获取真实的 **dom 对象或者组件实例对象**
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751802458723-58fe1ba9-ad8f-4278-bd92-d6306f216915.png)
+
+![](assets/1751802458723-58fe1ba9-ad8f-4278-bd92-d6306f216915.png)
 
 **ref() 创建响应式容器**
 
@@ -7435,6 +7445,7 @@ const getChildCount = () => {
 普通 `<script>` 中无需使用（直接通过 `export default` 暴露）
 
 **父组件调用子组件方法**  
+
 如子组件提供表单校验、重置等功能，父组件直接触发：
 
 ```vue
@@ -7447,6 +7458,7 @@ defineExpose({ resetForm })
 ```
 
 **获取子组件内部状态**  
+
 如获取子组件的计算属性或响应式数据：
 
 ```vue
@@ -7459,7 +7471,9 @@ console.log(childRef.value?.isLoading.value) // 读取子组件加载状态
 ```
 
 ## ?. **可选链操作符**
-`?.` 是 **可选链操作符**（Optional Chaining Operator），属于 ES2020 引入的 JavaScript 语法，核心作用是 **“安全访问嵌套对象 / 属性，避免中间步骤为 `null/undefined` 时报错”**
+`?.` 是 **可选链操作符**（Optional Chaining Operator），属于 ES2020 引入的 JavaScript 语法
+
+核心作用是 **安全访问嵌套对象 / 属性，避免中间步骤为 `null/undefined` 时报错**
 
 直接写 `childRef.value.resetForm()`：
 
@@ -7473,21 +7487,21 @@ console.log(childRef.value?.isLoading.value) // 读取子组件加载状态
 
 对象属性访问
 
-```vue
+```javascript
 obj?.prop 
 // 等价于：obj 存在（非null/undefined）时，取 obj.prop；否则返回 undefined
 ```
 
 数组索引访问
 
-```vue
+```javascript
 arr?.[0] 
 // 等价于：arr 存在时，取 arr[0]；否则返回 undefined
 ```
 
 函数调用
 
-```vue
+```javascript
 func?.() 
 // 等价于：func 是函数时，调用 func()；否则返回 undefined（避免“func is
 ```
@@ -7497,8 +7511,8 @@ func?.()
 # provide & inject  跨层组件通信  
 顶层组件向任意的底层组件传递数据和方法，实现跨层组件通信  
 
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1751804162581-e368bd52-5eb8-42ee-95da-88be516e4325.png)
+
+![](assets/1751804162581-e368bd52-5eb8-42ee-95da-88be516e4325.png)
 
 + **provide**：允许一个组件向其所有子孙后代组件注入一个依赖，不论组件层次有多深
 + **inject**：在其组件中接收提供（provide）的变量
@@ -7508,7 +7522,7 @@ func?.()
 
 底层组件通过 inject 函数获取数据  
 
-```vue
+```html
 // 父组件
 <script setup>
 // 导入子组件
@@ -7556,7 +7570,7 @@ const messag = inject('msg');
 ## 跨层传递响应式数据
 在调用provide函数时，第二个参数设置为ref对象  
 
-```vue
+```html
 // 父组件
 <script setup>
 // 导入子组件
@@ -7605,7 +7619,7 @@ const count = inject('count');
 ## 跨层传递方法
 顶层组件可以向底层组件传递方法，**底层组件调用方法修改顶层组件中的数据**
 
-```vue
+```javascript
 // 跨层级传递方法
 provide('changeCount', (newCount)=>{
   count.value = newCount;
@@ -7614,7 +7628,7 @@ provide('changeCount', (newCount)=>{
 
  
 
-```vue
+```html
 <script setup>
 import { inject } from 'vue';
 
@@ -7643,7 +7657,7 @@ Vue 3.3 `defineOptions`宏是一个编译时特性，主要用于在单文件组
 ## 基本用法
 使用 script setup 后无法提供与 setup 平级的一些属性，像 name（用于标识组件名称等用途）、props（通常用于接收父组件传递过来的数据）等。在这种情况下需要写两个 script 标签来满足相关需求
 
-```vue
+```html
 <script>
   export default {
     name:'LoginIndex'
@@ -7654,7 +7668,7 @@ Vue 3.3 `defineOptions`宏是一个编译时特性，主要用于在单文件组
 </script>
 ```
 
-```vue
+```html
 <script setup>
   // 导入 defineOptions 宏
   import { defineOptions } from 'vue'
@@ -7683,7 +7697,7 @@ Vue 3.3 `defineOptions`宏是一个编译时特性，主要用于在单文件组
 
 借助`defineOptions`可以明确指定组件的名称，调试和递归组件
 
-```vue
+```javascript
 defineOptions({
   name: 'MyComponent'
 })
@@ -7759,7 +7773,7 @@ defineOptions({
 这一特性实际上是对`v-model`在组件间使用方式的简化，能够更简洁地处理双向数据流
 
 ## 基本用法
-```vue
+```html
 <script setup>
   // 导入 defineModel 宏
   import { defineModel } from 'vue'
@@ -7798,7 +7812,7 @@ defineOptions({
 ## 示例
 简单的双向绑定
 
-```javascript
+```html
 <script setup>
 const modelValue = defineModel()
 </script>
@@ -7813,7 +7827,7 @@ const modelValue = defineModel()
 
 自定义 v-model 名称
 
-```javascript
+```html
 <script setup>
 // 对应父组件中的 v-model:title
 const title = defineModel<string>('title')
@@ -7829,7 +7843,7 @@ const title = defineModel<string>('title')
 
 多个 v-model 绑定
 
-```javascript
+```html
 <script setup>
 const name = defineModel<string>('name')
 const age = defineModel<number>('age')
@@ -7852,7 +7866,7 @@ const age = defineModel<number>('age')
 
 使用选项
 
-```javascript
+```html
 <script setup>
 const modelValue = defineModel({
   type: String,
@@ -7865,7 +7879,7 @@ const modelValue = defineModel({
 ### 与传统方式的对比
 在没有`defineModel`之前，我们需要这样实现双向绑定：
 
-```javascript
+```html
 <script setup>
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
@@ -7883,7 +7897,7 @@ const emit = defineEmits(['update:modelValue'])
 
 使用`defineModel`后，代码变得更加简洁：
 
-```javascript
+```html
 <script setup>
 const modelValue = defineModel()
 </script>
@@ -7906,8 +7920,8 @@ const modelValue = defineModel()
 如果你使用的是 Vue 3.4 及后续版本，推荐在开发中使用这一特性来处理双向数据流
 
 # 路由 Router4  
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/56143711/1752917560853-1d0011f7-d6de-4aee-88b8-3aac7cd986cd.png)
+
+![](assets/1752917560853-1d0011f7-d6de-4aee-88b8-3aac7cd986cd.png)
 
 Vue Router 4 是 Vue.js 3 的官方路由管理器，专为 Vue 3 设计，提供了现代化的路由解决方案
 
@@ -7948,7 +7962,7 @@ const router = createRouter({
 export default router
 ```
 
-```plain
+```javascript
 path: '/user/:id'
 ```
 
@@ -7958,7 +7972,7 @@ path: '/user/:id'
 
 **最常用**的场景：进入用户页面后，拿到 `id` 去发请求、渲染页面
 
-```vue
+```html
 <!-- User.vue -->
 <template>
   <div>用户ID：{{ userId }}</div>
@@ -7981,7 +7995,7 @@ path: '/user/:id'
 
 方式 1：声明式跳转（<router-link>）
 
-```typescript
+```html
 <!-- 跳转到 /user/1 -->
   <router-link to="/user/1">用户1</router-link>
 
@@ -7996,7 +8010,7 @@ path: '/user/:id'
 
 方式 2：编程式跳转（点击事件 / 逻辑中跳转）
 
-```typescript
+```html
 <script setup>
   import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -8069,7 +8083,7 @@ routes:[
 
 跳转路由：
 
-```vue
+```html
 <!--简化前：需要写完整的路径（to的字符串写法） -->
 <router-link to="/news/detail">跳转</router-link>
 
@@ -8115,7 +8129,7 @@ export default router
 
 跳转路由（记得要加完整路径）：
 
-```vue
+```html
 <router-link to="/news/detail">xxxx</router-link>
 <!-- 或 -->
 <router-link :to="{path:'/news/detail'}">xxxx</router-link>
@@ -8123,7 +8137,7 @@ export default router
 
 记得`Home`组件中预留一个`<router-view>`
 
-```vue
+```html
 <template>
   <div class="news">
     <nav class="news-list">
@@ -8140,7 +8154,7 @@ export default router
 
 ## 路由传参
 ### query参数
-```vue
+```html
 <template>
    <div>
     <!-- 跳转并携带query参数（to的字符串写法） -->
@@ -8243,7 +8257,7 @@ console.log(route.params)
 + **router.replace()：** 替换当前路由，不增加历史记录（等同于浏览器的替换当前页面）
 + **router.go(n)：** 在历史记录中前进或后退（如 `router.go(-1)` 等同于后退）
 
-```vue
+```html
 <template>
   <div>
     <router-link to="/">Home</router-link>
@@ -8573,7 +8587,7 @@ router.beforeEach((to, from, next) => {
 
 **布局切换示例：** 根据 `meta` 动态加载不同布局组件：
 
-```vue
+```html
 <!-- App.vue -->
 <template>
   <div id="app">
@@ -8599,7 +8613,7 @@ const layout = computed(() => {
 
 **访问路由元信息：** 在组件中使用 `useRoute()` 获取当前路由的 `meta`：
 
-```vue
+```html
 <script setup>
 import { useRoute } from 'vue-router'
 
@@ -8649,7 +8663,7 @@ const routes = [
 
 **在模板中使用命名视图：**
 
-```vue
+```html
 <template>
   <div>
     <!-- 默认视图 -->
@@ -8691,18 +8705,18 @@ const routes = [
 
 可以结合动态组件使用命名视图：
 
-```vue
+```html
 <router-view :is="viewComponent" />
 <router-view name="sidebar" :is="sidebarComponent" />
 ```
 
 ## 路由过渡动画
-Vue Router 可以与 Vue 的过渡系统结合，为路由切换添加动画效果，提升用户体验。
+Vue Router 可以与 Vue 的过渡系统结合，为路由切换添加动画效果，提升用户体验
 
 ### 基本过渡效果
 使用 `<transition>` 包裹 `<router-view>`：
 
-```vue
+```html
 <template>
   <transition name="fade">
     <router-view />
@@ -8723,7 +8737,7 @@ Vue Router 可以与 Vue 的过渡系统结合，为路由切换添加动画效�
 ### 过渡模式
 使用 `mode` 属性控制过渡顺序：
 
-```vue
+```html
 <transition name="slide" mode="out-in">
   <router-view />
 </transition>
@@ -8751,7 +8765,7 @@ Vue Router 可以与 Vue 的过渡系统结合，为路由切换添加动画效�
 ### 根据路由变化设置不同动画
 根据路由元信息应用不同的过渡效果：
 
-```vue
+```html
 <template>
   <transition :name="transitionName">
     <router-view />
@@ -8778,7 +8792,7 @@ const transitionName = computed(() => {
 ### 复杂动画与第三方库
 结合第三方动画库（如 Animate.css）实现更复杂的效果：
 
-```vue
+```html
 <template>
   <transition
     enter-active-class="animate__animated animate__fadeIn"
@@ -8791,7 +8805,7 @@ const transitionName = computed(() => {
 
 结合 Vue 的过渡系统实现路由切换动画：
 
-```vue
+```html
 <template>
   <transition name="fade">
     <router-view />
@@ -8878,7 +8892,7 @@ Store 是 Pinia 中保存状态和业务逻辑的实体，每个 Store 可以看
 
 它有点像一个永远存在的组件，每个组件都可以读取和写入它
 
-> 有三个概念，**state、getter、action**，相当于组件中的 **data`、`computed` 、`methods**
+> 有三个概念，**`state`、`getter`、`action`**，相当于组件中的 **`data`、`computed` 、`methods`**
 
 创建一个简单的计数器 Store：
 
@@ -9016,7 +9030,9 @@ Pinia 也支持更简洁的 Composition 组合式 API 风格定义 Store：可�
 
 ## action 异步实现
 编写方式：异步 action 函数的写法和组件中获取异步数据的写法完全一致  
+
 接口地址：[http://geek.itheima.net/v1_0/channels](http://geek.itheima.net/v1_0/channels)  
+
 需求：在 Pinia 中获取频道列表数据并把数据渲染 App 组件的模板中
 
 + **Pinia 的 Action 天然支持异步**（通过 `async/await` 实现），写法与组件内异步请求一致
@@ -9047,7 +9063,7 @@ export const useChannelStore = defineStore('channel', () => {
 })
 ```
 
-```vue
+```html
 <script setup>
 import { onMounted } from 'vue'
 import { useChannelStore } from '@/stores/channel'  // 导入仓库
@@ -9086,7 +9102,7 @@ Pinia 提供 `storeToRefs` 工具，专门处理 Store 的响应式解构：
 + 将 Store 中 **响应式属性（被 `ref/reactive` 包裹的 state、getter）** 转换为 **响应式引用（ref）**
 + 确保解构后的数据仍与 Store 保持关联，视图能实时更新
 
-```vue
+```html
 <script setup>
 import { storeToRefs } from 'pinia'   // 导入工具
 import { useCounterStore } from '@/stores/counter'  // 导入 Store
@@ -9117,7 +9133,7 @@ const { increment, decrement } = store
 ## 多个 Store 的使用
 在大型应用中，我们通常会按功能模块拆分 Store：
 
-```vue
+```javascript
 vue// stores/user.js
   export const useUserStore = defineStore('user', {
     state: () => ({
@@ -9155,7 +9171,7 @@ vue// stores/user.js
 
 在组件中可以同时使用多个 Store：
 
-```vue
+```html
 <script setup>
 import { useCounterStore } from '../stores/counter'
 import { useUserStore } from '../stores/user'
