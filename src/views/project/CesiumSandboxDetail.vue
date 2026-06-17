@@ -3,17 +3,17 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const project = {
   name: 'Cesium 在线沙盒编辑器',
-  url: 'http://cesiumsandbox.lx-studio.xyz:81/',
+  url: 'http://lx-studio.xyz:8002/',
   description: '自主主导、AI协同开发的 Cesium 三维 GIS 在线示例沙盒，提供丰富可视化示例、标签检索、代码实时编辑与运行，高效辅助开发者学习 Cesium 核心 API 与三维开发流程。',
   techStack: ['Vue 3', 'TypeScript', 'Vite', 'CesiumJS', 'Monaco Editor', 'Tailwind CSS', 'AI 辅助开发'],
   responsibilities: [
     {
-      title: '项目架构与页面布局设计',
-      content: '独立完成项目整体架构、页面布局与交互流程设计；主导 AI 完成路由配置、全局样式、工程化配置等重复性工作，大幅提升开发效率'
+      title: 'Cesium 核心功能开发',
+      content: '实现 Cesium 场景、相机、图层、地形、实体、空间分析、空间测量等核心模块示例；AI 辅助完成通用组件与功能封装'
     },
     {
-      title: 'Cesium 核心功能开发',
-      content: '自主实现 Cesium 场景、相机、图层、地形、空间分析等核心模块示例；将绘制工具、测量功能封装为可复用 composables，AI 辅助完成通用组件与功能封装'
+      title: '常用功能方法封装',
+      content: '封装多个可复用 composables，包括空间分析（剖面、坡向、坡度、方量、通视分析等），绘制工具（点、线、多边形、矩形），测量工具（距离、高度、面积、坐标拾取等）'
     },
     {
       title: '交互体验与性能优化',
@@ -21,7 +21,7 @@ const project = {
     },
     {
       title: 'AI 协同开发与问题修复',
-      content: '全程使用 AI 进行代码生成、Bug 排查与问题修复；自主验证功能逻辑与三维效果，形成“核心自研+AI提效”的现代化开发模式'
+      content: '全程使用 AI 辅助进行代码生成、Bug 排查、问题修复；自主验证功能逻辑与三维效果，形成“核心把控+AI提效”的现代化开发模式'
     }
   ],
   github: 'https://github.com/Chen-lingxiao/CesiumSandbox--LX',

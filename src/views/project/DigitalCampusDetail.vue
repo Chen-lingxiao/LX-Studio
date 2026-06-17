@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const project = {
   name: '校园消防栓可视化管理系统',
-  url: 'http://115.29.230.69/login',
+  url: 'http://lx-studio.xyz:8001/',
   description: '基于前后端分离架构，集三维可视化、实时数据监控与地理数据编辑于一体的校园设施管理平台，实现了消防设施的数字化管理与动态监控，支撑运维人员高效巡检与决策分析。',
   techStack: ['Vue 3', 'TypeScript', 'Vite', 'Cesium', 'Mapbox', 'Spring Boot', 'PostgreSQL', 'PostGIS', 'GeoServer'],
   responsibilities: [
@@ -24,7 +24,7 @@ const project = {
       content: '实现基于 JWT 的用户认证与路由权限控制；配置 ESLint、Prettier 保障代码规范；独立完成从开发到阿里云服务器部署上线全流程，包括 Docker 容器化、Nginx 反向代理、安全组配置'
     }
   ],
-  github: 'https://github.com/Chen-lingxiao/FireHydrant',
+  github: 'https://github.com/Chen-lingxiao/LX-FireHydrant',
   gitee: 'https://gitee.com/lxrelic/FireHydrant'
 }
 
