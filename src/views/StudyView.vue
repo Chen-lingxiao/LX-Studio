@@ -1,74 +1,84 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { studyMenu } from '../data/config'
-import { ElMenu, ElMenuItem, ElSubMenu } from 'element-plus'
-import MarkdownIt from 'markdown-it'
-import hljs from 'highlight.js/lib/core'
-import javascript from 'highlight.js/lib/languages/javascript'
-import typescript from 'highlight.js/lib/languages/typescript'
-import html from 'highlight.js/lib/languages/xml'
-import css from 'highlight.js/lib/languages/css'
-import java from 'highlight.js/lib/languages/java'
-import python from 'highlight.js/lib/languages/python'
-import bash from 'highlight.js/lib/languages/bash'
-import json from 'highlight.js/lib/languages/json'
-import sql from 'highlight.js/lib/languages/sql'
-import yaml from 'highlight.js/lib/languages/yaml'
-import 'highlight.js/styles/github-dark.css'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { studyMenu } from '../data/config';
+import { ElMenu, ElMenuItem, ElSubMenu } from 'element-plus';
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import html from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+import java from 'highlight.js/lib/languages/java';
+import python from 'highlight.js/lib/languages/python';
+import bash from 'highlight.js/lib/languages/bash';
+import json from 'highlight.js/lib/languages/json';
+import sql from 'highlight.js/lib/languages/sql';
+import yaml from 'highlight.js/lib/languages/yaml';
+import 'highlight.js/styles/github-dark.css';
 
 // 注册常用语言
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('typescript', typescript)
-hljs.registerLanguage('html', html)
-hljs.registerLanguage('css', css)
-hljs.registerLanguage('java', java)
-hljs.registerLanguage('python', python)
-hljs.registerLanguage('bash', bash)
-hljs.registerLanguage('json', json)
-hljs.registerLanguage('sql', sql)
-hljs.registerLanguage('yaml', yaml)
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('html', html);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('java', java);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('sql', sql);
+hljs.registerLanguage('yaml', yaml);
 
 // 状态管理
-const activeMenu = ref('')
-const markdownContent = ref('')
-const outline = ref<Array<{ level: number; text: string; id: string; expanded: boolean; children?: any[] }>>([])
-const contentRef = ref<HTMLElement | null>(null)
-const outlineRef = ref<HTMLElement | null>(null)
-const searchQuery = ref('')
-const activeHeadingId = ref('')
-const sidebarCollapsed = ref(false)
-const outlineCollapsed = ref(false)
-const currentFileDir = ref('')
-const isThemeSwitching = ref(false)
-let themeSwitchTimer: ReturnType<typeof setTimeout> | null = null
+const activeMenu = ref('');
+const markdownContent = ref('');
+const outline = ref<
+  Array<{
+    level: number;
+    text: string;
+    id: string;
+    expanded: boolean;
+    children?: any[];
+  }>
+>([]);
+const contentRef = ref<HTMLElement | null>(null);
+const outlineRef = ref<HTMLElement | null>(null);
+const searchQuery = ref('');
+const activeHeadingId = ref('');
+const sidebarCollapsed = ref(false);
+const outlineCollapsed = ref(false);
+const currentFileDir = ref('');
+const isThemeSwitching = ref(false);
+let themeSwitchTimer: ReturnType<typeof setTimeout> | null = null;
 
 // 监听主题切换，显示遮罩层掩盖卡顿
 function handleThemeChange() {
-  isThemeSwitching.value = true
-  if (themeSwitchTimer) clearTimeout(themeSwitchTimer)
+  isThemeSwitching.value = true;
+  if (themeSwitchTimer) clearTimeout(themeSwitchTimer);
   themeSwitchTimer = setTimeout(() => {
-    isThemeSwitching.value = false
-  }, 250) // 匹配统一过渡时间 0.2s + 缓冲
+    isThemeSwitching.value = false;
+  }, 250); // 匹配统一过渡时间 0.2s + 缓冲
 }
 
 // 过滤菜单搜索
 const filteredMenu = computed(() => {
-  if (!searchQuery.value.trim()) return studyMenu
-  const query = searchQuery.value.toLowerCase()
+  if (!searchQuery.value.trim()) return studyMenu;
+  const query = searchQuery.value.toLowerCase();
   return studyMenu
-    .map(category => ({
+    .map((category) => ({
       ...category,
-      children: category.children.filter(item =>
-        item.title.toLowerCase().includes(query) || item.path.toLowerCase().includes(query)
-      )
+      children: category.children.filter(
+        (item) =>
+          item.title.toLowerCase().includes(query) ||
+          item.path.toLowerCase().includes(query)
+      ),
     }))
-    .filter(category => category.children.length > 0)
-})
+    .filter((category) => category.children.length > 0);
+});
 
 // 滚动防抖定时器
-let scrollTimer: ReturnType<typeof requestAnimationFrame> | null = null
-const slugCountMap = new Map<string, number>()
-const headingIdMap = new Map<string, string>()
+let scrollTimer: ReturnType<typeof requestAnimationFrame> | null = null;
+const slugCountMap = new Map<string, number>();
+const headingIdMap = new Map<string, string>();
 
 // 生成唯一ID
 function generateSlug(text: string): string {
@@ -76,398 +86,418 @@ function generateSlug(text: string): string {
     .toLowerCase()
     .replace(/[^\w\s-\u4e00-\u9fa5]/g, '')
     .replace(/\s+/g, '-')
-    .substring(0, 50)
+    .substring(0, 50);
 
   if (!/^[a-zA-Z]/.test(base)) {
-    base = 'h-' + base
+    base = 'h-' + base;
   }
 
-  const count = slugCountMap.get(base) || 0
-  slugCountMap.set(base, count + 1)
+  const count = slugCountMap.get(base) || 0;
+  slugCountMap.set(base, count + 1);
 
-  return count === 0 ? base : `${base}-${count}`
+  return count === 0 ? base : `${base}-${count}`;
 }
 
 // 清理标题文本
 function cleanHeadingText(raw: string): string {
-  let text = raw.trim()
-  text = text.replace(/<[^>]*>/g, '').trim()
-  text = text.replace(/[*_`~]+/g, '').trim()
-  return text
+  let text = raw.trim();
+  text = text.replace(/<[^>]*>/g, '').trim();
+  text = text.replace(/[*_`~]+/g, '').trim();
+  return text;
 }
 
 // Markdown 解析器配置
 const md = new MarkdownIt({
   html: false, // 禁用 HTML 解析
   linkify: true, // 开启自动链接识别
-  typographer: true,  // 开启智能引号替换
+  typographer: true, // 开启智能引号替换
   highlight: (str, lang) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return hljs.highlight(str, { language: lang }).value
-      } catch (__) {}
+        return hljs.highlight(str, { language: lang }).value;
+      } catch (__) { }
     }
-    return ''
-  }
-})
+    return '';
+  },
+});
 
 // 自定义标题渲染器，添加ID
 md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
-  const token = tokens[idx]
-  const contentToken = tokens[idx + 1]
+  const token = tokens[idx];
+  const contentToken = tokens[idx + 1];
   if (contentToken && contentToken.type === 'inline') {
     const decoded = contentToken.content
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&amp;/g, '&')
       .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-    const cleanText = cleanHeadingText(decoded)
-    const id = headingIdMap.get(cleanText) || generateSlug(cleanText)
-    token.attrSet('id', id)
+      .replace(/&#39;/g, "'");
+    const cleanText = cleanHeadingText(decoded);
+    const id = headingIdMap.get(cleanText) || generateSlug(cleanText);
+    token.attrSet('id', id);
   }
-  return self.renderToken(tokens, idx, options)
-}
+  return self.renderToken(tokens, idx, options);
+};
 
-const defaultImageRenderer = md.renderer.rules.image || ((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options))
+const defaultImageRenderer =
+  md.renderer.rules.image ||
+  ((tokens, idx, options, env, self) =>
+    self.renderToken(tokens, idx, options));
 md.renderer.rules.image = (tokens, idx, options, env, self) => {
-  const token = tokens[idx]
-  const src = token.attrGet('src')
-  if (src && !src.startsWith('http') && !src.startsWith('//') && !src.startsWith('data:')) {
-    token.attrSet('src', `${currentFileDir.value}/${src}`)
+  const token = tokens[idx];
+  const src = token.attrGet('src');
+  if (
+    src &&
+    !src.startsWith('http') &&
+    !src.startsWith('//') &&
+    !src.startsWith('data:')
+  ) {
+    token.attrSet('src', `${currentFileDir.value}/${src}`);
   }
-  return defaultImageRenderer(tokens, idx, options, env, self)
-}
+  return defaultImageRenderer(tokens, idx, options, env, self);
+};
 
 // 预处理Markdown文本，转义行内HTML标签
 function preprocessMarkdown(text: string): string {
-  const lines = text.split('\n')
-  let inCodeBlock = false
-  let inHtmlComment = false
+  const lines = text.split('\n');
+  let inCodeBlock = false;
+  let inHtmlComment = false;
 
-  return lines.map(line => {
-    const trimmed = line.trim()
+  return lines
+    .map((line) => {
+      const trimmed = line.trim();
 
-    if (trimmed.startsWith('```')) {
-      inCodeBlock = !inCodeBlock
-      return line
-    }
-
-    if (inCodeBlock) {
-      return line
-    }
-
-    if (trimmed.startsWith('<!--')) {
-      inHtmlComment = true
-    }
-    if (inHtmlComment) {
-      if (trimmed.endsWith('-->')) {
-        inHtmlComment = false
+      if (trimmed.startsWith('```')) {
+        inCodeBlock = !inCodeBlock;
+        return line;
       }
-      return line
-    }
 
-    return escapeInlineHtml(line)
-  }).join('\n')
+      if (inCodeBlock) {
+        return line;
+      }
+
+      if (trimmed.startsWith('<!--')) {
+        inHtmlComment = true;
+      }
+      if (inHtmlComment) {
+        if (trimmed.endsWith('-->')) {
+          inHtmlComment = false;
+        }
+        return line;
+      }
+
+      return escapeInlineHtml(line);
+    })
+    .join('\n');
 }
 
 function escapeInlineHtml(line: string): string {
-  const parts = line.split(/(`+[^`]+`+)/g)
-  return parts.map((part, i) => {
-    if (i % 2 === 1) return part
+  const parts = line.split(/(`+[^`]+`+)/g);
+  return parts
+    .map((part, i) => {
+      if (i % 2 === 1) return part;
 
-    return part.replace(/<([^>]+)>/g, (match, content) => {
-      const commonHtmlTags = /^(br|hr|wbr|mark|del|ins|sup|sub|kbd|samp|var|time|data|meter|progress|details|summary|dialog|template|slot|canvas|script|style|link|meta|title|head|body|html|div|span|p|a|img|table|tr|td|th|thead|tbody|tfoot|ul|ol|li|dl|dt|dd|h1|h2|h3|h4|h5|h6|blockquote|pre|code|em|strong|b|i|u|s|strike|small|big|center|font|basefont|frame|frameset|noframes|iframe|embed|object|param|applet|map|area|form|input|textarea|select|option|optgroup|button|label|fieldset|legend|datalist|keygen|output|audio|video|source|track|article|aside|figcaption|figure|footer|header|hgroup|main|nav|section|address|abbr|acronym|cite|dfn|q|blockquote|bdo|bdi|ruby|rt|rp)(\s|>|\/)/i
+      return part.replace(/<([^>]+)>/g, (match, content) => {
+        const commonHtmlTags =
+          /^(br|hr|wbr|mark|del|ins|sup|sub|kbd|samp|var|time|data|meter|progress|details|summary|dialog|template|slot|canvas|script|style|link|meta|title|head|body|html|div|span|p|a|img|table|tr|td|th|thead|tbody|tfoot|ul|ol|li|dl|dt|dd|h1|h2|h3|h4|h5|h6|blockquote|pre|code|em|strong|b|i|u|s|strike|small|big|center|font|basefont|frame|frameset|noframes|iframe|embed|object|param|applet|map|area|form|input|textarea|select|option|optgroup|button|label|fieldset|legend|datalist|keygen|output|audio|video|source|track|article|aside|figcaption|figure|footer|header|hgroup|main|nav|section|address|abbr|acronym|cite|dfn|q|blockquote|bdo|bdi|ruby|rt|rp)(\s|>|\/)/i;
 
-      if (commonHtmlTags.test(content)) {
-        return `&lt;${content}&gt;`
-      }
-      return match
+        if (commonHtmlTags.test(content)) {
+          return `&lt;${content}&gt;`;
+        }
+        return match;
+      });
     })
-  }).join('')
+    .join('');
 }
 
 // 加载Markdown文件
 async function loadMarkdown(path: string) {
   try {
-    activeHeadingId.value = ''
-    contentRef.value?.scrollTo(0, 0)
-    outlineRef.value?.scrollTo(0, 0)
+    activeHeadingId.value = '';
+    contentRef.value?.scrollTo(0, 0);
+    outlineRef.value?.scrollTo(0, 0);
 
-    const fullPath = path.startsWith('/') ? path : `/${path}`
-    currentFileDir.value = fullPath.substring(0, fullPath.lastIndexOf('/'))
-    const response = await fetch(fullPath)
-    const text = await response.text()
+    const fullPath = path.startsWith('/') ? path : `/${path}`;
+    currentFileDir.value = fullPath.substring(0, fullPath.lastIndexOf('/'));
+    const response = await fetch(fullPath);
+    const text = await response.text();
 
-    slugCountMap.clear()
-    headingIdMap.clear()
-    generateOutline(text)
+    slugCountMap.clear();
+    headingIdMap.clear();
+    generateOutline(text);
 
-    const processedText = preprocessMarkdown(text)
-    const html = md.render(processedText)
-    markdownContent.value = html
+    const processedText = preprocessMarkdown(text);
+    const html = md.render(processedText);
+    markdownContent.value = html;
 
-    await nextTick()
-    scrollToHash()
+    await nextTick();
+    scrollToHash();
   } catch (error) {
-    console.error('Failed to load markdown:', error)
-    markdownContent.value = '<h1>加载失败</h1><p>无法加载该文档，请检查文件路径是否正确。</p>'
+    console.error('Failed to load markdown:', error);
+    markdownContent.value =
+      '<h1>加载失败</h1><p>无法加载该文档，请检查文件路径是否正确。</p>';
   }
 }
 
 // 生成树形结构大纲
 function generateOutline(content: string) {
-  const lines = content.split('\n')
-  const flatOutline: Array<{ level: number; text: string; id: string }> = []
-  let inCodeBlock = false
+  const lines = content.split('\n');
+  const flatOutline: Array<{ level: number; text: string; id: string }> = [];
+  let inCodeBlock = false;
 
-  lines.forEach(line => {
-    const trimmed = line.trim()
-    if (!trimmed) return
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
 
     if (trimmed.startsWith('```')) {
-      inCodeBlock = !inCodeBlock
-      return
+      inCodeBlock = !inCodeBlock;
+      return;
     }
 
-    if (inCodeBlock || trimmed.startsWith('<!--')) return
+    if (inCodeBlock || trimmed.startsWith('<!--')) return;
 
-    const headingMatch = trimmed.match(/^(#+)\s+(.+)$/)
+    const headingMatch = trimmed.match(/^(#+)\s+(.+)$/);
     if (headingMatch) {
-      const level = headingMatch[1].length
+      const level = headingMatch[1].length;
       if (level >= 1 && level <= 4) {
-        const text = cleanHeadingText(headingMatch[2])
+        const text = cleanHeadingText(headingMatch[2]);
         if (text) {
-          const id = generateSlug(text)
-          headingIdMap.set(text, id)
-          flatOutline.push({ level, text, id })
+          const id = generateSlug(text);
+          headingIdMap.set(text, id);
+          flatOutline.push({ level, text, id });
         }
       }
     }
-  })
+  });
 
-  outline.value = buildTree(flatOutline)
+  outline.value = buildTree(flatOutline);
 }
 
 // 将扁平结构转换为树形结构
-function buildTree(items: Array<{ level: number; text: string; id: string }>): Array<{ level: number; text: string; id: string; expanded: boolean; children?: any[] }> {
-  if (items.length === 0) return []
+function buildTree(
+  items: Array<{ level: number; text: string; id: string }>
+): Array<{
+  level: number;
+  text: string;
+  id: string;
+  expanded: boolean;
+  children?: any[];
+}> {
+  if (items.length === 0) return [];
 
-  const tree: any[] = []
-  const stack: any[] = []
+  const tree: any[] = [];
+  const stack: any[] = [];
 
-  items.forEach(item => {
-    const node = { ...item, expanded: true, children: [] }
+  items.forEach((item) => {
+    const node = { ...item, expanded: true, children: [] };
 
     while (stack.length > 0 && stack[stack.length - 1].level >= item.level) {
-      stack.pop()
+      stack.pop();
     }
 
     if (stack.length === 0) {
-      tree.push(node)
+      tree.push(node);
     } else {
-      stack[stack.length - 1].children.push(node)
+      stack[stack.length - 1].children.push(node);
     }
 
-    stack.push(node)
-  })
+    stack.push(node);
+  });
 
-  return tree
+  return tree;
 }
 
 // 切换展开/折叠状态
 function toggleExpand(event: Event, node: any) {
-  event.stopPropagation()
-  node.expanded = !node.expanded
+  event.stopPropagation();
+  node.expanded = !node.expanded;
 }
 
 // 侧边栏切换
 function toggleSidebar() {
-  sidebarCollapsed.value = !sidebarCollapsed.value
+  sidebarCollapsed.value = !sidebarCollapsed.value;
 }
 
 // 大纲面板切换
 function toggleOutline() {
-  outlineCollapsed.value = !outlineCollapsed.value
+  outlineCollapsed.value = !outlineCollapsed.value;
 }
 
 // 展开/折叠全部大纲
 function toggleAllOutline(event?: Event) {
-  if (event) event.stopPropagation()
-  const allExpanded = outline.value.every(item => item.expanded)
+  if (event) event.stopPropagation();
+  const allExpanded = outline.value.every((item) => item.expanded);
   const setExpanded = (items: any[]) => {
-    items.forEach(item => {
-      item.expanded = !allExpanded
+    items.forEach((item) => {
+      item.expanded = !allExpanded;
       if (item.children?.length) {
-        setExpanded(item.children)
+        setExpanded(item.children);
       }
-    })
-  }
-  setExpanded(outline.value)
+    });
+  };
+  setExpanded(outline.value);
 }
 
 // 滚动到指定标题
 function scrollToHeading(event: Event, id: string) {
-  event.stopPropagation()
-  const element = document.getElementById(id)
+  event.stopPropagation();
+  const element = document.getElementById(id);
   if (element && contentRef.value) {
-    const offsetTop = element.offsetTop
-    const paddingOffset = 24
-    const maxScrollTop = contentRef.value.scrollHeight - contentRef.value.clientHeight
-    const targetScrollTop = Math.max(0, Math.min(offsetTop - paddingOffset, maxScrollTop))
-    
+    const offsetTop = element.offsetTop;
+    const paddingOffset = 24;
+    const maxScrollTop =
+      contentRef.value.scrollHeight - contentRef.value.clientHeight;
+    const targetScrollTop = Math.max(
+      0,
+      Math.min(offsetTop - paddingOffset, maxScrollTop)
+    );
+
     contentRef.value.scrollTo({
       top: targetScrollTop,
-      behavior: 'smooth'
-    })
+      behavior: 'smooth',
+    });
   }
 }
 
 // 根据URL hash滚动
 function scrollToHash() {
-  const hash = window.location.hash
+  const hash = window.location.hash;
   if (hash && contentRef.value) {
-    const element = document.getElementById(hash.slice(1))
+    const element = document.getElementById(hash.slice(1));
     if (element) {
-      const offsetTop = element.offsetTop
-      const paddingOffset = 24
-      const maxScrollTop = contentRef.value.scrollHeight - contentRef.value.clientHeight
-      const targetScrollTop = Math.max(0, Math.min(offsetTop - paddingOffset, maxScrollTop))
-      
+      const offsetTop = element.offsetTop;
+      const paddingOffset = 24;
+      const maxScrollTop =
+        contentRef.value.scrollHeight - contentRef.value.clientHeight;
+      const targetScrollTop = Math.max(
+        0,
+        Math.min(offsetTop - paddingOffset, maxScrollTop)
+      );
+
       contentRef.value.scrollTo({
         top: targetScrollTop,
-        behavior: 'smooth'
-      })
+        behavior: 'smooth',
+      });
     }
   }
 }
 
 // 内容滚动处理
 function handleContentScroll() {
-  if (!contentRef.value || !outlineRef.value) return
-  if (scrollTimer) cancelAnimationFrame(scrollTimer)
+  if (!contentRef.value || !outlineRef.value) return;
+  if (scrollTimer) cancelAnimationFrame(scrollTimer);
   scrollTimer = requestAnimationFrame(() => {
-    if (!contentRef.value || !outlineRef.value) return
-    const headings = contentRef.value.querySelectorAll('h1[id], h2[id], h3[id], h4[id]')
-    if (headings.length === 0) return
+    if (!contentRef.value || !outlineRef.value) return;
+    const headings = contentRef.value.querySelectorAll(
+      'h1[id], h2[id], h3[id], h4[id]'
+    );
+    if (headings.length === 0) return;
 
-    const containerTop = contentRef.value.getBoundingClientRect().top
-    let currentHeadingId = ''
+    const containerTop = contentRef.value.getBoundingClientRect().top;
+    let currentHeadingId = '';
 
     headings.forEach((heading) => {
-      const rect = heading.getBoundingClientRect()
+      const rect = heading.getBoundingClientRect();
       if (rect.top - containerTop <= 60) {
-        currentHeadingId = heading.id
+        currentHeadingId = heading.id;
       }
-    })
+    });
 
     if (currentHeadingId && currentHeadingId !== activeHeadingId.value) {
-      activeHeadingId.value = currentHeadingId
-      const activeItem = outlineRef.value.querySelector(`a[data-id="${currentHeadingId}"]`)
+      activeHeadingId.value = currentHeadingId;
+      const activeItem = outlineRef.value.querySelector(
+        `a[data-id="${currentHeadingId}"]`
+      );
       if (activeItem) {
-        activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
-  })
+  });
 }
 
 // 窗口resize处理
 function handleResize() {
   if (window.innerWidth < 900) {
-    sidebarCollapsed.value = true
-    outlineCollapsed.value = true
+    sidebarCollapsed.value = true;
+    outlineCollapsed.value = true;
   } else {
-    sidebarCollapsed.value = false
-    outlineCollapsed.value = false
+    sidebarCollapsed.value = false;
+    outlineCollapsed.value = false;
   }
 }
 
 // 生命周期钩子
 onMounted(() => {
-  const pathname = window.location.pathname
-  const match = pathname.match(/\/study(\/.*\.md)$/)
+  const pathname = window.location.pathname;
+  const match = pathname.match(/\/study(\/.*\.md)$/);
   if (match) {
-    activeMenu.value = match[1]
+    activeMenu.value = match[1];
   } else {
-    const firstItem = studyMenu[0]?.children?.[0]
+    const firstItem = studyMenu[0]?.children?.[0];
     if (firstItem) {
-      activeMenu.value = firstItem.path
+      activeMenu.value = firstItem.path;
     }
   }
-  handleResize()
-  window.addEventListener('resize', handleResize)
-  
+  handleResize();
+  window.addEventListener('resize', handleResize);
+
   // 监听主题切换（html class变化）
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.attributeName === 'class') {
-        handleThemeChange()
+        handleThemeChange();
       }
-    })
-  })
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
-  ;(window as any).__themeObserver = observer
-})
+    });
+  });
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+  (window as any).__themeObserver = observer;
+});
 
 onUnmounted(() => {
-  if (scrollTimer) cancelAnimationFrame(scrollTimer)
-  if (themeSwitchTimer) clearTimeout(themeSwitchTimer)
-  window.removeEventListener('resize', handleResize)
-  ;(window as any).__themeObserver?.disconnect()
-})
+  if (scrollTimer) cancelAnimationFrame(scrollTimer);
+  if (themeSwitchTimer) clearTimeout(themeSwitchTimer);
+  window.removeEventListener('resize', handleResize);
+  (window as any).__themeObserver?.disconnect();
+});
 
 // 监听菜单变化
 watch(activeMenu, (newPath) => {
   if (newPath) {
-    loadMarkdown(newPath)
-    window.history.pushState({}, '', `/study${newPath}`)
+    loadMarkdown(newPath);
+    window.history.pushState({}, '', `/study${newPath}`);
   }
-})
+});
 </script>
 
 <template>
   <div class="study-page">
     <!-- 主题切换遮罩层，掩盖切换卡顿 -->
     <div class="theme-switch-mask" :class="{ active: isThemeSwitching }"></div>
-    
+
     <!-- 左侧菜单区域 -->
     <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
       <header class="sidebar-header">
         <div class="sidebar-search">
           <div class="search-input-wrapper">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
             </svg>
-            <input
-              v-model="searchQuery"
-              type="text"
-              class="search-input"
-              placeholder="搜索笔记..."
-            />
+            <input v-model="searchQuery" type="text" class="search-input" placeholder="搜索笔记..." />
           </div>
         </div>
       </header>
 
       <nav class="menu-container">
-        <ElMenu
-          mode="vertical"
-          :default-active="activeMenu"
-          @select="(key) => activeMenu = key"
-          class="study-menu"
-        >
-          <ElSubMenu
-            v-for="category in filteredMenu"
-            :key="category.title"
-            :index="category.title"
-          >
+        <ElMenu mode="vertical" :default-active="activeMenu" @select="(key) => (activeMenu = key)" class="study-menu">
+          <ElSubMenu v-for="category in filteredMenu" :key="category.title" :index="category.title">
             <template #title>
               <span>{{ category.title }}</span>
             </template>
-            <ElMenuItem
-              v-for="item in category.children"
-              :key="item.path"
-              :index="item.path"
-            >
+            <ElMenuItem v-for="item in category.children" :key="item.path" :index="item.path">
               <span>{{ item.title }}</span>
             </ElMenuItem>
           </ElSubMenu>
@@ -479,14 +509,10 @@ watch(activeMenu, (newPath) => {
       </nav>
     </aside>
 
-    <button 
-      class="sidebar-toggle-handle" 
-      @click="toggleSidebar" 
-      :title="sidebarCollapsed ? '展开菜单' : '收起菜单'"
-    >
+    <button class="sidebar-toggle-handle" @click="toggleSidebar" :title="sidebarCollapsed ? '展开菜单' : '收起菜单'">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path v-if="!sidebarCollapsed" d="M15 18l-6-6 6-6"/>
-        <path v-else d="M9 18l6-6-6-6"/>
+        <path v-if="!sidebarCollapsed" d="M15 18l-6-6 6-6" />
+        <path v-else d="M9 18l6-6-6-6" />
       </svg>
     </button>
 
@@ -499,16 +525,11 @@ watch(activeMenu, (newPath) => {
     <aside class="outline-panel" :class="{ collapsed: outlineCollapsed }">
       <header class="outline-header">
         <div class="outline-header-content">
-          <button class="outline-toggle-btn" @click="toggleAllOutline" :title="outline.every(i => i.expanded) ? '折叠全部' : '展开全部'">
-            <svg 
-              class="outline-icon" 
-              :class="{ rotated: outline.every(i => i.expanded) }"
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              stroke-width="2"
-            >
-              <path d="M4 6h16M4 12h10M4 18h14"/>
+          <button class="outline-toggle-btn" @click="toggleAllOutline"
+            :title="outline.every((i) => i.expanded) ? '折叠全部' : '展开全部'">
+            <svg class="outline-icon" :class="{ rotated: outline.every((i) => i.expanded) }" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6h16M4 12h10M4 18h14" />
             </svg>
           </button>
           <span class="outline-title">文档大纲</span>
@@ -519,66 +540,46 @@ watch(activeMenu, (newPath) => {
         <ul class="outline-list">
           <template v-for="item in outline" :key="item.id">
             <li class="outline-item">
-              <div
-                class="outline-item-header level-1"
-                @click="toggleExpand($event, item)"
-              >
+              <div class="outline-item-header level-1" @click="toggleExpand($event, item)">
                 <span class="outline-expand-icon" :class="{ expanded: item.expanded }">›</span>
-                <a
-                  href="javascript:void(0)"
-                  :data-id="item.id"
-                  class="outline-link-text"
-                  :class="{ active: activeHeadingId === item.id }"
-                  @click="scrollToHeading($event, item.id)"
-                >
+                <a href="javascript:void(0)" :data-id="item.id" class="outline-link-text"
+                  :class="{ active: activeHeadingId === item.id }" @click="scrollToHeading($event, item.id)">
                   {{ item.text }}
                 </a>
               </div>
               <ul v-if="item.expanded && item.children?.length" class="outline-sub-list">
                 <template v-for="child in item.children" :key="child.id">
                   <li class="outline-item">
-                    <div
-                      class="outline-item-header level-2"
-                      @click="toggleExpand($event, child)"
-                    >
+                    <div class="outline-item-header level-2" @click="toggleExpand($event, child)">
                       <span class="outline-expand-icon" :class="{ expanded: child.expanded }">›</span>
-                      <a
-                        href="javascript:void(0)"
-                        :data-id="child.id"
-                        class="outline-link-text"
-                        :class="{ active: activeHeadingId === child.id }"
-                        @click="scrollToHeading($event, child.id)"
-                      >
+                      <a href="javascript:void(0)" :data-id="child.id" class="outline-link-text"
+                        :class="{ active: activeHeadingId === child.id }" @click="scrollToHeading($event, child.id)">
                         {{ child.text }}
                       </a>
                     </div>
                     <ul v-if="child.expanded && child.children?.length" class="outline-sub-list">
                       <template v-for="grandchild in child.children" :key="grandchild.id">
                         <li class="outline-item">
-                          <div
-                            class="outline-item-header level-3"
-                            @click="toggleExpand($event, grandchild)"
-                          >
+                          <div class="outline-item-header level-3" @click="toggleExpand($event, grandchild)">
                             <span class="outline-expand-icon" :class="{ expanded: grandchild.expanded }">›</span>
-                            <a
-                              href="javascript:void(0)"
-                              :data-id="grandchild.id"
-                              class="outline-link-text"
-                              :class="{ active: activeHeadingId === grandchild.id }"
-                              @click="scrollToHeading($event, grandchild.id)"
-                            >
+                            <a href="javascript:void(0)" :data-id="grandchild.id" class="outline-link-text" :class="{
+                              active: activeHeadingId === grandchild.id,
+                            }" @click="scrollToHeading($event, grandchild.id)">
                               {{ grandchild.text }}
                             </a>
                           </div>
-                          <ul v-if="grandchild.expanded && grandchild.children?.length" class="outline-sub-list">
-                            <li v-for="greatgrandchild in grandchild.children" :key="greatgrandchild.id" class="outline-item">
-                              <a
-                                href="javascript:void(0)"
-                                :data-id="greatgrandchild.id"
-                                class="outline-item-header level-4"
-                                :class="{ active: activeHeadingId === greatgrandchild.id }"
-                                @click="scrollToHeading($event, greatgrandchild.id)"
-                              >
+                          <ul v-if="
+                            grandchild.expanded && grandchild.children?.length
+                          " class="outline-sub-list">
+                            <li v-for="greatgrandchild in grandchild.children" :key="greatgrandchild.id"
+                              class="outline-item">
+                              <a href="javascript:void(0)" :data-id="greatgrandchild.id"
+                                class="outline-item-header level-4" :class="{
+                                  active:
+                                    activeHeadingId === greatgrandchild.id,
+                                }" @click="
+                                  scrollToHeading($event, greatgrandchild.id)
+                                  ">
                                 {{ greatgrandchild.text }}
                               </a>
                             </li>
@@ -599,14 +600,10 @@ watch(activeMenu, (newPath) => {
       </nav>
     </aside>
 
-    <button 
-      class="outline-toggle-handle" 
-      @click="toggleOutline" 
-      :title="outlineCollapsed ? '展开大纲' : '收起大纲'"
-    >
+    <button class="outline-toggle-handle" @click="toggleOutline" :title="outlineCollapsed ? '展开大纲' : '收起大纲'">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path v-if="!outlineCollapsed" d="M9 18l6-6-6-6"/>
-        <path v-else d="M15 18l-6-6 6-6"/>
+        <path v-if="!outlineCollapsed" d="M9 18l6-6-6-6" />
+        <path v-else d="M15 18l-6-6 6-6" />
       </svg>
     </button>
   </div>
@@ -672,30 +669,37 @@ $menu-padding: 8px;
   justify-content: center;
   color: var(--color-text-secondary);
   z-index: 100;
-  transition: background-color $transition-theme, color $transition-theme, border-color $transition-theme, #{$position} $transition-medium, transform $transition-medium;
-  
+  transition: background-color $transition-theme,
+  color $transition-theme,
+  border-color $transition-theme,
+  #{$position} $transition-medium,
+  transform $transition-medium;
+
   &:hover {
     background-color: var(--color-bg-hover);
     color: var(--color-text-primary);
   }
-  
+
   svg {
     width: 14px;
     height: 14px;
     transition: transform $transition-normal;
   }
-  
+
   &:hover svg {
     transform: scale(1.1);
   }
 }
 
 @mixin heading-base($level) {
-  @if $level <= 2 {
+  @if $level <=2 {
     font-weight: 600;
-  } @else {
+  }
+
+  @else {
     font-weight: 500;
   }
+
   color: var(--color-text-primary);
 }
 
@@ -719,8 +723,8 @@ $menu-padding: 8px;
   @include handle-base(left, left);
   left: $sidebar-width - $handle-width;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-  
-  .sidebar.collapsed + & {
+
+  .sidebar.collapsed+& {
     left: 0;
     transform: translateY(-50%) translateX(0);
   }
@@ -733,7 +737,7 @@ $menu-padding: 8px;
   &.collapsed {
     width: 0;
     border-right: none;
-    
+
     .sidebar-header,
     .menu-container {
       display: none;
@@ -766,7 +770,7 @@ $menu-padding: 8px;
   background-color: var(--color-bg-base);
   border: 1px solid var(--color-border-muted);
   @include theme-transition(background-color, border-color);
-  
+
   &:focus-within {
     border-color: var(--color-primary);
   }
@@ -789,7 +793,7 @@ $menu-padding: 8px;
   color: var(--color-text-primary);
   line-height: 1.4;
   @include theme-transition(color);
-  
+
   &::placeholder {
     color: var(--color-text-muted);
   }
@@ -822,7 +826,7 @@ $menu-padding: 8px;
   --el-menu-item-active-color: var(--color-primary) !important;
   --el-sub-menu-title-color: var(--color-text-primary) !important;
   --el-sub-menu-title-hover-bg-color: var(--color-bg-hover) !important;
-  
+
   border: none;
   background-color: var(--el-menu-bg-color) !important;
   @include theme-transition(color);
@@ -875,7 +879,7 @@ $menu-padding: 8px;
     --el-menu-item-hover-bg-color: var(--color-bg-hover) !important;
     --el-menu-item-active-bg-color: var(--color-primary-bg-hover) !important;
     --el-menu-item-active-color: var(--color-primary) !important;
-    
+
     background-color: var(--el-menu-bg-color) !important;
     border: 1px solid var(--el-menu-border-color) !important;
     @include theme-transition(background-color, border-color, color);
@@ -925,8 +929,10 @@ $menu-padding: 8px;
   contain: layout style;
 
   // 标题样式
-  :deep(h1), :deep(h2), :deep(h3), :deep(h4) {
-  }
+  :deep(h1),
+  :deep(h2),
+  :deep(h3),
+  :deep(h4) {}
 
   :deep(h1) {
     font-size: 24px;
@@ -967,13 +973,17 @@ $menu-padding: 8px;
     color: var(--color-text-secondary);
   }
 
-  :deep(ul), :deep(ol) {
+  :deep(ul),
+  :deep(ol) {
     margin: 12px 0;
     padding-left: 46px;
     color: var(--color-text-secondary);
   }
 
-  :deep(ul ul), :deep(ol ol), :deep(ul ol), :deep(ol ul) {
+  :deep(ul ul),
+  :deep(ol ol),
+  :deep(ul ol),
+  :deep(ol ul) {
     padding-left: 62px;
   }
 
@@ -1114,7 +1124,8 @@ $menu-padding: 8px;
     margin-left: 20px;
     contain: paint;
 
-    th, td {
+    th,
+    td {
       border: 1px solid var(--color-border);
       padding: 10px 12px;
       text-align: left;
@@ -1161,25 +1172,30 @@ $menu-padding: 8px;
   justify-content: center;
   color: var(--color-text-secondary);
   z-index: 100;
-  transition: background-color $transition-theme, color $transition-theme, border-color $transition-theme, right $transition-medium, transform $transition-medium;
+  transition:
+    background-color $transition-theme,
+    color $transition-theme,
+    border-color $transition-theme,
+    right $transition-medium,
+    transform $transition-medium;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
-  
+
   &:hover {
     background-color: var(--color-bg-hover);
     color: var(--color-text-primary);
   }
-  
+
   svg {
     width: 14px;
     height: 14px;
     transition: transform $transition-normal;
   }
-  
+
   &:hover svg {
     transform: scale(1.1);
   }
-  
-  .outline-panel.collapsed + & {
+
+  .outline-panel.collapsed+& {
     right: 0;
     transform: translateY(-50%) translateX(0);
     border-radius: $handle-border-radius 0 0 $handle-border-radius;
@@ -1193,7 +1209,7 @@ $menu-padding: 8px;
   &.collapsed {
     width: 0;
     border-left: none;
-    
+
     .outline-header,
     .outline-content {
       display: none;
@@ -1343,7 +1359,9 @@ $menu-padding: 8px;
   padding: 2px 6px;
   margin: -2px -6px;
   border-radius: 4px;
-  transition: color $transition-theme, background-color $transition-theme;
+  transition:
+    color $transition-theme,
+    background-color $transition-theme;
 
   &.active {
     color: var(--color-primary);
@@ -1376,7 +1394,7 @@ $menu-padding: 8px;
   pointer-events: none;
   z-index: 999;
   transition: opacity 0.1s ease-in;
-  
+
   &.active {
     opacity: 1;
     transition: opacity 0.15s ease-out;

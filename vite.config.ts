@@ -1,55 +1,55 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import Markdown from 'unplugin-vue-markdown/vite'
-import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import Markdown from 'unplugin-vue-markdown/vite';
+import { fileURLToPath, URL } from 'node:url';
 // Element Plus 自动导入
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 export default defineConfig({
   plugins: [
     vue({
-      include: [/\.vue$/, /\.md$/]
+      include: [/\.vue$/, /\.md$/],
     }),
     Markdown({
       markdownItOptions: {
         html: true,
         breaks: true,
-        linkify: true
-      }
+        linkify: true,
+      },
     }),
     AutoImport({
       resolvers: [ElementPlusResolver()],
-      dts: true
+      dts: true,
     }),
     Components({
       resolvers: [ElementPlusResolver()],
-      dts: true
+      dts: true,
     }),
   ],
 
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
 
   server: {
     fs: {
-      allow: ['.']
+      allow: ['.'],
     },
     proxy: {
       '/api/calendar': {
         target: 'https://apis.juhe.cn/fapig/calendar/day',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/calendar/, '')
+        rewrite: (path) => path.replace(/^\/api\/calendar/, ''),
       },
       '/api/history': {
         target: 'https://v.juhe.cn/todayOnhistory/queryEvent',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/history/, '')
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api\/history/, ''),
+      },
+    },
   },
 
   optimizeDeps: {
@@ -71,11 +71,11 @@ export default defineConfig({
       'markdown-it',
       'markdown-it-container',
       'axios',
-      'aplayer'
-    ]
+      'aplayer',
+    ],
   },
 
   build: {
-    chunkSizeWarningLimit: 2000
-  }
-})
+    chunkSizeWarningLimit: 2000,
+  },
+});

@@ -1,101 +1,138 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const project = {
-  name: '基于微信小程序的市政消防栓管理系统',
-  subtitle: '本科毕业设计',
+  name: '消防栓智能管理系统',
+  subtitle: '本科毕业设计项目',
   url: '#',
-  description: '独立设计并开发了一个面向公众与运维人员的移动端GIS应用，旨在解决传统消防栓管理中的信息不透明、巡检效率低、公众参与度不足等问题。系统实现了消防栓的数字化、空间化与移动化管理。',
-  techStack: ['微信小程序', 'Mapbox GL JS', 'Turf.js', 'TypeScript', 'Node.js', 'PostgreSQL', 'PostGIS'],
+  description:
+    '独立设计并开发了面向公众与运维人员的一体化消防栓管理平台，依托Web GIS可视化与移动端小程序能力，实现消防设施数字化台账管理、点位可视化管控、故障线上上报，夯实区域消防安全运维能力。',
+  techStack: [
+    'HTML5',
+    'jQuery',
+    'Mapbox GL JS',
+    '天地图API',
+    '微信小程序',
+    'Spring Boot',
+    'MyBatis Plus',
+    'PostgreSQL',
+    'PostGIS',
+    'Turf.js',
+  ],
   responsibilities: [
     {
-      title: '移动端GIS开发',
-      content: '基于微信小程序原生框架与 Mapbox GL JS，开发了集成天地图底图与WMS服务的地图模块；实现了数据展示、地图浏览、实时定位、点击/扫码查询、故障上报等核心交互功能'
+      title: '项目背景与业务定位',
+      content:
+        '现阶段城市消防设施分布零散、线下巡检管控成本高、故障处置流程滞后，依托Web GIS可视化、移动端小程序能力，搭建一体化消防栓管理平台，打通运维人员、巡检人员业务链路，实现消防设施数字化台账管理、点位可视化管控、故障线上上报，夯实区域消防安全运维能力。',
     },
     {
-      title: '空间分析功能',
-      content: '利用 Turf.js 地理空间分析库，实现了「附近消防栓查询」功能，支持以用户位置为中心、自定义半径的空间范围搜索地理要素与结果可视化'
-    }
+      title: '分层技术架构搭建',
+      content:
+        '前端展示层：依托HTML5+jQuery搭建管理后台，接入Mapbox GL JS、天地图API、GeoServer服务完成二维GIS地图渲染，实现消防设施点位可视化管控<br/><br/>移动终端层：基于原生微信小程序开发巡检端，提供地理定位、轻量化扫码巡检、故障上报、点位查询移动端能力<br/><br/>业务逻辑层：基于Spring Boot搭建后端业务服务，整合MyBatis Plus完成业务CURD、业务权限逻辑封装<br/><br/>数据存储层：采用PostgreSQL搭配PostGIS拓展插件，结构化存储业务数据、空间点位数据，适配GIS空间检索业务<br/><br/>前端工具层：集成Turf.js空间算法库，完成距离测算、范围筛选、点位空间校验等前端地理计算工作',
+    },
+    {
+      title: '核心业务功能开发',
+      content:
+        '1. 消防栓台账信息管理模块：多维信息检索、上下游厂商联动、可视化状态分级<br/><br/>2. 二维GIS地图可视化模块：多源底图适配、点位交互管控、周边空间检索、用户地理定位<br/><br/>3. 移动端故障巡检上报模块：二维码快捷核验、标准化故障上报、工单溯源管理<br/><br/>4. 系统用户权限管理模块：账号体系搭建、个人档案运维',
+    },
+    {
+      title: '关键技术实现亮点',
+      content:
+        '空间业务能力落地：集成Turf.js空间算法，实现多边形范围点位筛选、自定义半径周边检索<br/><br/>标准化地图服务接入：合规接入天地图官方WMTS瓦片服务，优化瓦片加载逻辑<br/><br/>标准化接口开发：遵循RESTful规范设计后端接口，统一入参出参格式<br/><br/>轻量化交互开发：封装地图弹窗、实时测距、联动列表组件<br/><br/>标准前后端分离架构：前端依托Axios完成接口调用，后端专注业务逻辑与数据处理',
+    },
+    {
+      title: '数据库架构设计',
+      content:
+        '基于业务分层设计四张核心业务数据表：<br/><br/>- Hydrants消防栓点位表：存储设备编号、运行状态、水压数值、安装时间等核心台账数据<br/><br/>- Faults故障工单表：关联消防栓ID，存储故障描述、上报时间、处理状态工单数据<br/><br/>- User系统用户表：存储账号密码、个人基础信息，支撑账号登录与人员管理<br/><br/>- Companies合作厂商表：留存厂商名称、地址、联系方式，绑定对应供货消防栓设备',
+    },
+    {
+      title: '项目业务价值',
+      content:
+        '降本增效：数字化整合全域消防设施台账，简化人工线下巡检工作量<br/><br/>提速应急处置：线上闭环故障上报、派单、维修流程，缩短消防设施故障维修周期<br/><br/>辅助运维决策：沉淀设施分布、故障频次数据，为后续消防设施新增、点位优化提供数据参考<br/><br/>便民普惠赋能：面向公众开放就近消防栓查询能力，满足日常应急取水、消防自查便民使用需求',
+    },
   ],
   github: 'https://github.com/Chen-lingxiao/GraduationProject',
-  gitee: '#'
-}
+  gitee: '#',
+};
 
 const images = [
   '/Preview/WxFireHydrant/WxFireHydrant1.png',
   '/Preview/WxFireHydrant/WxFireHydrant2.png',
   '/Preview/WxFireHydrant/WxFireHydrant3.png',
   '/Preview/WxFireHydrant/WxFireHydrant4.png',
-  '/Preview/WxFireHydrant/WxFireHydrant5.png'
-]
+  '/Preview/WxFireHydrant/WxFireHydrant5.png',
+  '/Preview/WxFireHydrant/WxFireHydrant6.png',
+  '/Preview/WxFireHydrant/WxFireHydrant7.png',
+  '/Preview/WxFireHydrant/WxFireHydrant8.png',
+];
 
-const currentIndex = ref(0)
-const isTransitioning = ref(false)
-let autoPlayTimer: ReturnType<typeof setInterval> | null = null
+const currentIndex = ref(0);
+const isTransitioning = ref(false);
+let autoPlayTimer: ReturnType<typeof setInterval> | null = null;
 
-const totalImages = computed(() => images.length)
+const totalImages = computed(() => images.length);
 
 const prevIndex = computed(() => {
-  return (currentIndex.value - 1 + totalImages.value) % totalImages.value
-})
+  return (currentIndex.value - 1 + totalImages.value) % totalImages.value;
+});
 
 const nextIndex = computed(() => {
-  return (currentIndex.value + 1) % totalImages.value
-})
+  return (currentIndex.value + 1) % totalImages.value;
+});
 
 const visibleImages = computed(() => {
   return {
     prev: images[prevIndex.value],
     current: images[currentIndex.value],
-    next: images[nextIndex.value]
-  }
-})
+    next: images[nextIndex.value],
+  };
+});
 
 const goToNext = () => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-  currentIndex.value = nextIndex.value
+  if (isTransitioning.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = nextIndex.value;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const goToPrev = () => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-  currentIndex.value = prevIndex.value
+  if (isTransitioning.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = prevIndex.value;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const goToSlide = (index: number) => {
-  if (isTransitioning.value || index === currentIndex.value) return
-  isTransitioning.value = true
-  currentIndex.value = index
+  if (isTransitioning.value || index === currentIndex.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = index;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const startAutoPlay = () => {
-  autoPlayTimer = setInterval(goToNext, 5000)
-}
+  autoPlayTimer = setInterval(goToNext, 5000);
+};
 
 const stopAutoPlay = () => {
   if (autoPlayTimer) {
-    clearInterval(autoPlayTimer)
-    autoPlayTimer = null
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = null;
   }
-}
+};
 
 onMounted(() => {
-  startAutoPlay()
-})
+  startAutoPlay();
+});
 
 onUnmounted(() => {
-  stopAutoPlay()
-})
+  stopAutoPlay();
+});
 </script>
 
 <template>
@@ -105,53 +142,37 @@ onUnmounted(() => {
         <div class="carousel-wrapper" @mouseenter="stopAutoPlay" @mouseleave="startAutoPlay">
           <button class="nav-btn prev-btn" @click="goToPrev" aria-label="上一张">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
             </svg>
           </button>
-          
+
           <div class="carousel-container">
             <div class="carousel-track">
-              <div 
-                class="slide prev-slide" 
-                :class="{ 'transitioning': isTransitioning }"
-                @click="goToPrev"
-              >
+              <div class="slide prev-slide" :class="{ transitioning: isTransitioning }" @click="goToPrev">
                 <img :src="visibleImages.prev" :alt="'预览图 ' + prevIndex" class="slide-image" />
               </div>
-              <div 
-                class="slide current-slide"
-                :class="{ 'transitioning': isTransitioning }"
-              >
+              <div class="slide current-slide" :class="{ transitioning: isTransitioning }">
                 <img :src="visibleImages.current" :alt="'预览图 ' + currentIndex" class="slide-image" />
                 <div class="slide-overlay">
                   <span class="device-label">手机截图</span>
                 </div>
               </div>
-              <div 
-                class="slide next-slide" 
-                :class="{ 'transitioning': isTransitioning }"
-                @click="goToNext"
-              >
+              <div class="slide next-slide" :class="{ transitioning: isTransitioning }" @click="goToNext">
                 <img :src="visibleImages.next" :alt="'预览图 ' + nextIndex" class="slide-image" />
               </div>
             </div>
           </div>
-          
+
           <button class="nav-btn next-btn" @click="goToNext" aria-label="下一张">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
             </svg>
           </button>
-          
+
           <div class="carousel-indicators">
-            <button 
-              v-for="(image, index) in images" 
-              :key="index"
-              class="indicator"
-              :class="{ active: index === currentIndex }"
-              @click="goToSlide(index)"
-              :aria-label="'切换到第 ' + (index + 1) + ' 张'"
-            ></button>
+            <button v-for="(image, index) in images" :key="index" class="indicator"
+              :class="{ active: index === currentIndex }" @click="goToSlide(index)"
+              :aria-label="'切换到第 ' + (index + 1) + ' 张'"></button>
           </div>
         </div>
       </div>
@@ -165,7 +186,8 @@ onUnmounted(() => {
           <div class="project-links">
             <a :href="project.github" target="_blank" rel="noopener noreferrer" class="link-btn github">
               <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
               </svg>
               GitHub
             </a>
@@ -183,7 +205,7 @@ onUnmounted(() => {
           <h3 class="section-title">核心职责与成果</h3>
           <div v-for="(item, index) in project.responsibilities" :key="index" class="responsibility-item">
             <h4 class="item-title">{{ item.title }}</h4>
-            <p class="item-content">{{ item.content }}</p>
+            <p class="item-content" v-html="item.content"></p>
           </div>
         </div>
       </div>
@@ -208,7 +230,9 @@ onUnmounted(() => {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .project-card:hover {
@@ -424,7 +448,9 @@ onUnmounted(() => {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .tech-badge:hover {
@@ -491,7 +517,10 @@ onUnmounted(() => {
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .link-btn:hover {

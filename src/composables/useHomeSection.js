@@ -6,31 +6,39 @@
  * 2. 在首页滚动时向AppHeader提供当前section信息
  * 3. 用于动态调整Header样式（暗黑/亮色主题切换）
  */
-import { reactive, computed } from 'vue'
+import { reactive, computed } from 'vue';
 
 const state = reactive({
   currentSection: 0,
-  isOnHome: true
-})
+  isOnHome: true,
+});
 
 export function useHomeSection() {
   const setCurrentSection = (section) => {
-    state.currentSection = section
-  }
+    state.currentSection = section;
+  };
 
   const setIsOnHome = (value) => {
-    state.isOnHome = value
-  }
+    state.isOnHome = value;
+  };
 
-  const isHeroSection = computed(() => state.isOnHome && state.currentSection === 0)
+  const isHeroSection = computed(
+    () => state.isOnHome && state.currentSection === 0
+  );
 
   const isLightSection = computed(() => {
-    return state.isOnHome && (state.currentSection === 1 || state.currentSection === 2)
-  })
+    return (
+      state.isOnHome &&
+      (state.currentSection === 1 || state.currentSection === 2)
+    );
+  });
 
   const isDarkSection = computed(() => {
-    return state.isOnHome && (state.currentSection === 0 || state.currentSection === 3)
-  })
+    return (
+      state.isOnHome &&
+      (state.currentSection === 0 || state.currentSection === 3)
+    );
+  });
 
   return {
     state,
@@ -38,6 +46,6 @@ export function useHomeSection() {
     setIsOnHome,
     isHeroSection,
     isLightSection,
-    isDarkSection
-  }
+    isDarkSection,
+  };
 }

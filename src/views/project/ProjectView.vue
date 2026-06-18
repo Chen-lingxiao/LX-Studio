@@ -1,59 +1,62 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+  import { ref, onMounted, watch, nextTick } from 'vue';
+  import { useRouter, useRoute } from 'vue-router';
 
-const router = useRouter()
-const route = useRoute()
-const mainRef = ref<HTMLElement | null>(null)
+  const router = useRouter();
+  const route = useRoute();
+  const mainRef = ref<HTMLElement | null>(null);
 
-const projectList = [
-  {
-    index: '/project/digital-campus',
-    title: '校园消防栓可视化管理系统'
-  },
-  {
-    index: '/project/graduation-project',
-    title: '微信小程序消防栓管理系统'
-  },
-  {
-    index: '/project/cesium-sandbox',
-    title: 'Cesium 在线沙盒编辑器'
-  },
-  {
-    index: '/project/echarts-datav',
-    title: 'Echarts数据大屏'
-  },
-  {
-    index: '/project/example',
-    title: '示例项目'
-  }
-]
+  const projectList = [
+    {
+      index: '/project/digital-campus',
+      title: '校园消防栓可视化管理系统',
+    },
+    {
+      index: '/project/graduation-project',
+      title: '微信小程序消防栓管理系统',
+    },
+    {
+      index: '/project/cesium-sandbox',
+      title: 'Cesium 在线沙盒编辑器',
+    },
+    {
+      index: '/project/echarts-datav',
+      title: 'Echarts数据大屏',
+    },
+    {
+      index: '/project/example',
+      title: '示例项目',
+    },
+  ];
 
-const handleSelect = (index: string) => {
-  router.push(index)
-}
+  const handleSelect = (index: string) => {
+    router.push(index);
+  };
 
-const activeMenu = ref(route.path)
+  const activeMenu = ref(route.path);
 
-const redirectToDefault = () => {
-  if (route.path === '/project') {
-    router.push('/project/digital-campus')
-  }
-}
-
-onMounted(() => {
-  redirectToDefault()
-})
-
-watch(() => route.path, () => {
-  activeMenu.value = route.path
-  redirectToDefault()
-  nextTick(() => {
-    if (mainRef.value) {
-      mainRef.value.scrollTop = 0
+  const redirectToDefault = () => {
+    if (route.path === '/project') {
+      router.push('/project/digital-campus');
     }
-  })
-})
+  };
+
+  onMounted(() => {
+    redirectToDefault();
+  });
+
+  watch(
+    () => route.path,
+    () => {
+      activeMenu.value = route.path;
+      redirectToDefault();
+      nextTick(() => {
+        if (mainRef.value) {
+          mainRef.value.scrollTop = 0;
+        }
+      });
+    }
+  );
 </script>
 
 <template>
@@ -67,7 +70,11 @@ watch(() => route.path, () => {
         class="project-menu"
         @select="handleSelect"
       >
-        <el-menu-item v-for="item in projectList" :key="item.index" :index="item.index">
+        <el-menu-item
+          v-for="item in projectList"
+          :key="item.index"
+          :index="item.index"
+        >
           <template #title>
             <span>{{ item.title }}</span>
           </template>
@@ -81,59 +88,59 @@ watch(() => route.path, () => {
 </template>
 
 <style scoped>
-.project-layout {
-  display: flex;
-  height: calc(100vh - 60px);
-  background: var(--color-bg-base);
-}
+  .project-layout {
+    display: flex;
+    height: calc(100vh - 60px);
+    background: var(--color-bg-base);
+  }
 
-.project-aside {
-  width: 220px;
-  background: var(--color-bg-surface);
-  border-right: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-}
+  .project-aside {
+    width: 220px;
+    background: var(--color-bg-surface);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+  }
 
-.aside-header {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  border-bottom: 1px solid var(--color-border);
-}
+  .aside-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    border-bottom: 1px solid var(--color-border);
+  }
 
-.aside-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
+  .aside-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
 
-.project-menu {
-  flex: 1;
-  border-right: none;
-  background: transparent;
-}
+  .project-menu {
+    flex: 1;
+    border-right: none;
+    background: transparent;
+  }
 
-.project-menu .el-menu-item {
-  height: 56px;
-  line-height: 56px;
-  color: var(--color-text-secondary);
-}
+  .project-menu .el-menu-item {
+    height: 56px;
+    line-height: 56px;
+    color: var(--color-text-secondary);
+  }
 
-.project-menu .el-menu-item:hover {
-  background: var(--color-bg-hover);
-  color: var(--color-text-primary);
-}
+  .project-menu .el-menu-item:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-text-primary);
+  }
 
-.project-menu .el-menu-item.is-active {
-  background: var(--color-primary-bg-light);
-  color: var(--color-primary);
-}
+  .project-menu .el-menu-item.is-active {
+    background: var(--color-primary-bg-light);
+    color: var(--color-primary);
+  }
 
-.project-main {
-  flex: 1;
-  overflow-y: auto;
-  background: var(--color-bg-base);
-}
+  .project-main {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--color-bg-base);
+  }
 </style>

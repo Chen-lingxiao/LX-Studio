@@ -1,12 +1,13 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 5172944 */
-  src: url('./iconfont.woff2') format('woff2'),
-       url('./iconfont.woff') format('woff'),
-       url('./iconfont.ttf') format('truetype');
+  font-family: 'iconfont'; /* Project id 5172944 */
+  src:
+    url('./iconfont.woff2') format('woff2'),
+    url('./iconfont.woff') format('woff'),
+    url('./iconfont.ttf') format('truetype');
 }
 
 .iconfont {
-  font-family: "iconfont" !important;
+  font-family: 'iconfont' !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -14,38 +15,37 @@
 }
 
 .icon-wendang:before {
-  content: "\e613";
+  content: '\e613';
 }
 
 .icon-githublogo:before {
-  content: "\e608";
+  content: '\e608';
 }
 
 .icon-youxiang:before {
-  content: "\e908";
+  content: '\e908';
 }
 
 .icon-taiyang:before {
-  content: "\e60f";
+  content: '\e60f';
 }
 
 .icon-yueliang:before {
-  content: "\e611";
+  content: '\e611';
 }
 
 .icon-tianjia:before {
-  content: "\e607";
+  content: '\e607';
 }
 
 .icon-shezhi:before {
-  content: "\e851";
+  content: '\e851';
 }
 
 .icon-tupian:before {
-  content: "\e855";
+  content: '\e855';
 }
 
 .icon-daima:before {
-  content: "\e610";
+  content: '\e610';
 }
-

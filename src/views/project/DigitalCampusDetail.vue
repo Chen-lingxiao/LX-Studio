@@ -1,108 +1,144 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const project = {
   name: '校园消防栓可视化管理系统',
-  url: 'http://lx-studio.xyz:8001/',
-  description: '基于前后端分离架构，集三维可视化、实时数据监控与地理数据编辑于一体的校园设施管理平台，实现了消防设施的数字化管理与动态监控，支撑运维人员高效巡检与决策分析。',
-  techStack: ['Vue 3', 'TypeScript', 'Vite', 'Cesium', 'Mapbox', 'Spring Boot', 'PostgreSQL', 'PostGIS', 'GeoServer'],
+  url: 'https://lx-studio.xyz/FireHydrant/',
+  description:
+    '独立开发的全栈三维地理信息可视化管理系统，集成CesiumJS三维场景渲染、Mapbox二维地图交互、ECharts数据看板、GeoServer WFS-T事务操作地理数据编辑于一体的校园消防栓设施管理平台，实现消防栓设备的实时监控、空间数据编辑与智能告警，支撑运维人员高效巡检与决策分析;',
+  techStack: [
+    'Vue 3',
+    'TypeScript',
+    'CesiumJS',
+    'Mapbox GL JS',
+    'ECharts',
+    'Spring Boot',
+    'PostgreSQL/PostGIS',
+    'GeoServer',
+    'Docker',
+    'Nginx',
+  ],
   responsibilities: [
     {
-      title: '三维可视化开发',
-      content: '基于 CesiumJS 构建三维校园场景，实现建筑物 3DTiles、道路线、消防栓点等多图层融合展示；设计并开发基于设备状态的动态颜色标识与飞行动画定位功能，提升监控直观性'
+      title: '三维可视化引擎开发',
+      content:
+        'CesiumJS自定义材质渲染，构建三维校园场景，实现建筑物3DTiles、道路线、消防栓点等数据多图层融合展示<br/><br/>基于消防设备状态动态实现故障设备水波纹扩散动画告警特效<br/><br/>构建3DTiles建筑物模型自底部向上的动态扫光效果<br/><br/>基于校园边界GeoJSON构建电子围栏特效动画<br/><br/>基于道路网线GeoJSON构建流动光线动态效果',
     },
     {
-      title: '二维地图交互与数据编辑',
-      content: '使用 Mapbox GL JS 开发二维交互地图，支持图层切换；通过实现 WFS-T 协议与 GeoServer 的通信，完成地理数据的实时增删改查，并设计完整的编辑状态管理流程'
+      title: 'GIS服务与空间数据',
+      content:
+        '设计WFS-T事务处理架构，基于GeoServer WFS服务实现消防栓点要素增删改查，手动构建符合OGC标准的XML事务请求；<br/><br/>构建多源地图服务集成方案，同时对接Cesium Ion、Mapbox GL、天地图WMTS三种地图服务，实现矢量/影像底图一键切换；<br/><br/>实现PostGIS空间数据存储方案，设计多图层空间数据库架构，配合GeoServer 服务实现数据管理',
     },
     {
-      title: '数据分析与组件化',
-      content: '利用 ECharts 开发设备状态饼图、压力分布与趋势分析图表，建立模拟数据实时更新机制；封装可复用通用表格组件，支持配置化列管理、筛选、分页'
+      title: '数据可视化与实时监控',
+      content:
+        '构建ECharts多维度数据看板，实现设备状态环形饼图、压力分布柱状图、平均压力变化折线图，采用定时轮询机制实现数据动态更新;<br/><br/>设计消防栓状态实时监控体系，按normal/error/repairing三种状态分类管理，异常设备自动触发水波纹告警动画;<br/><br/>开发FPS性能监控组件, 实时展示系统运行状态, 帮助运维人员及时发现并解决问题;',
     },
     {
-      title: '系统架构与工程化',
-      content: '实现基于 JWT 的用户认证与路由权限控制；配置 ESLint、Prettier 保障代码规范；独立完成从开发到阿里云服务器部署上线全流程，包括 Docker 容器化、Nginx 反向代理、安全组配置'
-    }
+      title: '地图交互与要素编辑',
+      content:
+        '设计Mapbox GL要素编辑工作流，实现添加/更新/删除三种编辑模式，处理鼠标交互事件；构建要素信息弹窗系统，实现地理坐标到屏幕坐标的精确转换；<br/><br/>实现高亮定位与飞行导航功能，支持点击表格行自动飞行定位至目标消防栓、表格内容按消防设备状态进行筛选、根据设备编号搜索等操作;',
+    },
+    {
+      title: '用户信息管理模块',
+      content:
+        '设计管理员后台用户管理系统，实现用户信息列表展示，支持用户名、权限、性别、出生日期、部门、电话、邮箱等字段关键字搜索、分页浏览功能<br/><br/>构建用户信息CRUD操作，支持新增用户、编辑用户信息、删除用户等完整业务流程<br/><br/>实现权限分级管理，区分ADMIN管理员与USER普通用户两级权限体系<br/><br/>用户信息表单包含用户名、权限、性别、出生日期、部门、电话、邮箱等完整字段',
+    },
+    {
+      title: '全栈架构与安全认证',
+      content:
+        '构建前后端分离架构，前端Vue 3 Composition API + TypeScript + Vite，后端Spring Boot + MyBatis-Plus + PostgreSQL/PostGIS;<br/><br/>实现JWT + Cookie双重认证机制，采用HMAC-SHA256算法生成Token，设置HttpOnly Cookie防止XSS攻击;设计RBAC权限控制模型，实现管理员/普通用户两级权限体系',
+    },
+    {
+      title: '容器化部署与工程化',
+      content:
+        '搭建Docker容器化部署方案，编写docker-compose.yml编排PostGIS、GeoServer应用容器架构，配置数据卷持久化和自动重启策略;<br/><br/>实施代码质量保障体系，配置ESLint + Prettier统一代码规范，TypeScript严格模式保障类型安全',
+    },
+    {
+      title: '性能优化',
+      content:
+        '优化3D场景渲染性能，禁用Cesium Viewer非必要UI组件，关闭FXAA抗锯齿降低GPU负载；实现数据懒加载策略，采用Vue Router懒加载路由组件，地图图层按需加载',
+    },
   ],
   github: 'https://github.com/Chen-lingxiao/LX-FireHydrant',
-  gitee: 'https://gitee.com/lxrelic/FireHydrant'
-}
+  gitee: 'https://gitee.com/lxrelic/LX-FireHydrant',
+};
 
 const images = [
   '../Preview/DigitalCampus/DigitalCampus1.png',
   '../Preview/DigitalCampus/DigitalCampus2.png',
   '../Preview/DigitalCampus/DigitalCampus3.png',
   '../Preview/DigitalCampus/DigitalCampus4.png',
-  '../Preview/DigitalCampus/DigitalCampus5.png'
-]
+  '../Preview/DigitalCampus/DigitalCampus5.png',
+];
 
-const currentIndex = ref(0)
-const isTransitioning = ref(false)
-let autoPlayTimer: ReturnType<typeof setInterval> | null = null
+const currentIndex = ref(0);
+const isTransitioning = ref(false);
+let autoPlayTimer: ReturnType<typeof setInterval> | null = null;
 
-const totalImages = computed(() => images.length)
+const totalImages = computed(() => images.length);
 
 const prevIndex = computed(() => {
-  return (currentIndex.value - 1 + totalImages.value) % totalImages.value
-})
+  return (currentIndex.value - 1 + totalImages.value) % totalImages.value;
+});
 
 const nextIndex = computed(() => {
-  return (currentIndex.value + 1) % totalImages.value
-})
+  return (currentIndex.value + 1) % totalImages.value;
+});
 
 const visibleImages = computed(() => {
   return {
     prev: images[prevIndex.value],
     current: images[currentIndex.value],
-    next: images[nextIndex.value]
-  }
-})
+    next: images[nextIndex.value],
+  };
+});
 
 const goToNext = () => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-  currentIndex.value = nextIndex.value
+  if (isTransitioning.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = nextIndex.value;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const goToPrev = () => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-  currentIndex.value = prevIndex.value
+  if (isTransitioning.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = prevIndex.value;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const goToSlide = (index: number) => {
-  if (isTransitioning.value || index === currentIndex.value) return
-  isTransitioning.value = true
-  currentIndex.value = index
+  if (isTransitioning.value || index === currentIndex.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = index;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const startAutoPlay = () => {
-  autoPlayTimer = setInterval(goToNext, 5000)
-}
+  autoPlayTimer = setInterval(goToNext, 5000);
+};
 
 const stopAutoPlay = () => {
   if (autoPlayTimer) {
-    clearInterval(autoPlayTimer)
-    autoPlayTimer = null
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = null;
   }
-}
+};
 
 onMounted(() => {
-  startAutoPlay()
-})
+  startAutoPlay();
+});
 
 onUnmounted(() => {
-  stopAutoPlay()
-})
+  stopAutoPlay();
+});
 </script>
 
 <template>
@@ -112,23 +148,16 @@ onUnmounted(() => {
         <div class="carousel-wrapper" @mouseenter="stopAutoPlay" @mouseleave="startAutoPlay">
           <button class="nav-btn prev-btn" @click="goToPrev" aria-label="上一张">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
             </svg>
           </button>
-          
+
           <div class="carousel-container">
             <div class="carousel-track">
-              <div 
-                class="slide prev-slide" 
-                :class="{ 'transitioning': isTransitioning }"
-                @click="goToPrev"
-              >
+              <div class="slide prev-slide" :class="{ transitioning: isTransitioning }" @click="goToPrev">
                 <img :src="visibleImages.prev" :alt="'预览图 ' + prevIndex" class="slide-image" />
               </div>
-              <div 
-                class="slide current-slide"
-                :class="{ 'transitioning': isTransitioning }"
-              >
+              <div class="slide current-slide" :class="{ transitioning: isTransitioning }">
                 <img :src="visibleImages.current" :alt="'预览图 ' + currentIndex" class="slide-image" />
                 <div class="slide-overlay">
                   <a :href="project.url" target="_blank" rel="noopener noreferrer" class="visit-btn">
@@ -136,31 +165,22 @@ onUnmounted(() => {
                   </a>
                 </div>
               </div>
-              <div 
-                class="slide next-slide" 
-                :class="{ 'transitioning': isTransitioning }"
-                @click="goToNext"
-              >
+              <div class="slide next-slide" :class="{ transitioning: isTransitioning }" @click="goToNext">
                 <img :src="visibleImages.next" :alt="'预览图 ' + nextIndex" class="slide-image" />
               </div>
             </div>
           </div>
-          
+
           <button class="nav-btn next-btn" @click="goToNext" aria-label="下一张">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
             </svg>
           </button>
-          
+
           <div class="carousel-indicators">
-            <button 
-              v-for="(image, index) in images" 
-              :key="index"
-              class="indicator"
-              :class="{ active: index === currentIndex }"
-              @click="goToSlide(index)"
-              :aria-label="'切换到第 ' + (index + 1) + ' 张'"
-            ></button>
+            <button v-for="(image, index) in images" :key="index" class="indicator"
+              :class="{ active: index === currentIndex }" @click="goToSlide(index)"
+              :aria-label="'切换到第 ' + (index + 1) + ' 张'"></button>
           </div>
         </div>
       </div>
@@ -171,13 +191,15 @@ onUnmounted(() => {
           <div class="project-links">
             <a :href="project.github" target="_blank" rel="noopener noreferrer" class="link-btn github">
               <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
               </svg>
               GitHub
             </a>
             <a :href="project.gitee" target="_blank" rel="noopener noreferrer" class="link-btn gitee">
               <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10.184 0c-.944 0-1.784.39-2.423 1.018C7.34.39 6.5.78 6.5 1.535v21.323c0 .755.84 1.145 1.261.723.421-.421.763-.963.763-1.538V6.295l5.66 5.66c.193.193.451.29.708.29.258 0 .516-.097.708-.29.385-.385.385-1.012 0-1.397L10.18 5.006V1.535c0-.755-.84-1.145-1.261-.723-.421.421-.763.963-.763 1.538v16.54c0 1.018-.842 1.847-1.885 1.847-.755 0-1.368-.63-1.368-1.385V1.535C5.603.78 6.44.39 7.34.39c.902 0 1.62-.51 2.025-1.232C9.78-.51 10.5.03 11.26.03c.755 0 1.385-.54 1.385-1.295 0-.755-.63-1.385-1.385-1.385L10.184 0z"/>
+                <path
+                  d="M10.184 0c-.944 0-1.784.39-2.423 1.018C7.34.39 6.5.78 6.5 1.535v21.323c0 .755.84 1.145 1.261.723.421-.421.763-.963.763-1.538V6.295l5.66 5.66c.193.193.451.29.708.29.258 0 .516-.097.708-.29.385-.385.385-1.012 0-1.397L10.18 5.006V1.535c0-.755-.84-1.145-1.261-.723-.421.421-.763.963-.763 1.538v16.54c0 1.018-.842 1.847-1.885 1.847-.755 0-1.368-.63-1.368-1.385V1.535C5.603.78 6.44.39 7.34.39c.902 0 1.62-.51 2.025-1.232C9.78-.51 10.5.03 11.26.03c.755 0 1.385-.54 1.385-1.295 0-.755-.63-1.385-1.385-1.385L10.184 0z" />
               </svg>
               Gitee
             </a>
@@ -195,7 +217,7 @@ onUnmounted(() => {
           <h3 class="section-title">核心职责与成果</h3>
           <div v-for="(item, index) in project.responsibilities" :key="index" class="responsibility-item">
             <h4 class="item-title">{{ item.title }}</h4>
-            <p class="item-content">{{ item.content }}</p>
+            <p class="item-content" v-html="item.content"></p>
           </div>
         </div>
       </div>
@@ -220,7 +242,9 @@ onUnmounted(() => {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .project-card:hover {
@@ -391,7 +415,9 @@ onUnmounted(() => {
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .visit-btn:hover {
@@ -442,7 +468,9 @@ onUnmounted(() => {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .tech-badge:hover {
@@ -509,7 +537,10 @@ onUnmounted(() => {
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .link-btn:hover {

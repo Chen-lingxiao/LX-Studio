@@ -1,108 +1,130 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const project = {
-  name: 'Cesium 在线沙盒编辑器',
-  url: 'http://lx-studio.xyz:8002/',
-  description: '自主主导、AI协同开发的 Cesium 三维 GIS 在线示例沙盒，提供丰富可视化示例、标签检索、代码实时编辑与运行，高效辅助开发者学习 Cesium 核心 API 与三维开发流程。',
-  techStack: ['Vue 3', 'TypeScript', 'Vite', 'CesiumJS', 'Monaco Editor', 'Tailwind CSS', 'AI 辅助开发'],
+  name: 'CesiumStudio 在线编辑器',
+  url: 'https://lx-studio.xyz/CesiumStudio/',
+  description:
+    '自主主导、AI协同开发的 Cesium 三维 GIS 在线编辑器，提供代码实时编辑与运行、场景案例浏览、空间分析测量等能力，高效辅助开发者学习 Cesium 核心 API 与三维开发流程。',
+  techStack: [
+    'Vue 3',
+    'Vite',
+    'Cesium',
+    'Monaco Editor',
+    'ECharts',
+    'Turf.js',
+    'TypeScript',
+    'Trae',
+    'DeepSeeK-v4-pro',
+    'mimo-v2.5-pro',
+    'Sass',
+  ],
   responsibilities: [
     {
-      title: 'Cesium 核心功能开发',
-      content: '实现 Cesium 场景、相机、图层、地形、实体、空间分析、空间测量等核心模块示例；AI 辅助完成通用组件与功能封装'
+      title: '代码编辑与实时预览',
+      content:
+        '集成 Monaco Editor 实现在线编码能力，打造编码、场景预览一体化工作台，支持JS语法高亮、内置控制台日志打印、面板拖拽自适应布局，复刻轻量化IDE开发调试体验',
     },
     {
-      title: '常用功能方法封装',
-      content: '封装多个可复用 composables，包括空间分析（剖面、坡向、坡度、方量、通视分析等），绘制工具（点、线、多边形、矩形），测量工具（距离、高度、面积、坐标拾取等）'
+      title: '场景案例体系搭建',
+      content:
+        '搭建GIS全流程教学案例库，实现覆盖 Cesium 场景、相机、影像地形图层、实体、数据源、要素绘制、测量分析、特效等多个核心模块示例<br/><br/>内置30+可交互实操示例，搭建完整Cesium技术学习与调试平台',
     },
     {
-      title: '交互体验与性能优化',
-      content: '独立开发示例检索、代码运行、三维联动等核心交互；AI 协助完成 FPS 监测组件、控制台日志等模块；自主完成三维渲染、相机控制、加载性能优化'
+      title: '工具库封装',
+      content:
+        '独立封装多个高复用业务Composables工具集，采用函数式闭包 + Promise异步架构设计，适配项目快速调用，沉淀通用GIS开发能力，核心工具能力如下：<br/><br/>绘制工具（useCesiumDraw）：支持点、线、多边形、矩形标准化绘制，自定义交互逻辑，自动输出WKT空间格式数据，实现绘制过程实时预览<br/><br/>测量工具（useMeasurement）：集成直线距离、面积、高程、坐标拾取多维测量能力，适配地形、椭球体双拾取模式，适配户外实景测绘场景<br/><br/>剖面分析工具(useSectionAnalysis)：依托空间算法完成地形高程测算，联动ECharts完成分析结果可视化叠加展示<br/><br/>坡向/坡度分析工具(useAspectAnalysis、useSlopeAnalysis)：依托空间算法完成地貌方位、地表坡度测算，联动Canvas完成分析结果可视化叠加展示<br/><br/>土方量分析工具(useMeasureVolume)：基于Cesium的方量分析实现，用于计算挖方量和填方量<br/><br/>通视分析工具(useVisibilityAnalysis)：用于地形通视分析，支持绘制观测点和目标点，可视化显示视线、遮挡点位置，提供详细分析结果<br/><br/>通用布局工具（useResizer）：封装通用拖拽适配钩子，支持页面横竖布局尺寸自定义调整，适配多端工作台自适应布局开发<br/><br/>项目价值：沉淀可复用GIS业务工具能力，赋能后续三维可视化项目开发，有效减少重复底层开发工作量',
     },
     {
-      title: 'AI 协同开发与问题修复',
-      content: '全程使用 AI 辅助进行代码生成、Bug 排查、问题修复；自主验证功能逻辑与三维效果，形成“核心把控+AI提效”的现代化开发模式'
-    }
+      title: '工程化能力',
+      content:
+        '搭建全局主题系统，依托CSS变量实现深浅色模式一键切换，内置多款柔和业务配色，用户偏好本地持久化存储<br/><br/>内置轻量化FPS调试组件，联动页面可见性监听，适配三维项目常态化性能排查调试',
+    },
+    {
+      title: 'AI 协同开发',
+      content:
+        '熟练运用Trae、Cursor智能化编程工具，辅助通用工具封装、业务组件开发、界面样式优化、线上问题闭环修复，借助AI工具提升编码、调试全流程开发效率',
+    },
   ],
-  github: 'https://github.com/Chen-lingxiao/CesiumSandbox--LX',
-  gitee: 'https://gitee.com/lxrelic/cesium-sandbox-lx'
-}
+  github: 'https://github.com/Chen-lingxiao/LX-CesiumStudio',
+  gitee: 'https://gitee.com/lxrelic/LX-CesiumStudio',
+};
 
 const images = [
   '../Preview/CesiumSandbox/CesiumSandbox1.png',
   '../Preview/CesiumSandbox/CesiumSandbox2.png',
   '../Preview/CesiumSandbox/CesiumSandbox3.png',
   '../Preview/CesiumSandbox/CesiumSandbox4.png',
-  '../Preview/CesiumSandbox/CesiumSandbox5.png'
-]
+  '../Preview/CesiumSandbox/CesiumSandbox5.png',
+];
 
-const currentIndex = ref(0)
-const isTransitioning = ref(false)
-let autoPlayTimer: ReturnType<typeof setInterval> | null = null
+const currentIndex = ref(0);
+const isTransitioning = ref(false);
+let autoPlayTimer: ReturnType<typeof setInterval> | null = null;
 
-const totalImages = computed(() => images.length)
+const totalImages = computed(() => images.length);
 
 const prevIndex = computed(() => {
-  return (currentIndex.value - 1 + totalImages.value) % totalImages.value
-})
+  return (currentIndex.value - 1 + totalImages.value) % totalImages.value;
+});
 
 const nextIndex = computed(() => {
-  return (currentIndex.value + 1) % totalImages.value
-})
+  return (currentIndex.value + 1) % totalImages.value;
+});
 
 const visibleImages = computed(() => {
   return {
     prev: images[prevIndex.value],
     current: images[currentIndex.value],
-    next: images[nextIndex.value]
-  }
-})
+    next: images[nextIndex.value],
+  };
+});
 
 const goToNext = () => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-  currentIndex.value = nextIndex.value
+  if (isTransitioning.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = nextIndex.value;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const goToPrev = () => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-  currentIndex.value = prevIndex.value
+  if (isTransitioning.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = prevIndex.value;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const goToSlide = (index: number) => {
-  if (isTransitioning.value || index === currentIndex.value) return
-  isTransitioning.value = true
-  currentIndex.value = index
+  if (isTransitioning.value || index === currentIndex.value) return;
+  isTransitioning.value = true;
+  currentIndex.value = index;
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
+    isTransitioning.value = false;
+  }, 500);
+};
 
 const startAutoPlay = () => {
-  autoPlayTimer = setInterval(goToNext, 5000)
-}
+  autoPlayTimer = setInterval(goToNext, 5000);
+};
 
 const stopAutoPlay = () => {
   if (autoPlayTimer) {
-    clearInterval(autoPlayTimer)
-    autoPlayTimer = null
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = null;
   }
-}
+};
 
 onMounted(() => {
-  startAutoPlay()
-})
+  startAutoPlay();
+});
 
 onUnmounted(() => {
-  stopAutoPlay()
-})
+  stopAutoPlay();
+});
 </script>
 
 <template>
@@ -112,23 +134,16 @@ onUnmounted(() => {
         <div class="carousel-wrapper" @mouseenter="stopAutoPlay" @mouseleave="startAutoPlay">
           <button class="nav-btn prev-btn" @click="goToPrev" aria-label="上一张">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
             </svg>
           </button>
-          
+
           <div class="carousel-container">
             <div class="carousel-track">
-              <div 
-                class="slide prev-slide" 
-                :class="{ 'transitioning': isTransitioning }"
-                @click="goToPrev"
-              >
+              <div class="slide prev-slide" :class="{ transitioning: isTransitioning }" @click="goToPrev">
                 <img :src="visibleImages.prev" :alt="'预览图 ' + prevIndex" class="slide-image" />
               </div>
-              <div 
-                class="slide current-slide"
-                :class="{ 'transitioning': isTransitioning }"
-              >
+              <div class="slide current-slide" :class="{ transitioning: isTransitioning }">
                 <img :src="visibleImages.current" :alt="'预览图 ' + currentIndex" class="slide-image" />
                 <div class="slide-overlay">
                   <a :href="project.url" target="_blank" rel="noopener noreferrer" class="visit-btn">
@@ -136,31 +151,22 @@ onUnmounted(() => {
                   </a>
                 </div>
               </div>
-              <div 
-                class="slide next-slide" 
-                :class="{ 'transitioning': isTransitioning }"
-                @click="goToNext"
-              >
+              <div class="slide next-slide" :class="{ transitioning: isTransitioning }" @click="goToNext">
                 <img :src="visibleImages.next" :alt="'预览图 ' + nextIndex" class="slide-image" />
               </div>
             </div>
           </div>
-          
+
           <button class="nav-btn next-btn" @click="goToNext" aria-label="下一张">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
             </svg>
           </button>
-          
+
           <div class="carousel-indicators">
-            <button 
-              v-for="(image, index) in images" 
-              :key="index"
-              class="indicator"
-              :class="{ active: index === currentIndex }"
-              @click="goToSlide(index)"
-              :aria-label="'切换到第 ' + (index + 1) + ' 张'"
-            ></button>
+            <button v-for="(image, index) in images" :key="index" class="indicator"
+              :class="{ active: index === currentIndex }" @click="goToSlide(index)"
+              :aria-label="'切换到第 ' + (index + 1) + ' 张'"></button>
           </div>
         </div>
       </div>
@@ -169,15 +175,19 @@ onUnmounted(() => {
         <div class="project-header">
           <h2 class="project-title">{{ project.name }}</h2>
           <div class="project-links" v-if="project.github || project.gitee">
-            <a v-if="project.github" :href="project.github" target="_blank" rel="noopener noreferrer" class="link-btn github">
+            <a v-if="project.github" :href="project.github" target="_blank" rel="noopener noreferrer"
+              class="link-btn github">
               <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
               </svg>
               GitHub
             </a>
-            <a v-if="project.gitee" :href="project.gitee" target="_blank" rel="noopener noreferrer" class="link-btn gitee">
+            <a v-if="project.gitee" :href="project.gitee" target="_blank" rel="noopener noreferrer"
+              class="link-btn gitee">
               <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10.184 0c-.944 0-1.784.39-2.423 1.018C7.34.39 6.5.78 6.5 1.535v21.323c0 .755.84 1.145 1.261.723.421-.421.763-.963.763-1.538V6.295l5.66 5.66c.193.193.451.29.708.29.258 0 .516-.097.708-.29.385-.385.385-1.012 0-1.397L10.18 5.006V1.535c0-.755-.84-1.145-1.261-.723-.421.421-.763.963-.763 1.538v16.54c0 1.018-.842 1.847-1.885 1.847-.755 0-1.368-.63-1.368-1.385V1.535C5.603.78 6.44.39 7.34.39c.902 0 1.62-.51 2.025-1.232C9.78-.51 10.5.03 11.26.03c.755 0 1.385-.54 1.385-1.295 0-.755-.63-1.385-1.385-1.385L10.184 0z"/>
+                <path
+                  d="M10.184 0c-.944 0-1.784.39-2.423 1.018C7.34.39 6.5.78 6.5 1.535v21.323c0 .755.84 1.145 1.261.723.421-.421.763-.963.763-1.538V6.295l5.66 5.66c.193.193.451.29.708.29.258 0 .516-.097.708-.29.385-.385.385-1.012 0-1.397L10.18 5.006V1.535c0-.755-.84-1.145-1.261-.723-.421.421-.763.963-.763 1.538v16.54c0 1.018-.842 1.847-1.885 1.847-.755 0-1.368-.63-1.368-1.385V1.535C5.603.78 6.44.39 7.34.39c.902 0 1.62-.51 2.025-1.232C9.78-.51 10.5.03 11.26.03c.755 0 1.385-.54 1.385-1.295 0-.755-.63-1.385-1.385-1.385L10.184 0z" />
               </svg>
               Gitee
             </a>
@@ -195,7 +205,7 @@ onUnmounted(() => {
           <h3 class="section-title">核心职责与成果</h3>
           <div v-for="(item, index) in project.responsibilities" :key="index" class="responsibility-item">
             <h4 class="item-title">{{ item.title }}</h4>
-            <p class="item-content">{{ item.content }}</p>
+            <p class="item-content" v-html="item.content"></p>
           </div>
         </div>
       </div>
@@ -220,7 +230,9 @@ onUnmounted(() => {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .project-card:hover {
@@ -391,7 +403,9 @@ onUnmounted(() => {
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .visit-btn:hover {
@@ -442,7 +456,9 @@ onUnmounted(() => {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .tech-badge:hover {
@@ -509,7 +525,10 @@ onUnmounted(() => {
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .link-btn:hover {

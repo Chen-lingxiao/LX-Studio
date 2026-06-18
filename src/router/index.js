@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { nextTick } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import { nextTick } from 'vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,35 +7,35 @@ const router = createRouter({
     if (savedPosition) {
       return new Promise((resolve) => {
         nextTick(() => {
-          const mainContent = document.querySelector('.main-content')
+          const mainContent = document.querySelector('.main-content');
           if (mainContent) {
-            mainContent.scrollTo({ top: savedPosition.top, left: 0 })
+            mainContent.scrollTo({ top: savedPosition.top, left: 0 });
           }
-          resolve(savedPosition)
-        })
-      })
+          resolve(savedPosition);
+        });
+      });
     }
     return new Promise((resolve) => {
       nextTick(() => {
-        const mainContent = document.querySelector('.main-content')
+        const mainContent = document.querySelector('.main-content');
         if (mainContent) {
-          mainContent.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+          mainContent.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         }
-        resolve({ left: 0, top: 0, behavior: 'instant' })
-      })
-    })
+        resolve({ left: 0, top: 0, behavior: 'instant' });
+      });
+    });
   },
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/home',
     },
     {
       path: '/home',
       name: 'Home',
-      component: () => import('../views/HomeView.vue')
+      component: () => import('../views/HomeView.vue'),
     },
-    
+
     {
       path: '/project',
       name: 'Project',
@@ -44,43 +44,43 @@ const router = createRouter({
         {
           path: 'digital-campus',
           name: 'DigitalCampusDetail',
-          component: () => import('../views/project/DigitalCampusDetail.vue')
+          component: () => import('../views/project/DigitalCampusDetail.vue'),
         },
         {
           path: 'graduation-project',
           name: 'GraduationProject',
-          component: () => import('../views/project/GraduationProject.vue')
+          component: () => import('../views/project/GraduationProject.vue'),
         },
         {
           path: 'cesium-sandbox',
           name: 'CesiumSandboxDetail',
-          component: () => import('../views/project/CesiumSandboxDetail.vue')
+          component: () => import('../views/project/CesiumSandboxDetail.vue'),
         },
         {
           path: 'echarts-datav',
           name: 'EchartsDatav',
-          component: () => import('../views/project/EchartsDatav.vue')
+          component: () => import('../views/project/EchartsDatav.vue'),
         },
         {
           path: 'example',
           name: 'ExampleProject',
-          component: () => import('../views/project/ExampleProject.vue')
-        }
-      ]
+          component: () => import('../views/project/ExampleProject.vue'),
+        },
+      ],
     },
-    
+
     {
       path: '/study/:pathMatch(.*)*',
       name: 'Study',
-      component: () => import('../views/StudyView.vue')
+      component: () => import('../views/StudyView.vue'),
     },
-    
+
     {
       path: '/articles',
       name: 'Articles',
-      component: () => import('../views/ArticlesView.vue')
-    }
-  ]
-})
+      component: () => import('../views/ArticlesView.vue'),
+    },
+  ],
+});
 
-export default router
+export default router;

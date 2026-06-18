@@ -10,8 +10,8 @@ export const studyMenu = [
       { title: 'ES6+', path: '/docs/frontend/ES6.md' },
       { title: 'TypeScript', path: '/docs/frontend/TypeScript.md' },
       { title: 'Ajax', path: '/docs/frontend/Ajax.md' },
-      { title: 'Vue2+3', path: '/docs/frontend/Vue.md' }
-    ]
+      { title: 'Vue2+3', path: '/docs/frontend/Vue.md' },
+    ],
   },
   {
     title: 'GIS框架',
@@ -23,7 +23,7 @@ export const studyMenu = [
       { title: 'MapboxGL', path: '/docs/GIS/MapboxGL.md' },
       { title: 'Cesium', path: '/docs/GIS/Cesium.md' },
       { title: 'Cesium for Unreal', path: '/docs/GIS/CesiumUnreal.md' },
-      { title: 'Three.js', path: '/docs/GIS/Threejs.md' }
-    ]
-  }
-]
+      { title: 'Three.js', path: '/docs/GIS/Threejs.md' },
+    ],
+  },
+];

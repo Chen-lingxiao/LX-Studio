@@ -1,12 +1,12 @@
 export interface MenuItem {
-  title: string
-  path: string
+  title: string;
+  path: string;
 }
 
 export interface MenuCategory {
-  title: string
-  icon: string
-  children: MenuItem[]
+  title: string;
+  icon: string;
+  children: MenuItem[];
 }
 
-export const studyMenu: MenuCategory[]
+export const studyMenu: MenuCategory[];
