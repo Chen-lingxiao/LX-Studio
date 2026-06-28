@@ -49,6 +49,30 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/history/, ''),
       },
+      '/api/articles': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/api/notes': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/api/projects': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/api/upload': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/api/admin': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
     },
   },
 
@@ -66,12 +90,10 @@ export default defineConfig({
       'element-plus/es/components/icon/style/css',
       'element-plus/es/components/scrollbar/style/css',
       'element-plus/es/components/tooltip/style/css',
-      '@element-plus/icons-vue',
-      'lucide-vue-next',
+      '@lucide/vue',
       'markdown-it',
       'markdown-it-container',
       'axios',
-      'aplayer',
     ],
   },
 

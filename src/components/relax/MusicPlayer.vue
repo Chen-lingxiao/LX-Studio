@@ -36,6 +36,10 @@
       type: Array,
       default: () => [],
     },
+    cyberpunk: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const repeatMode = ref('off');
@@ -183,7 +187,7 @@
 </script>
 
 <template>
-  <div class="music-player">
+  <div class="music-player" :class="{ cyberpunk: cyberpunk }">
     <div class="player-content">
       <!-- 歌曲信息 -->
       <div class="song-info" v-if="currentSong">
@@ -681,5 +685,153 @@
     padding-top: 8px;
     margin-top: auto;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* ── 赛博朋克模式 ── */
+  .music-player.cyberpunk .song-name {
+    color: #00f0ff;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  }
+
+  .music-player.cyberpunk .song-artist {
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .music-player.cyberpunk .time {
+    color: rgba(0, 240, 255, 0.6);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .music-player.cyberpunk .progress-bar {
+    background: rgba(0, 240, 255, 0.1);
+  }
+
+  .music-player.cyberpunk .progress-fill {
+    background: linear-gradient(90deg, #00f0ff, #ff2e93);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  }
+
+  .music-player.cyberpunk .progress-thumb {
+    background: #00f0ff;
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+  }
+
+  .music-player.cyberpunk .control-btn {
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .music-player.cyberpunk .control-btn:hover {
+    color: #ff2e93;
+    background: rgba(255, 46, 147, 0.08);
+  }
+
+  .music-player.cyberpunk .control-btn.active {
+    color: #ff2e93;
+    text-shadow: 0 0 6px rgba(255, 46, 147, 0.5);
+  }
+
+  .music-player.cyberpunk .play-btn {
+    background: linear-gradient(135deg, #00f0ff, #ff2e93);
+    box-shadow: 0 6px 25px rgba(0, 240, 255, 0.3);
+  }
+
+  .music-player.cyberpunk .play-btn:hover {
+    box-shadow: 0 8px 30px rgba(0, 240, 255, 0.5);
+  }
+
+  .music-player.cyberpunk .volume-btn {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .music-player.cyberpunk .volume-btn:hover {
+    color: #00f0ff;
+  }
+
+  .music-player.cyberpunk .volume-bar {
+    background: rgba(0, 240, 255, 0.1);
+  }
+
+  .music-player.cyberpunk .volume-fill {
+    background: #00f0ff;
+    box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+  }
+
+  .music-player.cyberpunk .playlist-item {
+    border-bottom-color: rgba(0, 240, 255, 0.08);
+  }
+
+  .music-player.cyberpunk .playlist-item:hover {
+    background: rgba(255, 46, 147, 0.06);
+  }
+
+  .music-player.cyberpunk .playlist-item.active {
+    background: rgba(0, 240, 255, 0.08);
+  }
+
+  .music-player.cyberpunk .playlist-number {
+    background: rgba(0, 240, 255, 0.1);
+    color: rgba(0, 240, 255, 0.7);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .music-player.cyberpunk .playlist-item.active .playlist-number {
+    background: rgba(255, 46, 147, 0.3);
+    color: #ff2e93;
+    border-color: rgba(255, 46, 147, 0.4);
+    box-shadow: 0 0 6px rgba(255, 46, 147, 0.4);
+  }
+
+  .music-player.cyberpunk .playlist-name {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .music-player.cyberpunk .playlist-item:hover .playlist-name {
+    color: #ff2e93;
+    text-shadow: 0 0 6px rgba(255, 46, 147, 0.5);
+  }
+
+  .music-player.cyberpunk .playlist-artist {
+    color: rgba(0, 240, 255, 0.5);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .music-player.cyberpunk .playlist-item.active .playlist-name {
+    color: #00f0ff;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  }
+
+  .music-player.cyberpunk .copyright {
+    color: rgba(0, 240, 255, 0.4);
+    border-top-color: rgba(0, 240, 255, 0.1);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .music-player.cyberpunk .wave-animation span {
+    background: #00f0ff;
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+  }
+
+  .music-player.cyberpunk .album-cover {
+    border-radius: 0;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+  }
+
+  .music-player.cyberpunk .playlist::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.2);
+  }
+
+  .music-player.cyberpunk .playlist::-webkit-scrollbar-track {
+    background: rgba(0, 240, 255, 0.03);
+  }
+
+  .music-player.cyberpunk .repeat-all::after,
+  .music-player.cyberpunk .repeat-one::after {
+    background: #ff2e93;
+    box-shadow: 0 0 6px rgba(255, 46, 147, 0.6);
   }
 </style>

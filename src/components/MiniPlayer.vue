@@ -8,7 +8,7 @@
     Volume2,
     VolumeX,
     Music,
-  } from 'lucide-vue-next';
+  } from '@lucide/vue';
   import { useAudioPlayer } from '../composables/useAudioPlayer';
 
   const {

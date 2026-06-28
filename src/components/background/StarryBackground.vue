@@ -293,7 +293,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: auto;
+    pointer-events: none;
     background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f1628 100%);
     will-change: transform;
     transform: translateZ(0);

@@ -1,163 +1,230 @@
 <script setup>
 /**
- * AppFooter.vue - 应用页脚组件
+ * AppFooter.vue - 首页专属页脚组件
  *
- * 功能说明：
- * 1. 悬浮在屏幕底部，不占用页面空间
- * 2. 显示版权信息和备案号
- * 3. 支持明暗主题切换
- * 4. 符合法规要求
- * 5. 首页：背景透明，文字颜色根据章节背景调整
- * 6. 项目/学习页面：背景透明，文字颜色跟随明暗模式
+ * 布局（参考图片样式）：
+ * - 左侧：SYS 版本行 + 版权行
+ * - 右侧：ICP 备案 + 公安备案 + LAST_SYNC 时间（三行）
  */
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { useHomeSection } from '../composables/useHomeSection';
-import { useSettings } from '../composables/useSettings';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { useTheme } from '../composables/useTheme';
 
-const route = useRoute();
-const { settings } = useSettings();
-const { isDarkSection, isLightSection } = useHomeSection();
-
-const props = defineProps({
-  transparentMode: {
-    type: Boolean,
-    default: false,
-  },
-});
+const { isDark, isCyberpunk } = useTheme();
 
 const currentYear = new Date().getFullYear();
+const sysVersion = 'v3.7.1';
 
-/**
- * 判断是否在首页
- */
-const isHome = computed(() => route.path === '/' || route.path === '/home');
+const syncTimeText = ref('');
+let timeTimer = null;
 
-/**
- * 是否显示透明背景
- */
-const showTransparent = computed(() => props.transparentMode || isHome.value);
+const pad = (n) => String(n).padStart(2, '0');
 
-/**
- * 是否应用白色文字样式
- * 首页：暗色章节或暗色模式使用白色文字
- * 项目/学习页面：根据明暗模式
- */
-const useWhiteTextStyle = computed(() => {
-  if (props.transparentMode) {
-    if (isHome.value) {
-      return isDarkSection.value || settings.isDark;
-    }
-    return settings.isDark;
-  }
-  return isDarkSection.value || settings.isDark;
+const formatSyncTime = (date) => {
+  const y = date.getFullYear();
+  const mo = pad(date.getMonth() + 1);
+  const d = pad(date.getDate());
+  const hh = pad(date.getHours());
+  const mm = pad(date.getMinutes());
+  const ss = pad(date.getSeconds());
+  const tz = -date.getTimezoneOffset() / 60;
+  const tzStr = `UTC${tz >= 0 ? '+' : '-'}${pad(Math.abs(tz))}`;
+  return `LAST_SYNC: ${y}-${mo}-${d} ${hh}:${mm}:${ss} ${tzStr}`;
+};
+
+const updateTime = () => {
+  syncTimeText.value = formatSyncTime(new Date());
+};
+
+onMounted(() => {
+  updateTime();
+  timeTimer = setInterval(updateTime, 1000);
 });
+
+onUnmounted(() => {
+  if (timeTimer) {
+    clearInterval(timeTimer);
+  }
+});
+
+const yearText = computed(() => `${currentYear}`);
 </script>
 
 <template>
-  <footer class="app-footer" :class="{ 'transparent-footer': showTransparent }">
-    <div class="footer-content">
-      <span class="footer-copyright" :class="{
-        'white-text': useWhiteTextStyle,
-        'dark-text': !useWhiteTextStyle && showTransparent,
-      }">© {{ currentYear }} LX 版权所有</span>
-      <span class="footer-divider" :class="{
-        'white-divider': useWhiteTextStyle,
-        'dark-divider': !useWhiteTextStyle && showTransparent,
-      }">|</span>
-      <a class="footer-icp" :class="{
-        'white-text': useWhiteTextStyle,
-        'dark-text': !useWhiteTextStyle && showTransparent,
-      }" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">陇ICP备2026004546号</a>
-      <span class="footer-divider" :class="{
-        'white-divider': useWhiteTextStyle,
-        'dark-divider': !useWhiteTextStyle && showTransparent,
-      }">|</span>
-      <a class="footer-icp" :class="{
-        'white-text': useWhiteTextStyle,
-        'dark-text': !useWhiteTextStyle && showTransparent,
-      }" href="https://beian.mps.gov.cn/#/query/webSearch?code=62072202000212" target="_blank"
-        rel="noopener noreferrer">
-        <img src="/备案图标.png" alt="备案图标" class="footer-icp-icon" />
-        甘公网安备62072202000212号
-      </a>
+  <footer class="app-footer" :class="{ dark: isDark, cyberpunk: isCyberpunk }">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <p class="brand-line">【揽星河】 SYS:{{ sysVersion }}</p>
+        <p class="copyright-line">© {{ yearText }} 揽星河 · 研习站</p>
+      </div>
+      <div class="footer-right">
+        <a
+          class="record-line"
+          href="https://beian.miit.gov.cn/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >陇ICP备2026004546号</a
+        >
+        <a
+          class="record-line"
+          href="https://beian.mps.gov.cn/#/query/webSearch?code=62072202000212"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="/备案图标.png" alt="备案图标" class="record-icon" />
+          甘公网安备62072202000212号
+        </a>
+        <span class="sync-line">{{ syncTimeText }}</span>
+      </div>
     </div>
   </footer>
 </template>
 
 <style scoped>
 .app-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 28px;
-  background-color: var(--color-bg-surface);
+  width: 100%;
+  height: 140px;
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
-  transition:
-    background-color 0.3s,
-    border-color 0.3s;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+  letter-spacing: 0.03rem;
 }
 
-.footer-content {
+.app-footer.dark {
+  background-color: #000000;
+  color: rgba(224, 232, 240, 0.8);
+}
+
+.footer-inner {
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--color-text-muted);
+  justify-content: space-between;
+  gap: 2rem;
 }
 
-.footer-content span,
-.footer-content a {
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  line-height: 1.7;
+}
+
+.brand-line {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
+}
+
+.copyright-line {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+}
+
+.app-footer.dark .brand-line {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.app-footer.dark .copyright-line {
+  color: rgba(224, 232, 240, 0.5);
+}
+
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+  line-height: 1.7;
+}
+
+.record-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
   transition: color 0.3s;
 }
 
-.footer-divider {
-  color: var(--color-border);
+.record-line:hover {
+  color: #ffffff;
 }
 
-.footer-icp {
-  cursor: pointer;
+.app-footer.dark .record-line {
+  color: rgba(224, 232, 240, 0.65);
 }
 
-.footer-icp:hover {
-  color: var(--color-text-secondary);
+.app-footer.dark .record-line:hover {
+  color: #ffffff;
 }
 
-.footer-icp-icon {
+.sync-line {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.app-footer.dark .sync-line {
+  color: rgba(224, 232, 240, 0.45);
+}
+
+.record-icon {
   display: inline-block;
   width: 14px;
   height: 14px;
-  vertical-align: -3px;
-  margin-right: 4px;
+  vertical-align: -2px;
 }
 
-/* 透明页脚样式（首页） */
-.transparent-footer {
-  background-color: transparent;
-  border-top: none;
+@media (max-width: 900px) {
+  .app-footer {
+    height: auto;
+    min-height: 140px;
+    padding: 1rem 0;
+  }
+  .footer-inner {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .footer-right {
+    align-items: flex-start;
+  }
 }
 
-/* 白色文本（首页） */
-.white-text {
-  color: rgba(255, 255, 255, 0.75);
+/* ── 赛博朋克模式 ── */
+.app-footer.cyberpunk {
+  background-color: #05050a;
+  border-top: 1px solid rgba(0, 240, 255, 0.15);
+  font-family: 'Share Tech Mono', monospace;
 }
 
-/* 白色分隔线（首页） */
-.white-divider {
+.app-footer.cyberpunk .brand-line {
+  color: #00f0ff;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+}
+
+.app-footer.cyberpunk .copyright-line {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.app-footer.cyberpunk .record-line {
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* 深色文本（首页浅色章节/项目学习页面）- 不受明暗模式影响 */
-.dark-text {
-  color: rgba(58, 90, 74, 0.7) !important;
+.app-footer.cyberpunk .record-line:hover {
+  color: #00f0ff;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
 }
 
-/* 深色分隔线（首页浅色章节/项目学习页面）- 不受明暗模式影响 */
-.dark-divider {
-  color: rgba(58, 90, 74, 0.3) !important;
+.app-footer.cyberpunk .sync-line {
+  color: rgba(0, 240, 255, 0.5);
 }
 </style>

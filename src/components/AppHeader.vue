@@ -1,75 +1,40 @@
 <script setup>
-  /**
-   * AppHeader.vue - 应用头部组件
-   *
-   * 功能说明：
-   * 1. 显示应用标题和 Cesium 版本
-   * 2. 提供横向导航菜单（首页、项目示例、学习文档）
-   * 3. 集成功能区（邮箱、GitHub、主题切换、设置）
-   * 4. 在首页时背景透明，与首页融为一体
-   */
   import { ref, computed } from 'vue';
   import { useRoute } from 'vue-router';
-  import { useSettings } from '../composables/useSettings';
+  import { useTheme } from '../composables/useTheme';
   import { useHomeSection } from '../composables/useHomeSection';
   import SettingsPanel from './settings/SettingsPanel.vue';
 
   const route = useRoute();
-  const { settings, updateSetting } = useSettings();
+  const { isDark, isCyberpunk, toggleColorMode } = useTheme();
   const { isLightSection, isDarkSection } = useHomeSection();
 
-  /**
-   * 判断是否在首页
-   */
   const isHome = computed(() => route.path === '/home');
 
-  /**
-   * 是否应用白色文字样式
-   * - 首页：暗色章节或暗色模式使用白色文字
-   * - 非首页：暗色主题使用白色文字
-   */
   const useWhiteTextStyle = computed(() => {
     if (isHome.value) {
-      return isDarkSection.value || settings.isDark;
+      return isDarkSection.value || isDark.value || isCyberpunk.value;
     }
-    return settings.isDark;
+    return isDark.value || isCyberpunk.value;
   });
 
-  /**
-   * 是否应用深色文字样式
-   * - 首页：浅色章节且亮色模式使用深色文字
-   * - 非首页：浅色主题使用深色文字
-   */
   const useDarkTextStyle = computed(() => {
     if (isHome.value) {
-      return isLightSection.value && !settings.isDark;
+      return isLightSection.value && !isDark.value && !isCyberpunk.value;
     }
-    return !settings.isDark;
+    return !isDark.value && !isCyberpunk.value;
   });
 
-  /**
-   * 设置面板显示状态
-   */
   const showSettingsPanel = ref(false);
 
-  /**
-   * 处理主题切换
-   */
   const handleThemeToggle = () => {
-    updateSetting('isDark', !settings.isDark);
+    toggleColorMode();
   };
 
-  /**
-   * 处理GitHub点击
-   */
   const handleGithubClick = () => {
     window.open('https://github.com/Chen-lingxiao', '_blank');
   };
 
-  /**
-   * 处理图标点击
-   * @param {string} iconName - 图标名称
-   */
   const handleIconClick = (iconName) => {
     if (iconName === 'settings') {
       showSettingsPanel.value = !showSettingsPanel.value;
@@ -80,16 +45,13 @@
     }
   };
 
-  /**
-   * 关闭设置面板
-   */
   const handleCloseSettings = () => {
     showSettingsPanel.value = false;
   };
 </script>
 
 <template>
-  <header class="app-header" :class="{ 'transparent-header': isHome }">
+  <header class="app-header" :class="{ 'transparent-header': isHome, cyberpunk: isCyberpunk }">
     <!-- 左侧标题区域 -->
     <div class="header-content">
       <h1
@@ -99,16 +61,8 @@
           'force-dark-text': useDarkTextStyle,
         }"
       >
-        LX
+        揽星河 · 研习站
       </h1>
-      <span
-        class="header-version"
-        :class="{
-          'white-text': useWhiteTextStyle,
-          'force-dark-text': useDarkTextStyle,
-        }"
-        >v1.0.0</span
-      >
     </div>
 
     <!-- 右侧区域：导航菜单 + 功能区 -->
@@ -119,26 +73,13 @@
           to="/"
           class="nav-link"
           :class="{
-            active: $route.path === '/',
+            active: $route.path === '/home',
             'white-link': useWhiteTextStyle,
             'force-dark-link': useDarkTextStyle,
           }"
         >
           <span>首页</span>
         </router-link>
-
-        <router-link
-          to="/articles"
-          class="nav-link"
-          :class="{
-            active: $route.path.startsWith('/articles'),
-            'white-link': useWhiteTextStyle,
-            'force-dark-link': useDarkTextStyle,
-          }"
-        >
-          <span>文章</span>
-        </router-link>
-
         <router-link
           to="/project"
           class="nav-link"
@@ -150,6 +91,19 @@
         >
           <span>项目</span>
         </router-link>
+        <router-link
+          to="/articles"
+          class="nav-link"
+          :class="{
+            active: $route.path.startsWith('/articles'),
+            'white-link': useWhiteTextStyle,
+            'force-dark-link': useDarkTextStyle,
+          }"
+        >
+          <span>随笔</span>
+        </router-link>
+
+        
         <router-link
           to="/study"
           class="nav-link"
@@ -203,11 +157,11 @@
             'force-dark-icon': useDarkTextStyle,
           }"
           @click="handleThemeToggle"
-          :title="settings.isDark ? '切换到亮色主题' : '切换到暗色主题'"
+          :title="isDark ? '切换到亮色主题' : '切换到暗色主题'"
         >
           <span
             class="iconfont"
-            :class="settings.isDark ? 'icon-taiyang' : 'icon-yueliang'"
+            :class="isDark ? 'icon-taiyang' : 'icon-yueliang'"
           ></span>
         </div>
         <div
@@ -421,5 +375,55 @@
   /* 图标字体样式 */
   .iconfont {
     font-size: 18px;
+  }
+
+  /* ── 赛博朋克模式 ── */
+  .app-header.cyberpunk {
+    background-color: #05050a;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+    box-shadow:
+      0 1px 0 rgba(0, 240, 255, 0.3),
+      0 2px 8px rgba(0, 240, 255, 0.15),
+      0 4px 20px rgba(0, 240, 255, 0.08);
+  }
+
+  .app-header.cyberpunk.transparent-header {
+    background-color: transparent;
+  }
+
+  .app-header.cyberpunk .header-title {
+    color: #00f0ff;
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  }
+
+  .app-header.cyberpunk .nav-link {
+    color: rgba(255, 255, 255, 0.55);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .app-header.cyberpunk .nav-link:hover {
+    color: #ff2e93;
+    background-color: rgba(255, 46, 147, 0.06);
+    text-shadow: 0 0 6px rgba(255, 46, 147, 0.5);
+  }
+
+  .app-header.cyberpunk .nav-link.active {
+    color: #ff2e93;
+    border-bottom-color: #ff2e93;
+    text-shadow: 0 0 8px rgba(255, 46, 147, 0.6);
+  }
+
+  .app-header.cyberpunk .nav-divider {
+    background-color: rgba(0, 240, 255, 0.2);
+  }
+
+  .app-header.cyberpunk .icon-item {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .app-header.cyberpunk .icon-item:hover {
+    color: #00f0ff;
+    background-color: rgba(0, 240, 255, 0.08);
   }
 </style>

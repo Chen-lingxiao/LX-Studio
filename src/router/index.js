@@ -42,29 +42,16 @@ const router = createRouter({
       component: () => import('../views/project/ProjectView.vue'),
       children: [
         {
-          path: 'digital-campus',
-          name: 'DigitalCampusDetail',
-          component: () => import('../views/project/DigitalCampusDetail.vue'),
+          path: '',
+          name: 'ProjectListEmpty',
+          component: {
+            render: () => null,
+          },
         },
         {
-          path: 'graduation-project',
-          name: 'GraduationProject',
-          component: () => import('../views/project/GraduationProject.vue'),
-        },
-        {
-          path: 'cesium-sandbox',
-          name: 'CesiumSandboxDetail',
-          component: () => import('../views/project/CesiumSandboxDetail.vue'),
-        },
-        {
-          path: 'echarts-datav',
-          name: 'EchartsDatav',
-          component: () => import('../views/project/EchartsDatav.vue'),
-        },
-        {
-          path: 'example',
-          name: 'ExampleProject',
-          component: () => import('../views/project/ExampleProject.vue'),
+          path: ':slug',
+          name: 'ProjectDetail',
+          component: () => import('../views/project/ProjectDetail.vue'),
         },
       ],
     },
@@ -79,6 +66,12 @@ const router = createRouter({
       path: '/articles',
       name: 'Articles',
       component: () => import('../views/ArticlesView.vue'),
+    },
+
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: () => import('../views/AdminView.vue'),
     },
   ],
 });

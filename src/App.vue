@@ -9,7 +9,6 @@
    * 4. 项目和学习页面底部透明，与透明页脚配合
    */
   import AppHeader from './components/AppHeader.vue';
-  import AppFooter from './components/AppFooter.vue';
   import MiniPlayer from './components/MiniPlayer.vue';
   import { useSettings } from './composables/useSettings';
   import { useRoute } from 'vue-router';
@@ -47,6 +46,11 @@
   const isHome = computed(() => route.path === '/' || route.path === '/home');
 
   /**
+   * 判断是否是管理后台页面
+   */
+  const isAdmin = computed(() => route.path.startsWith('/admin'));
+
+  /**
    * 判断是否是项目、学习或文章页面（需要透明底部页脚）
    */
   const isProjectOrStudy = computed(() => {
@@ -59,7 +63,11 @@
 </script>
 
 <template>
-  <div id="app">
+  <!-- 管理后台：独立页面，不加载公共布局 -->
+  <router-view v-if="isAdmin" />
+
+  <!-- 正常页面：带公共布局 -->
+  <div v-else id="app">
     <!-- 加载动画层 -->
     <div
       class="loading-overlay"
@@ -87,8 +95,6 @@
     >
       <router-view />
     </main>
-    <!-- 页脚 -->
-    <AppFooter :transparent-mode="isProjectOrStudy" />
     <!-- 全局迷你播放器 -->
     <MiniPlayer />
   </div>
@@ -139,7 +145,7 @@
     height: 100vh;
     overflow-y: auto;
     padding-top: 50px;
-    padding-bottom: 28px;
+    padding-bottom: 0;
   }
 
   .main-content::-webkit-scrollbar {

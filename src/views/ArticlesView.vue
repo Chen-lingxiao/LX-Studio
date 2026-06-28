@@ -1,45 +1,108 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue';
-  import { useSettings } from '../composables/useSettings';
-  import { articles, categories } from '../data/articles';
   import ArticleListItem from '../components/blog/ArticleListItem.vue';
+  import MarkdownIt from 'markdown-it';
+  import hljs from 'highlight.js/lib/core';
+  import javascript from 'highlight.js/lib/languages/javascript';
+  import bash from 'highlight.js/lib/languages/bash';
+  import xml from 'highlight.js/lib/languages/xml';
+  import css from 'highlight.js/lib/languages/css';
+  import json from 'highlight.js/lib/languages/json';
+  import typescript from 'highlight.js/lib/languages/typescript';
+  import { useTheme } from '../composables/useTheme';
+  import { useCyberpunkGlitch } from '../composables/useCyberpunkGlitch';
 
-  const { settings } = useSettings();
+  hljs.registerLanguage('javascript', javascript);
+  hljs.registerLanguage('bash', bash);
+  hljs.registerLanguage('xml', xml);
+  hljs.registerLanguage('html', xml);
+  hljs.registerLanguage('css', css);
+  hljs.registerLanguage('json', json);
+  hljs.registerLanguage('typescript', typescript);
 
-  const activeCategory = ref('全部');
+  const { isDark, isCyberpunk } = useTheme();
+
+  const pageRef = ref<HTMLElement | null>(null);
+  useCyberpunkGlitch(
+    pageRef,
+    isCyberpunk,
+    { selectors: ['.article-list-item', '.category-tab'] }
+  );
+
+  const md = new MarkdownIt({
+    html: true,
+    linkify: true,
+    typographer: true,
+    highlight: function (str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          const result = hljs.highlight(str, { language: lang, ignoreIllegals: true });
+          return '<pre class="hljs"><code>' + result.value + '</code></pre>';
+        } catch (__) {}
+      }
+      return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+    },
+  });
+
+  const articles = ref([]);
+  const tags = ref([]);
+  const loading = ref(true);
+  const activeTag = ref('全部');
   const selectedArticle = ref(null);
   const articleContent = ref('');
 
   const sortedArticles = computed(() => {
     const filtered =
-      activeCategory.value === '全部'
-        ? articles
-        : articles.filter((a) => a.category === activeCategory.value);
+      activeTag.value === '全部'
+        ? articles.value
+        : articles.value.filter((a) => a.tags && a.tags.includes(activeTag.value));
     return [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
   });
 
-  const selectArticle = async (article) => {
-    selectedArticle.value = article;
-    if (article.contentPath) {
-      try {
-        const response = await fetch(`/data/content/${article.contentPath}`);
-        articleContent.value = await response.text();
-      } catch (error) {
-        articleContent.value = '文章内容加载失败';
+  const loadArticles = async () => {
+    loading.value = true;
+    try {
+      const response = await fetch('/api/articles');
+      const result = await response.json();
+      if (result.success) {
+        articles.value = result.data;
       }
-    } else {
-      articleContent.value = '暂无内容';
+    } catch (error) {
+      console.error('加载文章列表失败:', error);
     }
   };
 
-  onMounted(() => {
+  const loadTags = async () => {
+    try {
+      const response = await fetch('/api/articles/tags');
+      const result = await response.json();
+      if (result.success) {
+        tags.value = result.data;
+      }
+    } catch (error) {
+      console.error('加载标签失败:', error);
+    }
+  };
+
+  const selectArticle = async (article) => {
+    selectedArticle.value = article;
+    if (article.content) {
+      articleContent.value = md.render(article.content);
+    } else {
+      articleContent.value = '<p>暂无内容</p>';
+    }
+  };
+
+  onMounted(async () => {
+    await Promise.all([loadArticles(), loadTags()]);
+    loading.value = false;
     if (sortedArticles.value.length > 0) {
       selectArticle(sortedArticles.value[0]);
     }
   });
 
-  const handleCategoryChange = (category) => {
-    activeCategory.value = category;
+  const handleTagChange = (tag) => {
+    activeTag.value = tag;
     if (sortedArticles.value.length > 0) {
       selectArticle(sortedArticles.value[0]);
     }
@@ -47,7 +110,7 @@
 </script>
 
 <template>
-  <div class="articles-page" :class="{ 'dark-mode': settings.isDark }">
+  <div class="articles-page" ref="pageRef" :class="{ 'dark-mode': isDark, cyberpunk: isCyberpunk }">
     <div class="articles-background">
       <div class="sky-gradient"></div>
       <div class="clouds">
@@ -55,7 +118,7 @@
         <div class="cloud cloud-2"></div>
         <div class="cloud cloud-3"></div>
       </div>
-      <div class="stars" v-if="settings.isDark">
+      <div class="stars" v-if="isDark">
         <div
           v-for="i in 50"
           :key="i"
@@ -74,14 +137,14 @@
       <header class="articles-header">
         <div class="category-tabs">
           <button
-            v-for="cat in categories"
-            :key="cat.name"
+            v-for="tag in tags"
+            :key="tag.name"
             class="category-tab"
-            :class="{ active: activeCategory === cat.name }"
-            @click="handleCategoryChange(cat.name)"
+            :class="{ active: activeTag === tag.name }"
+            @click="handleTagChange(tag.name)"
           >
-            {{ cat.name }}
-            <span class="category-count">{{ cat.count }}</span>
+            {{ tag.name }}
+            <span class="category-count">{{ tag.count }}</span>
           </button>
         </div>
       </header>
@@ -93,12 +156,14 @@
             <span class="sidebar-count">{{ sortedArticles.length }} 篇</span>
           </div>
 
-          <div class="articles-list custom-scrollbar">
+          <div v-if="loading" class="loading-state">加载中...</div>
+          
+          <div v-else class="articles-list custom-scrollbar">
             <ArticleListItem
               v-for="article in sortedArticles"
               :key="article.id"
               :article="article"
-              :is-dark="settings.isDark"
+              :is-dark="isDark"
               :selected="selectedArticle?.id === article.id"
               @click="selectArticle(article)"
             />
@@ -109,45 +174,20 @@
           <div v-if="selectedArticle" class="article-detail">
             <header class="article-header">
               <div class="article-meta">
-                <span class="article-category">{{
-                  selectedArticle.category
-                }}</span>
-                <span class="article-date">{{ selectedArticle.date }}</span>
-              </div>
-              <h2 class="article-title">{{ selectedArticle.title }}</h2>
-              <p class="article-excerpt">{{ selectedArticle.excerpt }}</p>
-              <div class="article-tags">
                 <span
                   v-for="tag in selectedArticle.tags"
                   :key="tag"
                   class="article-tag"
+                  >{{ tag }}</span
                 >
-                  {{ tag }}
+                <span class="article-date">{{ selectedArticle.date }}</span>
+                <span v-if="selectedArticle.readTime" class="article-read-time">
+                  📖 {{ selectedArticle.readTime }}
                 </span>
               </div>
-              <div class="article-stats">
-                <span class="stat-item">
-                  <span class="stat-icon">📖</span>
-                  {{ selectedArticle.readTime }}
-                </span>
-                <span class="stat-item">
-                  <span class="stat-icon">👁️</span>
-                  {{ selectedArticle.views }} 阅读
-                </span>
-                <span class="stat-item">
-                  <span class="stat-icon">❤️</span>
-                  {{ selectedArticle.likes }}
-                </span>
-                <span class="stat-item">
-                  <span class="stat-icon">💬</span>
-                  {{ selectedArticle.comments }}
-                </span>
-              </div>
+              <h2 class="article-title">{{ selectedArticle.title }}</h2>
+              <p class="article-excerpt">{{ selectedArticle.excerpt }}</p>
             </header>
-
-            <div class="article-cover">
-              <img :src="selectedArticle.cover" :alt="selectedArticle.title" />
-            </div>
 
             <div class="article-body">
               <div class="markdown-content" v-html="articleContent"></div>
@@ -156,7 +196,7 @@
 
           <div v-else class="empty-state">
             <div class="empty-icon">📝</div>
-            <p>请选择一篇文章查看内容</p>
+            <p>{{ loading ? '加载中...' : '请选择一篇文章查看内容' }}</p>
           </div>
         </article>
       </main>
@@ -166,9 +206,10 @@
 
 <style scoped>
   .articles-page {
-    min-height: 100vh;
+    height: 100%;
     position: relative;
     transition: all 0.5s ease;
+    overflow: hidden;
   }
 
   .articles-background {
@@ -283,13 +324,18 @@
     position: relative;
     z-index: 1;
     max-width: 1400px;
+    height: 100%;
     margin: 0 auto;
-    padding: 80px 20px 40px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
   }
 
   .articles-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
   }
 
   .category-tabs {
@@ -351,6 +397,8 @@
     display: grid;
     grid-template-columns: 400px 1fr;
     gap: 30px;
+    flex: 1;
+    min-height: 0;
   }
 
   .articles-sidebar {
@@ -361,6 +409,8 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   :root:not(.dark) .articles-sidebar {
@@ -414,30 +464,27 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-height: calc(100vh - 250px);
-    overflow-y: auto;
-    padding-right: 5px;
   }
 
-  .articles-list::-webkit-scrollbar {
+  .articles-sidebar::-webkit-scrollbar {
     width: 6px;
   }
 
-  .articles-list::-webkit-scrollbar-track {
+  .articles-sidebar::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 3px;
   }
 
-  .dark-mode .articles-list::-webkit-scrollbar-track {
+  .dark-mode .articles-sidebar::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
   }
 
-  .articles-list::-webkit-scrollbar-thumb {
+  .articles-sidebar::-webkit-scrollbar-thumb {
     background: rgba(58, 90, 74, 0.3);
     border-radius: 3px;
   }
 
-  .dark-mode .articles-list::-webkit-scrollbar-thumb {
+  .dark-mode .articles-sidebar::-webkit-scrollbar-thumb {
     background: rgba(100, 140, 120, 0.3);
   }
 
@@ -448,7 +495,8 @@
     padding: 35px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    min-height: 500px;
+    overflow-y: auto;
+    min-height: 0;
     transition: all 0.3s ease;
   }
 
@@ -461,6 +509,28 @@
     background: rgba(15, 20, 35, 0.9);
     border-color: rgba(80, 100, 120, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .article-content-area::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .article-content-area::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 3px;
+  }
+
+  .dark-mode .article-content-area::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .article-content-area::-webkit-scrollbar-thumb {
+    background: rgba(58, 90, 74, 0.25);
+    border-radius: 3px;
+  }
+
+  .dark-mode .article-content-area::-webkit-scrollbar-thumb {
+    background: rgba(100, 140, 120, 0.25);
   }
 
   .article-detail {
@@ -478,284 +548,509 @@
     }
   }
 
+  /* ── 文章头部信息 ── */
   .article-header {
-    margin-bottom: 25px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
+  .dark-mode .article-header {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  /* 元信息行：分类 + 日期 */
   .article-meta {
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
-
-  .article-category {
-    font-size: 12px;
-    padding: 4px 12px;
-    background: rgba(58, 90, 74, 0.15);
-    color: #3a5a4a;
-    border-radius: 15px;
-    font-weight: 500;
-  }
-
-  .dark-mode .article-category {
-    background: rgba(100, 160, 140, 0.2);
-    color: #a8c8b8;
-  }
-
-  .article-date {
-    font-size: 12px;
-    color: #7a8a9a;
-  }
-
-  .dark-mode .article-date {
-    color: #9aabbb;
-  }
-
-  .article-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #1a2a3a;
-    margin: 0 0 15px 0;
-    line-height: 1.4;
-    transition: color 0.3s ease;
-  }
-
-  .dark-mode .article-title {
-    color: #e8f4f8;
-  }
-
-  .article-excerpt {
-    font-size: 1rem;
-    color: #4a5a6a;
-    line-height: 1.7;
-    margin: 0 0 15px 0;
-    transition: color 0.3s ease;
-  }
-
-  .dark-mode .article-excerpt {
-    color: #aabbcc;
-  }
-
-  .article-tags {
-    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 15px;
   }
 
   .article-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 14px;
+    background: rgba(58, 90, 74, 0.1);
+    color: #3a6a4a;
+    border-radius: 20px;
     font-size: 12px;
-    padding: 4px 10px;
-    background: rgba(135, 206, 235, 0.2);
-    color: #2a5a6a;
-    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
   }
 
   .dark-mode .article-tag {
-    background: rgba(100, 160, 180, 0.2);
-    color: #a8d8e8;
+    background: rgba(106, 196, 138, 0.12);
+    color: #6ac48a;
   }
 
-  .article-stats {
-    display: flex;
-    gap: 20px;
-  }
-
-  .stat-item {
-    display: flex;
+  .article-date {
+    font-size: 13px;
+    color: #8a9aaa;
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
-    font-size: 12px;
+    gap: 4px;
+  }
+
+  .article-date::before {
+    content: '📅';
+    font-size: 13px;
+  }
+
+  .article-read-time {
+    font-size: 13px;
+    color: #7a8a9a;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .dark-mode .article-read-time {
     color: #6a7a8a;
   }
 
-  .dark-mode .stat-item {
+  /* 标题 */
+  .article-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a2a3a;
+    margin: 0 0 12px;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+  }
+
+  .dark-mode .article-title {
+    color: #e8f0f8;
+  }
+
+  /* 描述 / 摘要 */
+  .article-excerpt {
+    font-size: 15px;
+    color: #5a6a7a;
+    line-height: 1.7;
+    margin: 0 0 16px;
+  }
+
+  .dark-mode .article-excerpt {
     color: #8a9aaa;
   }
 
-  .stat-icon {
-    font-size: 14px;
+  /* ── Markdown 正文排版 ── */
+  .markdown-content {
+    font-size: 16px;
+    line-height: 1.85;
+    letter-spacing: 0.02em;
+    color: #2c3e50;
+    word-break: break-word;
   }
 
-  .article-cover {
-    margin-bottom: 25px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.1);
+  .dark-mode .markdown-content {
+    color: #d0d8e0;
   }
 
-  .dark-mode .article-cover {
-    background: rgba(0, 0, 0, 0.3);
+  /* ── 标题 ── */
+  .markdown-content :deep(h1) {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 40px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(58, 90, 74, 0.2);
+    line-height: 1.4;
+    letter-spacing: 0.03em;
   }
 
-  .article-cover img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    background: rgba(0, 0, 0, 0.1);
+  .markdown-content :deep(h2) {
+    font-size: 23px;
+    font-weight: 700;
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(58, 90, 74, 0.12);
+    line-height: 1.4;
+    letter-spacing: 0.02em;
   }
 
-  .dark-mode .article-cover img {
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  .article-body {
-    color: #3a4a5a;
-    line-height: 1.8;
-    transition: color 0.3s ease;
-  }
-
-  .dark-mode .article-body {
-    color: #c8d8e8;
-  }
-
-  .markdown-content h1 {
-    font-size: 1.5rem;
+  .markdown-content :deep(h3) {
+    font-size: 19px;
     font-weight: 600;
-    margin: 25px 0 15px 0;
+    margin: 28px 0 12px;
+    line-height: 1.5;
+  }
+
+  .markdown-content :deep(h4) {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 24px 0 10px;
+    line-height: 1.5;
+  }
+
+  .markdown-content :deep(h5),
+  .markdown-content :deep(h6) {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    line-height: 1.5;
+    color: #5a6a7a;
+  }
+
+  .dark-mode .markdown-content :deep(h5),
+  .dark-mode .markdown-content :deep(h6) {
+    color: #8a9aaa;
+  }
+
+  /* ── 段落 ── */
+  .markdown-content :deep(p) {
+    margin: 0 0 18px;
+    line-height: 1.85;
+  }
+
+  /* ── 链接 ── */
+  .markdown-content :deep(a) {
+    color: #3a7a5a;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(58, 122, 90, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .markdown-content :deep(a:hover) {
+    color: #2a5a3a;
+    border-bottom-color: #2a5a3a;
+  }
+
+  .dark-mode .markdown-content :deep(a) {
+    color: #6ac48a;
+    border-bottom-color: rgba(106, 196, 138, 0.3);
+  }
+
+  .dark-mode .markdown-content :deep(a:hover) {
+    color: #8ae4aa;
+    border-bottom-color: #8ae4aa;
+  }
+
+  /* ── 粗体 / 斜体 ── */
+  .markdown-content :deep(strong) {
+    font-weight: 600;
     color: #1a2a3a;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .dark-mode .markdown-content h1 {
-    color: #e8f4f8;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+  .dark-mode .markdown-content :deep(strong) {
+    color: #e8f0f8;
   }
 
-  .markdown-content h2 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin: 20px 0 12px 0;
-    color: #2a3a4a;
+  .markdown-content :deep(em) {
+    font-style: italic;
+    color: #4a5a6a;
   }
 
-  .dark-mode .markdown-content h2 {
-    color: #d8e8f8;
+  .dark-mode .markdown-content :deep(em) {
+    color: #9aaaba;
   }
 
-  .markdown-content h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 18px 0 10px 0;
-    color: #3a4a5a;
+  /* ── 列表 ── */
+  .markdown-content :deep(ul),
+  .markdown-content :deep(ol) {
+    margin: 0 0 18px;
+    padding-left: 28px;
+    line-height: 1.85;
   }
 
-  .dark-mode .markdown-content h3 {
-    color: #c8d8e8;
+  .markdown-content :deep(li) {
+    margin-bottom: 6px;
   }
 
-  .markdown-content p {
-    margin: 12px 0;
+  .markdown-content :deep(li > ul),
+  .markdown-content :deep(li > ol) {
+    margin-top: 6px;
+    margin-bottom: 0;
   }
 
-  .markdown-content code {
-    background: rgba(0, 0, 0, 0.08);
+  .markdown-content :deep(ul > li) {
+    list-style-type: disc;
+  }
+
+  .markdown-content :deep(ul > li > ul > li) {
+    list-style-type: circle;
+  }
+
+  .markdown-content :deep(ol > li) {
+    list-style-type: decimal;
+  }
+
+  /* ── 引用块 ── */
+  .markdown-content :deep(blockquote) {
+    margin: 20px 0;
+    padding: 14px 20px;
+    border-left: 4px solid rgba(58, 90, 74, 0.5);
+    background: rgba(58, 90, 74, 0.04);
+    border-radius: 0 8px 8px 0;
+    color: #4a5a6a;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .markdown-content :deep(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .dark-mode .markdown-content :deep(blockquote) {
+    background: rgba(106, 196, 138, 0.06);
+    border-left-color: rgba(106, 196, 138, 0.4);
+    color: #9aaaba;
+  }
+
+  /* ── 行内代码 ── */
+  .markdown-content :deep(code) {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+    background: rgba(58, 90, 74, 0.08);
+    color: #3a7a5a;
     padding: 2px 6px;
     border-radius: 4px;
-    font-size: 0.9em;
-    font-family: 'Fira Code', monospace;
+    word-break: break-word;
   }
 
-  .dark-mode .markdown-content code {
-    background: rgba(255, 255, 255, 0.08);
+  .dark-mode .markdown-content :deep(code) {
+    background: rgba(106, 196, 138, 0.1);
+    color: #6ac48a;
   }
 
-  .markdown-content pre {
-    background: rgba(0, 0, 0, 0.05);
-    padding: 15px;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 15px 0;
+  /* ── 代码块 ── */
+  .markdown-content :deep(pre) {
+    margin: 20px 0;
+    border-radius: 10px;
+    overflow: hidden;
   }
 
-  .dark-mode .markdown-content pre {
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  .markdown-content pre code {
-    background: none;
+  .markdown-content :deep(pre.hljs) {
+    background: #1e2127;
     padding: 0;
   }
 
-  .markdown-content blockquote {
-    border-left: 3px solid #3a5a4a;
-    padding-left: 15px;
-    margin: 15px 0;
-    color: #5a6a7a;
-    font-style: italic;
+  .markdown-content :deep(pre code) {
+    display: block;
+    padding: 18px 22px;
+    background: #1e2127;
+    color: #abb2bf;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: auto;
+    border-radius: 0;
   }
 
-  .dark-mode .markdown-content blockquote {
-    border-left-color: #6a9a8a;
-    color: #9aabbb;
+  .markdown-content :deep(pre code::-webkit-scrollbar) {
+    height: 6px;
   }
 
-  .markdown-content ul,
-  .markdown-content ol {
-    padding-left: 25px;
-    margin: 12px 0;
+  .markdown-content :deep(pre code::-webkit-scrollbar-track) {
+    background: rgba(255, 255, 255, 0.05);
   }
 
-  .markdown-content li {
-    margin: 6px 0;
+  .markdown-content :deep(pre code::-webkit-scrollbar-thumb) {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
   }
 
-  .markdown-content a {
-    color: #3a5a4a;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(58, 90, 74, 0.3);
+  /* ── 表格 ── */
+  .markdown-content :deep(table) {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    font-size: 15px;
   }
 
-  .dark-mode .markdown-content a {
-    color: #8ab8a8;
-    border-bottom-color: rgba(138, 184, 168, 0.3);
+  .markdown-content :deep(th) {
+    background: rgba(58, 90, 74, 0.08);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
-  .markdown-content a:hover {
-    border-bottom-color: #3a5a4a;
+  .markdown-content :deep(td) {
+    padding: 10px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
-  .dark-mode .markdown-content a:hover {
-    border-bottom-color: #8ab8a8;
+  .markdown-content :deep(tr:nth-child(even)) {
+    background: rgba(0, 0, 0, 0.02);
   }
 
-  .markdown-content hr {
+  .dark-mode .markdown-content :deep(th) {
+    background: rgba(106, 196, 138, 0.08);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .dark-mode .markdown-content :deep(td) {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .dark-mode .markdown-content :deep(tr:nth-child(even)) {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  /* ── 分割线 ── */
+  .markdown-content :deep(hr) {
+    margin: 32px 0;
     border: none;
-    height: 1px;
-    background: rgba(0, 0, 0, 0.1);
-    margin: 25px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .dark-mode .markdown-content hr {
-    background: rgba(255, 255, 255, 0.1);
+  .dark-mode .markdown-content :deep(hr) {
+    border-top-color: rgba(255, 255, 255, 0.1);
   }
 
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 400px;
-    color: #7a8a9a;
+  /* ── 图片 ── */
+  .markdown-content :deep(img) {
+    max-width: 100%;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
-  .dark-mode .empty-state {
-    color: #8a9aaa;
+  .dark-mode .markdown-content :deep(img) {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   }
 
-  .empty-icon {
-    font-size: 4rem;
-    margin-bottom: 15px;
+  /* ── 删除线 ── */
+  .markdown-content :deep(del) {
+    color: #999;
+    text-decoration: line-through;
   }
 
-  @media (max-width: 1200px) {
-    .articles-main {
-      grid-template-columns: 1fr;
-    }
+  .loading-state {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+  }
 
-    .articles-list {
-      max-height: 400px;
-    }
+  /* ========== 赛博朋克主题 ========== */
+  .articles-page.cyberpunk {
+    background: #000;
+  }
+
+  .articles-page.cyberpunk .articles-background {
+    display: none;
+  }
+
+  .articles-page.cyberpunk .articles-container {
+    background: transparent;
+  }
+
+  .articles-page.cyberpunk .articles-header {
+    border-bottom-color: var(--color-border);
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .articles-page.cyberpunk .category-tab {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--color-border);
+    color: rgba(255, 255, 255, 0.55);
+    font-family: var(--cyber-font-mono);
+    border-radius: 0;
+  }
+
+  .articles-page.cyberpunk .category-tab:hover {
+    background: rgba(0, 240, 255, 0.06);
+    color: var(--cyber-neon-cyan);
+    border-color: var(--cyber-neon-cyan);
+    text-shadow: var(--cyber-glow-cyan-subtle);
+  }
+
+  .articles-page.cyberpunk .category-tab.active {
+    background: var(--cyber-neon-pink);
+    color: #000;
+    border-color: var(--cyber-neon-pink);
+    box-shadow: 0 0 12px rgba(255, 46, 147, 0.5);
+  }
+
+  .articles-page.cyberpunk .articles-sidebar {
+    background: var(--color-bg-surface);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .articles-page.cyberpunk .sidebar-header {
+    border-bottom-color: var(--color-border);
+  }
+
+  .articles-page.cyberpunk .sidebar-title {
+    color: var(--cyber-neon-cyan);
+    font-family: var(--cyber-font-mono);
+    text-shadow: var(--cyber-glow-cyan-subtle);
+  }
+
+  .articles-page.cyberpunk .sidebar-count {
+    color: rgba(255, 255, 255, 0.45);
+    font-family: var(--cyber-font-mono);
+  }
+
+  .articles-page.cyberpunk .article-content-area {
+    background: var(--color-bg-base);
+  }
+
+  .articles-page.cyberpunk .article-header {
+    border-bottom-color: var(--color-border);
+  }
+
+  .articles-page.cyberpunk .article-title {
+    color: var(--cyber-neon-cyan);
+    text-shadow: var(--cyber-glow-cyan-subtle);
+  }
+
+  .articles-page.cyberpunk .article-tag {
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--cyber-neon-cyan);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 0;
+  }
+
+  .articles-page.cyberpunk .article-date,
+  .articles-page.cyberpunk .article-read-time {
+    color: rgba(255, 255, 255, 0.45);
+    font-family: var(--cyber-font-mono);
+  }
+
+  .articles-page.cyberpunk .empty-state {
+    color: rgba(255, 255, 255, 0.45);
+    font-family: var(--cyber-font-mono);
+  }
+
+  /* markdown 内容区域 */
+  .articles-page.cyberpunk .markdown-content {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .articles-page.cyberpunk .markdown-content :deep(h1),
+  .articles-page.cyberpunk .markdown-content :deep(h2),
+  .articles-page.cyberpunk .markdown-content :deep(h3) {
+    color: var(--cyber-neon-cyan);
+    text-shadow: var(--cyber-glow-cyan-subtle);
+  }
+
+  .articles-page.cyberpunk .markdown-content :deep(a) {
+    color: var(--cyber-neon-pink);
+  }
+
+  .articles-page.cyberpunk .markdown-content :deep(a:hover) {
+    text-shadow: var(--cyber-glow-pink-subtle);
+  }
+
+  .articles-page.cyberpunk .markdown-content :deep(code) {
+    background: rgba(0, 240, 255, 0.08);
+    color: var(--cyber-neon-cyan);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+  }
+
+  .articles-page.cyberpunk .markdown-content :deep(blockquote) {
+    border-left-color: var(--cyber-neon-pink);
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .articles-page.cyberpunk .markdown-content :deep(pre) {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--color-border);
+  }
+
+  .articles-page.cyberpunk .category-count {
+    opacity: 0.7;
   }
 </style>

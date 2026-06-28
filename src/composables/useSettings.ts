@@ -1,31 +1,26 @@
 /**
- * useSettings.ts - 设置管理Composable
+ * useSettings.ts - 应用设置管理
  *
- * 功能说明：
- * 1. 管理应用设置状态（FPS显示开关、主题色预设等）
- * 2. 支持设置持久化到localStorage
- * 3. 提供响应式状态和修改方法
+ * 管理非主题类的应用设置（如 FPS 显示）。
+ * 主题相关操作（明暗模式、色彩预设、赛博朋克）已迁移至 useTheme.ts。
  *
- * 返回值：
- * - settings: 响应式设置对象
- * - updateSetting: 更新单个设置项
- * - resetSettings: 重置所有设置为默认值
+ * 为保持向后兼容，settings 对象仍包含 isDark / themeColorPreset 字段，
+ * 但它们是 useTheme 状态的只读代理，修改操作委托给 useTheme。
  */
 import { reactive } from 'vue';
+import {
+  useTheme,
+  themeColorPresets,
+  type ThemeColorPreset,
+} from './useTheme';
+
+/** @deprecated 从 useTheme 导入 */
+export type { ThemeColorPreset };
+/** @deprecated 从 useTheme 导入 */
+export { themeColorPresets };
 
 /**
- * 主题色预设类型
- */
-export type ThemeColorPreset =
-  | 'default'
-  | 'light-purple'
-  | 'light-green'
-  | 'light-pink'
-  | 'mint-green'
-  | 'soft-blue';
-
-/**
- * 设置接口定义
+ * 设置接口定义（向后兼容）
  */
 export interface Settings {
   showFps: boolean;
@@ -44,151 +39,40 @@ const DEFAULT_SETTINGS: Settings = {
 
 /**
  * 设置状态（模块级别响应式对象）
+ * isDark 和 themeColorPreset 通过 computed 代理到 useTheme
  */
-const settings = reactive<Settings>({ ...DEFAULT_SETTINGS });
+const settingsState = reactive({
+  showFps: true,
+});
 
-/**
- * 初始化标志
- */
+/** 初始化标志 */
 let isInitialized = false;
 
 /**
- * 主题色预设配置
- */
-const themeColorPresets = {
-  default: {
-    name: '默认白',
-    colors: {
-      bgBase: '#ffffff',
-      bgSurface: '#ffffff',
-      bgElevated: '#f5f5f5',
-      bgHover: '#e8e8e8',
-      border: '#eeeeee',
-      borderMuted: '#dddddd',
-    },
-  },
-  'light-purple': {
-    name: '淡紫色',
-    colors: {
-      bgBase: '#fff0f9',
-      bgSurface: '#ffe6f7',
-      bgElevated: '#fff5fb',
-      bgHover: '#ffd6ed',
-      border: '#f8e0f0',
-      borderMuted: '#f0d0e8',
-    },
-  },
-  'light-green': {
-    name: '淡绿色',
-    colors: {
-      bgBase: '#e0ebd8',
-      bgSurface: '#d0ddc8',
-      bgElevated: '#e8f0e1',
-      bgHover: '#c0cfb8',
-      border: '#d8e4ce',
-      borderMuted: '#c8d4bc',
-    },
-  },
-  'light-pink': {
-    name: '淡粉色',
-    colors: {
-      bgBase: '#fff0f0',
-      bgSurface: '#ffe6e6',
-      bgElevated: '#fffafa',
-      bgHover: '#ffd6d6',
-      border: '#ffebe9',
-      borderMuted: '#f0d8d8',
-    },
-  },
-  'mint-green': {
-    name: '薄荷绿',
-    colors: {
-      bgBase: '#e8f5f0',
-      bgSurface: '#d4e8e0',
-      bgElevated: '#f0faf7',
-      bgHover: '#c4d8d0',
-      border: '#d8ece4',
-      borderMuted: '#c8dcc4',
-    },
-  },
-  'soft-blue': {
-    name: '柔和蓝',
-    colors: {
-      bgBase: '#e8f0fe',
-      bgSurface: '#d4e4fc',
-      bgElevated: '#f0f6ff',
-      bgHover: '#c4d4ec',
-      border: '#d8e4f8',
-      borderMuted: '#c8d4e8',
-    },
-  },
-};
-
-/**
- * 从localStorage加载设置
+ * 从localStorage加载非主题设置
  */
 function loadSettings() {
   const saved = localStorage.getItem('app-settings');
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      Object.assign(settings, { ...DEFAULT_SETTINGS, ...parsed });
-    } catch (e) {
-      console.warn('Failed to load settings from localStorage');
+      if (typeof parsed.showFps === 'boolean') {
+        settingsState.showFps = parsed.showFps;
+      }
+    } catch {
+      // 静默失败
     }
   }
 }
 
 /**
- * 保存设置到localStorage
+ * 保存非主题设置到localStorage
  */
 function saveSettings() {
-  localStorage.setItem('app-settings', JSON.stringify(settings));
-}
-
-/**
- * 更新主题色CSS变量
- * @param preset 主题色预设名称
- */
-function updateThemeColors(preset: ThemeColorPreset) {
-  const colors =
-    themeColorPresets[preset]?.colors || themeColorPresets.default.colors;
-  const root = document.documentElement;
-
-  if (settings.isDark) return;
-
-  Object.entries(colors).forEach(([key, color]) => {
-    const cssVarName = `--color-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-    root.style.setProperty(cssVarName, color as string);
-  });
-}
-
-/**
- * 更新暗色模式状态
- * @param isDark 是否为暗色模式
- */
-function updateDarkMode(isDarkMode: boolean) {
-  const root = document.documentElement;
-  const propertiesToRemove = [
-    '--color-bg-base',
-    '--color-bg-surface',
-    '--color-bg-elevated',
-    '--color-bg-hover',
-    '--color-border',
-    '--color-border-muted',
-  ];
-
-  if (isDarkMode) {
-    root.classList.add('dark');
-    propertiesToRemove.forEach((p) => {
-      root.style.removeProperty(p);
-    });
-  } else {
-    root.classList.remove('dark');
-    updateThemeColors(settings.themeColorPreset);
-  }
-
-  localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  localStorage.setItem(
+    'app-settings',
+    JSON.stringify({ showFps: settingsState.showFps })
+  );
 }
 
 /**
@@ -197,28 +81,52 @@ function updateDarkMode(isDarkMode: boolean) {
 function initSettings() {
   if (isInitialized) return;
   isInitialized = true;
-
   loadSettings();
-  updateThemeColors(settings.themeColorPreset);
-  updateDarkMode(settings.isDark);
 }
 
 export function useSettings() {
+  initSettings();
+
+  // 获取 useTheme 实例（共享同一个模块级单例）
+  const theme = useTheme();
+
   /**
-   * 更新单个设置项
-   * @param key 设置项键名
-   * @param value 设置项值
+   * 向后兼容的 settings 对象
+   * isDark 和 themeColorPreset 是只读代理
+   */
+  const settings: Settings = reactive({
+    get showFps() {
+      return settingsState.showFps;
+    },
+    set showFps(val: boolean) {
+      settingsState.showFps = val;
+      saveSettings();
+    },
+    get isDark() {
+      return theme.isDark.value;
+    },
+    set isDark(val: boolean) {
+      theme.setColorMode(val ? 'dark' : 'light');
+    },
+    get themeColorPreset() {
+      return theme.currentPreset.value;
+    },
+    set themeColorPreset(val: ThemeColorPreset) {
+      theme.setPreset(val);
+    },
+  });
+
+  /**
+   * 更新单个设置项（向后兼容）
    */
   function updateSetting<K extends keyof Settings>(key: K, value: Settings[K]) {
-    settings[key] = value;
-    saveSettings();
-
-    if (key === 'themeColorPreset') {
-      updateThemeColors(value as ThemeColorPreset);
-    }
-
     if (key === 'isDark') {
-      updateDarkMode(value as boolean);
+      theme.setColorMode(value ? 'dark' : 'light');
+    } else if (key === 'themeColorPreset') {
+      theme.setPreset(value as ThemeColorPreset);
+    } else if (key === 'showFps') {
+      settingsState.showFps = value as boolean;
+      saveSettings();
     }
   }
 
@@ -226,10 +134,10 @@ export function useSettings() {
    * 重置所有设置为默认值
    */
   function resetSettings() {
-    Object.assign(settings, { ...DEFAULT_SETTINGS });
+    settingsState.showFps = DEFAULT_SETTINGS.showFps;
     saveSettings();
-    updateThemeColors(DEFAULT_SETTINGS.themeColorPreset);
-    updateDarkMode(DEFAULT_SETTINGS.isDark);
+    theme.setColorMode('light');
+    theme.setPreset('default');
   }
 
   return {
@@ -240,5 +148,3 @@ export function useSettings() {
     initSettings,
   };
 }
-
-export { themeColorPresets };

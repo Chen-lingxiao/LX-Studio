@@ -7,9 +7,10 @@
   } from 'lucide-vue-next';
 
   defineProps<{
-    currentPage: number;
-    totalPages: number;
-  }>();
+  currentPage: number;
+  totalPages: number;
+  cyberpunk?: boolean;
+}>();
 
   const emit = defineEmits<{
     (e: 'change', page: number): void;
@@ -21,7 +22,7 @@
 </script>
 
 <template>
-  <div class="blog-pagination">
+  <div class="blog-pagination" :class="{ cyberpunk: cyberpunk }">
     <button
       class="page-btn"
       :disabled="currentPage === 1"
@@ -123,5 +124,33 @@
   .page-number.active {
     background: rgba(58, 90, 74, 0.8);
     color: white;
+  }
+
+  /* Cyberpunk theme styles */
+  .blog-pagination.cyberpunk .page-btn,
+  .blog-pagination.cyberpunk .page-number {
+    background: transparent;
+    color: #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 0;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .blog-pagination.cyberpunk .page-btn:hover:not(:disabled),
+  .blog-pagination.cyberpunk .page-number:hover {
+    background: rgba(0, 240, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  }
+
+  .blog-pagination.cyberpunk .page-number.active {
+    background: #ff2e93 !important;
+    color: #000 !important;
+    border-color: #ff2e93;
+    box-shadow: 0 0 12px rgba(255, 46, 147, 0.5);
+  }
+
+  .blog-pagination.cyberpunk .page-btn:disabled {
+    opacity: 0.3;
+    border-color: rgba(0, 240, 255, 0.1);
   }
 </style>

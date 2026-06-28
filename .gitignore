@@ -42,6 +42,10 @@ __screenshots__/
 .env.local
 .env.*.local
 
+# Database
+data.db
+data/
+
 # Cesium cache
 .cache
 cesium-ion-access-token

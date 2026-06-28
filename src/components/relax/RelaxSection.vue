@@ -15,6 +15,10 @@
       type: Boolean,
       default: false,
     },
+    cyberpunk: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const historyEvents = ref([]);
@@ -158,11 +162,12 @@
 </script>
 
 <template>
-  <div class="relax-section">
+  <div class="relax-section" :class="{ cyberpunk: cyberpunk }">
     <div class="relax-content">
       <div class="relax-header">
         <h2 class="relax-title"></h2>
-        <p class="relax-subtitle">𝓛𝓲𝓿𝓮 𝓵𝓸𝓷𝓰 𝓪𝓷𝓭 𝓹𝓻𝓸𝓼𝓹𝓮𝓻</p>
+        <p v-if="cyberpunk" class="relax-subtitle cyber-quote cyber-section-label">𝓐𝓵𝓵 𝓽𝓱𝓸𝓼𝓮 𝓶𝓸𝓶𝓮𝓷𝓽𝓼 𝔀𝓲𝓵𝓵 𝓫𝓮 𝓵𝓸𝓼𝓽 𝓲𝓷 𝓽𝓲𝓶𝓮, 𝓵𝓲𝓴𝓮 𝓽𝓮𝓪𝓻𝓼 𝓲𝓷 𝓻𝓪𝓲𝓷.</p>
+        <p v-else class="relax-subtitle">𝓛𝓲𝓿𝓮 𝓵𝓸𝓷𝓰 𝓪𝓷𝓭 𝓹𝓻𝓸𝓼𝓹𝓮𝓻</p>
       </div>
 
       <div class="relax-main">
@@ -183,7 +188,7 @@
             </svg>
             <span>音乐</span>
           </div>
-          <MusicPlayer :songs="songs" />
+          <MusicPlayer :songs="songs" :cyberpunk="cyberpunk" />
         </div>
 
         <!-- 右侧：日期和历史 -->
@@ -582,5 +587,114 @@
     .date-main {
       font-size: 1.8rem;
     }
+  }
+
+  /* ── 赛博朋克模式 ── */
+  .relax-section.cyberpunk .relax-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: #00f0ff;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+  }
+
+  .relax-section.cyberpunk .relax-subtitle {
+    color: rgba(0, 240, 255, 0.5);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .relax-section.cyberpunk .relax-subtitle.cyber-quote {
+    color: #00f0ff;
+    font-style: italic;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.25rem;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+    transition: color 0.25s, text-shadow 0.25s;
+    cursor: default;
+  }
+
+  .relax-section.cyberpunk .relax-subtitle.cyber-quote:hover {
+    color: #ff2e93;
+    text-shadow: 0 0 10px rgba(255, 46, 147, 0.8), 0 0 20px rgba(255, 46, 147, 0.5);
+  }
+
+  .relax-section.cyberpunk .section-header {
+    color: #00f0ff;
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
+  }
+
+  .relax-section.cyberpunk .date-num {
+    color: #00f0ff;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 30px rgba(0, 240, 255, 0.3);
+  }
+
+  .relax-section.cyberpunk .date-slash {
+    color: rgba(0, 240, 255, 0.5);
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+  }
+
+  .relax-section.cyberpunk .date-weekday {
+    color: rgba(0, 240, 255, 0.8);
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
+  }
+
+  .relax-section.cyberpunk .weekday-divider {
+    color: rgba(0, 240, 255, 0.3);
+  }
+
+  .relax-section.cyberpunk .calendar-details {
+    color: rgba(0, 240, 255, 0.6);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .relax-section.cyberpunk .calendar-divider {
+    color: rgba(255, 46, 147, 0.5);
+  }
+
+  .relax-section.cyberpunk .history-year {
+    color: #ff2e93;
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 8px rgba(255, 46, 147, 0.5);
+  }
+
+  .relax-section.cyberpunk .history-dot {
+    color: rgba(255, 46, 147, 0.5);
+  }
+
+  .relax-section.cyberpunk .history-event {
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .relax-section.cyberpunk .history-item {
+    border-bottom-color: rgba(0, 240, 255, 0.08);
+  }
+
+  .relax-section.cyberpunk .loading-text {
+    color: rgba(0, 240, 255, 0.6);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .relax-section.cyberpunk .error-text {
+    color: #ff2e93;
+  }
+
+  .relax-section.cyberpunk .funny-item .history-event {
+    color: rgba(0, 240, 255, 0.7);
+  }
+
+  .relax-section.cyberpunk .history-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.2);
+  }
+
+  .relax-section.cyberpunk .history-list::-webkit-scrollbar-track {
+    background: rgba(0, 240, 255, 0.03);
+  }
+
+  .relax-section.cyberpunk .disclaimer {
+    color: rgba(0, 240, 255, 0.3);
+    border-top-color: rgba(0, 240, 255, 0.1);
+    font-family: 'Share Tech Mono', monospace;
   }
 </style>

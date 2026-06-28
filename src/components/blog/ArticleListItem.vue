@@ -3,11 +3,16 @@
     article: {
       id: number;
       title: string;
-      category: string;
+      date?: string;
     };
     isDark?: boolean;
     selected?: boolean;
   }>();
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return '';
+    return dateStr.replace(/-/g, '.');
+  };
 
   defineEmits<{
     (e: 'click'): void;
@@ -20,7 +25,7 @@
     :class="{ dark: isDark, selected: selected }"
     @click="$emit('click')"
   >
-    <span class="item-category">{{ article.category }}</span>
+    <span class="item-date">{{ formatDate(article.date) }}</span>
     <span class="item-title">{{ article.title }}</span>
   </div>
 </template>
@@ -63,14 +68,15 @@
     background: rgba(58, 90, 74, 0.12);
   }
 
-  .item-category {
+  .item-date {
     flex-shrink: 0;
-    padding: 3px 10px;
-    background: rgba(58, 90, 74, 0.85);
-    border-radius: 12px;
     font-size: 11px;
-    font-weight: 500;
-    color: white;
+    color: #8a9aaa;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .article-list-item.dark .item-date {
+    color: #6a7a8a;
   }
 
   .item-title {
@@ -102,9 +108,5 @@
 
   .article-list-item.dark .item-title {
     color: #b8c8d8;
-  }
-
-  .article-list-item.dark .item-category {
-    background: rgba(80, 120, 100, 0.85);
   }
 </style>

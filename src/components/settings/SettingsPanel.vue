@@ -14,11 +14,7 @@
    * 事件：
    * - close: 关闭面板
    */
-  import {
-    useSettings,
-    themeColorPresets,
-    type ThemeColorPreset,
-  } from '../../composables/useSettings';
+  import { useTheme, type ThemeColorPreset } from '../../composables/useTheme';
 
   const props = defineProps({
     visible: {
@@ -29,21 +25,21 @@
 
   const emit = defineEmits(['close']);
 
-  const { settings, updateSetting } = useSettings();
+  const { isDark, currentPreset, toggleColorMode, setPreset, themeColorPresets } = useTheme();
 
   /**
    * 处理主题色预设选择
    * @param preset 主题色预设名称
    */
   const handleThemeColorSelect = (preset: ThemeColorPreset) => {
-    updateSetting('themeColorPreset', preset);
+    setPreset(preset);
   };
 
   /**
    * 处理明暗模式切换
    */
   const handleDarkModeToggle = () => {
-    updateSetting('isDark', !settings.isDark);
+    toggleColorMode();
   };
 
   /**
@@ -74,13 +70,13 @@
               <div class="setting-label">
                 <span
                   class="iconfont"
-                  :class="settings.isDark ? 'icon-taiyang' : 'icon-yueliang'"
+                  :class="isDark ? 'icon-taiyang' : 'icon-yueliang'"
                 ></span>
-                <span>{{ settings.isDark ? '暗色模式' : '亮色模式' }}</span>
+                <span>{{ isDark ? '暗色模式' : '亮色模式' }}</span>
               </div>
               <div
                 class="toggle-switch"
-                :class="{ active: settings.isDark }"
+                :class="{ active: isDark }"
                 @click="handleDarkModeToggle"
               >
                 <div class="toggle-thumb"></div>
@@ -95,15 +91,15 @@
                   v-for="(config, key) in themeColorPresets"
                   :key="key"
                   class="color-preset-item"
-                  :class="{ active: settings.themeColorPreset === key }"
+                  :class="{ active: currentPreset === key }"
                   :title="config.name"
                   @click="handleThemeColorSelect(key as ThemeColorPreset)"
                 >
                   <div
                     class="color-preview"
                     :style="{
-                      backgroundColor: config.colors.bgBase,
-                      borderColor: config.colors.border,
+                      backgroundColor: config.colors['--color-bg-base'],
+                      borderColor: config.colors['--color-border'],
                     }"
                   ></div>
                   <span class="color-name">{{ config.name }}</span>

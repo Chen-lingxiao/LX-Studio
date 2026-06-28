@@ -1,48 +1,30 @@
 <script setup lang="ts">
-  import { Eye, Heart, MessageCircle, Clock } from 'lucide-vue-next';
-  import { ref } from 'vue';
+  import { Clock } from 'lucide-vue-next';
 
   defineProps<{
     article: {
       id: number;
       title: string;
       excerpt: string;
-      category: string;
+      tags?: string[];
       readTime: string;
-      views: number;
-      likes: number;
-      comments: number;
       date: string;
-      cover: string;
     };
     isDark?: boolean;
+    isCyberpunk?: boolean;
   }>();
 
   defineEmits<{
     (e: 'click'): void;
   }>();
-
-  const imageLoaded = ref(true);
-
-  const handleImageError = (event: Event) => {
-    const img = event.target as HTMLImageElement;
-    img.parentElement?.classList.add('no-cover');
-    imageLoaded.value = false;
-  };
 </script>
 
 <template>
-  <div class="blog-card" :class="{ dark: isDark }" @click="$emit('click')">
-    <div class="card-cover" :class="{ 'no-cover': !imageLoaded }">
-      <img
-        v-show="imageLoaded"
-        :src="article.cover"
-        :alt="article.title"
-        @error="handleImageError"
-      />
-      <div class="category-tag">{{ article.category }}</div>
-    </div>
+  <div class="blog-card" :class="{ dark: isDark, cyberpunk: isCyberpunk }" @click="$emit('click')">
     <div class="card-content">
+      <div class="card-header">
+        <span v-for="tag in article.tags?.slice(0, 2)" :key="tag" class="category-tag">{{ tag }}</span>
+      </div>
       <h3 class="card-title">{{ article.title }}</h3>
       <p class="card-excerpt">{{ article.excerpt }}</p>
       <div class="card-meta">
@@ -50,20 +32,8 @@
           <Clock :size="14" />
           {{ article.readTime }}
         </span>
-        <span class="meta-item">
-          <Eye :size="14" />
-          {{ article.views }}
-        </span>
-        <span class="meta-item">
-          <MessageCircle :size="14" />
-          {{ article.comments }}
-        </span>
-        <span class="meta-item">
-          <Heart :size="14" />
-          {{ article.likes }}
-        </span>
+        <span class="meta-item date">{{ article.date }}</span>
       </div>
-      <div class="card-date">{{ article.date }}</div>
     </div>
   </div>
 </template>
@@ -79,7 +49,7 @@
       transform 0.3s ease,
       box-shadow 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.3);
-    height: 240px;
+    height: 200px;
     display: flex;
     flex-direction: column;
   }
@@ -89,34 +59,23 @@
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   }
 
-  .card-cover {
-    position: relative;
-    height: 100px;
-    overflow: hidden;
-    flex-shrink: 0;
+  .card-content {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
-  .card-cover.no-cover {
-    height: 0;
-    min-height: 0;
-  }
-
-  .card-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-
-  .blog-card:hover .card-cover img {
-    transform: scale(1.08);
+  .card-header {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
   }
 
   .category-tag {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    padding: 3px 10px;
+    display: inline-block;
+    padding: 2px 10px;
     background: rgba(58, 90, 74, 0.9);
     backdrop-filter: blur(4px);
     border-radius: 16px;
@@ -125,19 +84,11 @@
     color: white;
   }
 
-  .card-content {
-    padding: 12px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
   .card-title {
     font-size: 14px;
     font-weight: 600;
     color: #2a3a4a;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -148,19 +99,20 @@
   .card-excerpt {
     font-size: 12px;
     color: #5a6a7a;
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    flex-shrink: 0;
+    flex: 1;
   }
 
   .card-meta {
     display: flex;
-    gap: 12px;
-    margin-bottom: 6px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
   }
 
   .meta-item {
@@ -171,8 +123,7 @@
     color: #7a8a9a;
   }
 
-  .card-date {
-    font-size: 10px;
+  .meta-item.date {
     color: #9a9a9a;
   }
 
@@ -199,11 +150,92 @@
     color: #6a7a8a;
   }
 
-  .blog-card.dark .card-date {
+  .blog-card.dark .meta-item.date {
     color: #5a6a7a;
   }
 
   .blog-card.dark .category-tag {
     background: rgba(80, 120, 100, 0.9);
+  }
+
+  /* Cyberpunk theme styles */
+  .blog-card.cyberpunk {
+    background: #05050a;
+    border: 1px solid rgba(var(--cyber-cyan-rgb), 0.15);
+    border-radius: 0;
+    box-shadow:
+      inset 0 0 4px rgba(var(--cyber-cyan-rgb), 0.2),
+      inset 0 0 12px rgba(var(--cyber-cyan-rgb), 0.1);
+    transition:
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .blog-card.cyberpunk:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 46, 147, 0.3);
+    box-shadow:
+      inset 0 0 8px rgba(255, 46, 147, 0.5),
+      inset 0 0 30px rgba(255, 46, 147, 0.25),
+      0 0 25px rgba(255, 46, 147, 0.5),
+      0 0 50px rgba(255, 46, 147, 0.25);
+  }
+
+  @keyframes blog-card-glitch {
+    0% { transform: translate(0); }
+    100% { transform: translate(0); }
+  }
+
+  .blog-card.cyberpunk .category-tag {
+    background: transparent;
+    border: 1px solid rgba(var(--cyber-pink-alt-rgb), 0.5);
+    color: var(--cyber-neon-pink-alt);
+    border-radius: 0;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 2px 8px;
+    letter-spacing: 0.05rem;
+  }
+
+  .blog-card.cyberpunk .card-title {
+    color: var(--cyber-neon-cyan);
+    font-family: 'Noto Sans SC', sans-serif;
+    text-shadow: 0 0 10px rgba(var(--cyber-cyan-rgb), 0.35);
+    transition: color 0.25s, text-shadow 0.25s;
+  }
+
+  .blog-card.cyberpunk:hover .card-title {
+    color: var(--cyber-neon-pink-alt) !important;
+    text-shadow:
+      0 0 12px rgba(var(--cyber-pink-alt-rgb), 0.7),
+      0 0 24px rgba(var(--cyber-pink-alt-rgb), 0.4);
+  }
+
+  .blog-card.cyberpunk .card-excerpt {
+    color: rgba(255, 255, 255, 0.55);
+    transition: color 0.25s;
+  }
+
+  .blog-card.cyberpunk:hover .card-excerpt {
+    color: rgba(var(--cyber-cyan-rgb), 0.9) !important;
+  }
+
+  .blog-card.cyberpunk .category-tag {
+    transition: all 0.25s;
+  }
+
+  .blog-card.cyberpunk:hover .category-tag {
+    background: var(--cyber-neon-pink-alt) !important;
+    color: #000 !important;
+    box-shadow: 0 0 10px rgba(var(--cyber-pink-alt-rgb), 0.6);
+  }
+
+  .blog-card.cyberpunk .meta-item {
+    color: rgba(255, 255, 255, 0.55);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+  }
+
+  .blog-card.cyberpunk .meta-item.date {
+    color: rgba(var(--cyber-cyan-rgb), 0.75);
   }
 </style>

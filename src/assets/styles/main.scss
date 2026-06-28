@@ -193,3 +193,121 @@ body {
 
   scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
+
+/* ========== 色彩预设（仅亮色模式生效） ========== */
+:root[data-preset="light-purple"] {
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-active: #5b21b6;
+  --color-primary-bg-light: rgba(124, 58, 237, 0.08);
+  --color-primary-bg-hover: rgba(124, 58, 237, 0.12);
+  --color-primary-bg-active: rgba(124, 58, 237, 0.18);
+}
+
+:root[data-preset="light-green"] {
+  --color-primary: #059669;
+  --color-primary-hover: #047857;
+  --color-primary-active: #065f46;
+  --color-primary-bg-light: rgba(5, 150, 105, 0.08);
+  --color-primary-bg-hover: rgba(5, 150, 105, 0.12);
+  --color-primary-bg-active: rgba(5, 150, 105, 0.18);
+}
+
+:root[data-preset="light-pink"] {
+  --color-primary: #db2777;
+  --color-primary-hover: #be185d;
+  --color-primary-active: #9d174d;
+  --color-primary-bg-light: rgba(219, 39, 119, 0.08);
+  --color-primary-bg-hover: rgba(219, 39, 119, 0.12);
+  --color-primary-bg-active: rgba(219, 39, 119, 0.18);
+}
+
+:root[data-preset="mint-green"] {
+  --color-primary: #10b981;
+  --color-primary-hover: #059669;
+  --color-primary-active: #047857;
+  --color-primary-bg-light: rgba(16, 185, 129, 0.08);
+  --color-primary-bg-hover: rgba(16, 185, 129, 0.12);
+  --color-primary-bg-active: rgba(16, 185, 129, 0.18);
+}
+
+:root[data-preset="soft-blue"] {
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-active: #1d4ed8;
+  --color-primary-bg-light: rgba(59, 130, 246, 0.08);
+  --color-primary-bg-hover: rgba(59, 130, 246, 0.12);
+  --color-primary-bg-active: rgba(59, 130, 246, 0.18);
+}
+
+/* ========== 赛博朋克主题变量 ========== */
+:root.cyberpunk-theme {
+  /* 基础霓虹色 */
+  --cyber-neon-cyan: #00f0ff;
+  --cyber-neon-pink: #ff1493;
+  --cyber-neon-pink-alt: #ff2e93;
+  --cyber-neon-yellow: #f0ff00;
+
+  /* RGB 三元组（用于 rgba） */
+  --cyber-cyan-rgb: 0, 240, 255;
+  --cyber-pink-rgb: 255, 20, 147;
+  --cyber-pink-alt-rgb: 255, 46, 147;
+
+  /* 发光阴影 */
+  --cyber-glow-cyan: 0 0 4px #00f0ff, 0 0 10px #00f0ff, 0 0 24px rgba(0, 240, 255, 0.6);
+  --cyber-glow-pink: 0 0 4px #ff1493, 0 0 10px #ff1493, 0 0 24px #ff2e93;
+
+  /* 复合阴影 */
+  --cyber-shadow-cyan-sm: 0 0 4px rgba(0, 240, 255, 0.3);
+  --cyber-shadow-cyan-md: 0 0 4px #00f0ff, 0 0 10px rgba(0, 240, 255, 0.4);
+  --cyber-shadow-pink-md: 0 0 4px #ff1493, 0 0 10px rgba(255, 20, 147, 0.4);
+  --cyber-shadow-pink-lg: 0 0 4px #ff1493, 0 0 10px #ff1493, 0 0 24px #ff2e93;
+
+  /* 字体 */
+  --cyber-font-mono: 'Share Tech Mono', 'Courier New', monospace;
+  --cyber-font-display: 'Orbitron', sans-serif;
+
+  /* 圆角 */
+  --cyber-border-radius: 0;
+
+  /* 背景色 */
+  --color-bg-base: #000000;
+  --color-bg-surface: #05050a;
+  --color-bg-elevated: #0a0a14;
+  --color-bg-hover: #101020;
+
+  /* 文字色 */
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #888888;
+  --color-text-muted: #555555;
+
+  /* 边框色 */
+  --color-border: #1a1a2e;
+  --color-border-muted: #111122;
+
+  /* 主题色覆盖 */
+  --color-primary: #00f0ff;
+  --color-primary-hover: #33f3ff;
+  --color-primary-active: #00c8d6;
+  --color-primary-bg-light: rgba(0, 240, 255, 0.08);
+  --color-primary-bg-hover: rgba(0, 240, 255, 0.12);
+  --color-primary-bg-active: rgba(0, 240, 255, 0.18);
+}
+
+/* ========== 赛博朋克 CRT 扫描线网格（全局） ========== */
+#app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(rgba(255, 46, 147, 0.03) 50%, transparent 50%),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 50%, transparent 50%);
+  background-size: 4px 4px;
+}
+
+:root.cyberpunk-theme #app::before {
+  opacity: 1;
+}

@@ -15,6 +15,8 @@ import json from 'highlight.js/lib/languages/json';
 import sql from 'highlight.js/lib/languages/sql';
 import yaml from 'highlight.js/lib/languages/yaml';
 import 'highlight.js/styles/github-dark.css';
+import { useTheme } from '../composables/useTheme';
+import { useCyberpunkGlitch } from '../composables/useCyberpunkGlitch';
 
 // 注册常用语言
 hljs.registerLanguage('javascript', javascript);
@@ -31,6 +33,20 @@ hljs.registerLanguage('yaml', yaml);
 // 状态管理
 const activeMenu = ref('');
 const markdownContent = ref('');
+const apiNotes = ref<any[]>([]);
+const combinedMenu = computed(() => {
+  const apiMenu = {
+    title: '📚 我的笔记',
+    icon: 'folder',
+    children: apiNotes.value.map(n => ({
+      title: n.title || '无标题笔记',
+      path: `/api/note/${n.id}`,
+      isApiNote: true,
+    }))
+  };
+  const hasApiNotes = apiNotes.value.length > 0;
+  return hasApiNotes ? [...studyMenu, apiMenu] : studyMenu;
+});
 const outline = ref<
   Array<{
     level: number;
@@ -47,23 +63,22 @@ const activeHeadingId = ref('');
 const sidebarCollapsed = ref(false);
 const outlineCollapsed = ref(false);
 const currentFileDir = ref('');
-const isThemeSwitching = ref(false);
-let themeSwitchTimer: ReturnType<typeof setTimeout> | null = null;
 
-// 监听主题切换，显示遮罩层掩盖卡顿
-function handleThemeChange() {
-  isThemeSwitching.value = true;
-  if (themeSwitchTimer) clearTimeout(themeSwitchTimer);
-  themeSwitchTimer = setTimeout(() => {
-    isThemeSwitching.value = false;
-  }, 250); // 匹配统一过渡时间 0.2s + 缓冲
-}
+const { isCyberpunk } = useTheme();
+
+const studyPageRef = ref<HTMLElement | null>(null);
+useCyberpunkGlitch(
+  studyPageRef,
+  isCyberpunk,
+  { selectors: ['.el-menu-item', '.outline-link-text'] }
+);
 
 // 过滤菜单搜索
 const filteredMenu = computed(() => {
-  if (!searchQuery.value.trim()) return studyMenu;
+  const menu = combinedMenu.value;
+  if (!searchQuery.value.trim()) return menu;
   const query = searchQuery.value.toLowerCase();
-  return studyMenu
+  return menu
     .map((category) => ({
       ...category,
       children: category.children.filter(
@@ -210,9 +225,47 @@ function escapeInlineHtml(line: string): string {
     .join('');
 }
 
+// 从API加载笔记
+async function loadNoteFromApi(noteId: string) {
+  try {
+    activeHeadingId.value = '';
+    contentRef.value?.scrollTo(0, 0);
+    outlineRef.value?.scrollTo(0, 0);
+
+    const response = await fetch(`/api/notes/${noteId}`);
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error);
+    }
+
+    const text = result.data.content || '';
+    slugCountMap.clear();
+    headingIdMap.clear();
+    generateOutline(text);
+
+    const processedText = preprocessMarkdown(text);
+    const html = md.render(processedText);
+    markdownContent.value = html;
+
+    await nextTick();
+    scrollToHash();
+  } catch (error) {
+    console.error('Failed to load note:', error);
+    markdownContent.value =
+      '<h1>加载失败</h1><p>无法加载该笔记。</p>';
+  }
+}
+
 // 加载Markdown文件
 async function loadMarkdown(path: string) {
   try {
+    if (path.startsWith('/api/note/')) {
+      const noteId = path.replace('/api/note/', '');
+      await loadNoteFromApi(noteId);
+      return;
+    }
+
     activeHeadingId.value = '';
     contentRef.value?.scrollTo(0, 0);
     outlineRef.value?.scrollTo(0, 0);
@@ -236,6 +289,19 @@ async function loadMarkdown(path: string) {
     console.error('Failed to load markdown:', error);
     markdownContent.value =
       '<h1>加载失败</h1><p>无法加载该文档，请检查文件路径是否正确。</p>';
+  }
+}
+
+// 加载API笔记列表
+async function loadApiNotes() {
+  try {
+    const response = await fetch('/api/notes');
+    const result = await response.json();
+    if (result.success) {
+      apiNotes.value = result.data.filter((n: any) => n.content);
+    }
+  } catch (error) {
+    console.error('Failed to load API notes:', error);
   }
 }
 
@@ -427,40 +493,26 @@ function handleResize() {
 }
 
 // 生命周期钩子
-onMounted(() => {
+onMounted(async () => {
+  await loadApiNotes();
+  
   const pathname = window.location.pathname;
   const match = pathname.match(/\/study(\/.*\.md)$/);
   if (match) {
     activeMenu.value = match[1];
   } else {
-    const firstItem = studyMenu[0]?.children?.[0];
+    const firstItem = combinedMenu.value[0]?.children?.[0];
     if (firstItem) {
       activeMenu.value = firstItem.path;
     }
   }
   handleResize();
   window.addEventListener('resize', handleResize);
-
-  // 监听主题切换（html class变化）
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.attributeName === 'class') {
-        handleThemeChange();
-      }
-    });
-  });
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
-  (window as any).__themeObserver = observer;
 });
 
 onUnmounted(() => {
   if (scrollTimer) cancelAnimationFrame(scrollTimer);
-  if (themeSwitchTimer) clearTimeout(themeSwitchTimer);
   window.removeEventListener('resize', handleResize);
-  (window as any).__themeObserver?.disconnect();
 });
 
 // 监听菜单变化
@@ -473,9 +525,7 @@ watch(activeMenu, (newPath) => {
 </script>
 
 <template>
-  <div class="study-page">
-    <!-- 主题切换遮罩层，掩盖切换卡顿 -->
-    <div class="theme-switch-mask" :class="{ active: isThemeSwitching }"></div>
+  <div class="study-page" ref="studyPageRef" :class="{ cyberpunk: isCyberpunk }">
 
     <!-- 左侧菜单区域 -->
     <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
@@ -1424,6 +1474,164 @@ $menu-padding: 8px;
     &:hover {
       background-color: var(--color-text-muted);
     }
+  }
+}
+
+/* ========== 赛博朋克主题 ========== */
+.study-page.cyberpunk {
+  .sidebar {
+    background: var(--color-bg-surface);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .sidebar-header {
+    border-bottom-color: var(--color-border);
+  }
+
+  .search-input-wrapper {
+    background: var(--color-bg-elevated);
+    border-color: var(--color-border);
+  }
+
+  .search-input {
+    color: var(--color-text-primary);
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+
+  .search-icon {
+    color: var(--cyber-neon-cyan);
+  }
+
+  :deep(.el-menu) {
+    background-color: transparent;
+  }
+
+  :deep(.el-menu-item) {
+    color: rgba(255, 255, 255, 0.65);
+    font-family: var(--cyber-font-mono);
+    border-radius: 0;
+    &:hover {
+      background: var(--color-bg-hover);
+      color: var(--cyber-neon-cyan);
+    }
+    &.is-active {
+      color: var(--cyber-neon-pink);
+      background: rgba(255, 20, 147, 0.06);
+    }
+  }
+
+  :deep(.el-sub-menu__title) {
+    color: var(--cyber-neon-cyan);
+    font-family: var(--cyber-font-mono);
+    &:hover {
+      background: var(--color-bg-hover);
+    }
+  }
+
+  .content-area {
+    background: var(--color-bg-base);
+  }
+
+  .markdown-content {
+    color: rgba(255, 255, 255, 0.85);
+
+    :deep(h1), :deep(h2), :deep(h3), :deep(h4) {
+      color: var(--cyber-neon-cyan);
+      text-shadow: var(--cyber-glow-cyan-subtle);
+    }
+
+    :deep(a) {
+      color: var(--cyber-neon-pink);
+      &:hover {
+        text-shadow: var(--cyber-glow-pink-subtle);
+      }
+    }
+
+    :deep(code) {
+      background: rgba(0, 240, 255, 0.08);
+      color: var(--cyber-neon-cyan);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+
+    :deep(blockquote) {
+      border-left-color: var(--cyber-neon-pink);
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    :deep(pre) {
+      background: var(--cyber-bg-card);
+      border: 1px solid var(--color-border);
+    }
+
+    :deep(table) {
+      border-color: var(--color-border);
+    }
+
+    :deep(th), :deep(td) {
+      border-color: var(--color-border);
+    }
+
+    :deep(th) {
+      background: var(--color-bg-elevated);
+      color: var(--cyber-neon-cyan);
+    }
+  }
+
+  .outline-panel {
+    background: var(--color-bg-surface);
+    border-left: 1px solid var(--color-border);
+  }
+
+  .outline-header {
+    border-bottom-color: var(--color-border);
+  }
+
+  .outline-title {
+    color: var(--cyber-neon-cyan);
+    font-family: var(--cyber-font-mono);
+  }
+
+  .outline-link-text {
+    color: rgba(255, 255, 255, 0.55);
+    font-family: var(--cyber-font-mono);
+    font-size: 13px;
+
+    &:hover {
+      color: var(--cyber-neon-cyan);
+    }
+
+    &.active {
+      color: var(--cyber-neon-pink);
+      text-shadow: var(--cyber-glow-pink-subtle);
+    }
+  }
+
+  .outline-expand-icon {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .sidebar-toggle-handle,
+  .outline-toggle-handle {
+    background: var(--color-bg-elevated);
+    border-color: var(--color-border);
+    color: var(--cyber-neon-cyan);
+
+    &:hover {
+      background: var(--color-bg-hover);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+  }
+
+  .search-empty,
+  .outline-empty {
+    color: var(--color-text-muted);
+    font-family: var(--cyber-font-mono);
+  }
+
+  .theme-switch-mask {
+    display: none; /* 隐藏主题切换遮罩 */
   }
 }
 </style>
