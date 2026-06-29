@@ -1,13 +1,96 @@
 <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
   import { useRoute } from 'vue-router';
   import { useTheme } from '../composables/useTheme';
   import { useHomeSection } from '../composables/useHomeSection';
   import SettingsPanel from './settings/SettingsPanel.vue';
+  import { PowerGlitch } from 'powerglitch';
 
   const route = useRoute();
   const { isDark, isCyberpunk, toggleColorMode } = useTheme();
   const { isLightSection, isDarkSection } = useHomeSection();
+
+  // ── 赛博朋克导航 hover 故障效果 ──
+  const HEADER_GLITCH_CONFIG = {
+    playMode: 'manual',
+    hideOverflow: false,
+    timing: { duration: 500, iterations: 1 },
+    glitchTimeSpan: { start: 0, end: 1 },
+    shake: { velocity: 25, amplitudeX: 0.15, amplitudeY: 0.15 },
+    slice: { count: 8, velocity: 18, minHeight: 0.02, maxHeight: 0.15, hueRotate: true },
+  };
+
+  let _headerOverHandler = null;
+  let _headerOutHandler = null;
+  let _headerGlitch = null;
+  let _headerTarget = null;
+
+  function stopGlitch(inst) {
+    if (inst) { try { inst.stopGlitch(); } catch (_) {} }
+  }
+
+  function initHeaderGlitch() {
+    const header = document.querySelector('.app-header');
+    if (!header) return;
+
+    _headerOverHandler = (e) => {
+      const target = e.target.closest('.nav-link');
+      if (!target || !header.contains(target) || target === _headerTarget) return;
+      stopGlitch(_headerGlitch);
+      _headerTarget = target;
+      _headerGlitch = PowerGlitch.glitch(target, HEADER_GLITCH_CONFIG);
+      _headerGlitch.startGlitch();
+    };
+
+    _headerOutHandler = (e) => {
+      const target = e.target.closest('.nav-link');
+      if (!target) return;
+      const related = e.relatedTarget;
+      if (related && target.contains(related)) return;
+      stopGlitch(_headerGlitch);
+      _headerGlitch = null;
+      _headerTarget = null;
+    };
+
+    header.addEventListener('mouseover', _headerOverHandler);
+    header.addEventListener('mouseout', _headerOutHandler);
+  }
+
+  function destroyHeaderGlitch() {
+    const header = document.querySelector('.app-header');
+    if (header && _headerOverHandler) {
+      header.removeEventListener('mouseover', _headerOverHandler);
+      header.removeEventListener('mouseout', _headerOutHandler);
+    }
+    if (_headerGlitch) { try { _headerGlitch.stopGlitch(); } catch (_) {} _headerGlitch = null; _headerTarget = null; }
+    _headerOverHandler = _headerOutHandler = null;
+  }
+
+  watch(
+    isCyberpunk,
+    (active) => {
+      if (active) {
+        nextTick(() => {
+          initHeaderGlitch();
+        });
+      } else {
+        destroyHeaderGlitch();
+      }
+    },
+    { immediate: true }
+  );
+
+  onMounted(() => {
+    if (isCyberpunk.value) {
+      nextTick(() => {
+        initHeaderGlitch();
+      });
+    }
+  });
+
+  onUnmounted(() => {
+    destroyHeaderGlitch();
+  });
 
   const isHome = computed(() => route.path === '/home');
 

@@ -47,7 +47,7 @@ const handleLogin = async () => {
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <h1>📚 内容管理系统</h1>
+        <h1>内容管理系统</h1>
         <p>登录以管理文章、随笔和笔记</p>
       </div>
       <form @submit.prevent="handleLogin" class="login-form">
@@ -74,7 +74,7 @@ const handleLogin = async () => {
         </button>
       </form>
       <div class="login-footer">
-        <p>默认账号: admin / admin123</p>
+        <p>请联系管理员获取登录账号</p>
       </div>
     </div>
   </div>

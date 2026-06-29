@@ -16,7 +16,6 @@ import sql from 'highlight.js/lib/languages/sql';
 import yaml from 'highlight.js/lib/languages/yaml';
 import 'highlight.js/styles/github-dark.css';
 import { useTheme } from '../composables/useTheme';
-import { useCyberpunkGlitch } from '../composables/useCyberpunkGlitch';
 
 // 注册常用语言
 hljs.registerLanguage('javascript', javascript);
@@ -65,13 +64,6 @@ const outlineCollapsed = ref(false);
 const currentFileDir = ref('');
 
 const { isCyberpunk } = useTheme();
-
-const studyPageRef = ref<HTMLElement | null>(null);
-useCyberpunkGlitch(
-  studyPageRef,
-  isCyberpunk,
-  { selectors: ['.el-menu-item', '.outline-link-text'] }
-);
 
 // 过滤菜单搜索
 const filteredMenu = computed(() => {

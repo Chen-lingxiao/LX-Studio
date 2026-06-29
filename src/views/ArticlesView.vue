@@ -164,6 +164,7 @@
               :key="article.id"
               :article="article"
               :is-dark="isDark"
+              :cyberpunk="isCyberpunk"
               :selected="selectedArticle?.id === article.id"
               @click="selectArticle(article)"
             />

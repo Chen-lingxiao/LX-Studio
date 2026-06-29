@@ -12,7 +12,7 @@ import { useTheme } from '../composables/useTheme';
 const { isDark, isCyberpunk } = useTheme();
 
 const currentYear = new Date().getFullYear();
-const sysVersion = 'v3.7.1';
+const sysVersion = 'v1.0.1';
 
 const syncTimeText = ref('');
 let timeTimer = null;

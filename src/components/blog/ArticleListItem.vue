@@ -6,6 +6,7 @@
       date?: string;
     };
     isDark?: boolean;
+    cyberpunk?: boolean;
     selected?: boolean;
   }>();
 
@@ -22,7 +23,7 @@
 <template>
   <div
     class="article-list-item"
-    :class="{ dark: isDark, selected: selected }"
+    :class="{ dark: isDark, cyberpunk: cyberpunk, selected: selected }"
     @click="$emit('click')"
   >
     <span class="item-date">{{ formatDate(article.date) }}</span>
@@ -108,5 +109,40 @@
 
   .article-list-item.dark .item-title {
     color: #b8c8d8;
+  }
+
+  /* 赛博朋克主题样式 */
+  .article-list-item.cyberpunk {
+    background: #05050a;
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    border-radius: 0;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .article-list-item.cyberpunk:hover {
+    background: rgba(0, 240, 255, 0.06);
+    border-color: rgba(255, 46, 147, 0.3);
+    transform: none;
+  }
+
+  .article-list-item.cyberpunk.selected {
+    background: rgba(255, 46, 147, 0.15);
+    border-color: rgba(255, 46, 147, 0.5);
+    box-shadow: 0 0 15px rgba(255, 46, 147, 0.3);
+  }
+
+  .article-list-item.cyberpunk .item-date {
+    color: #00f0ff;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+  }
+
+  .article-list-item.cyberpunk .item-title {
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.03rem;
+  }
+
+  .article-list-item.cyberpunk:hover .item-title {
+    color: #ff2e93;
+    text-shadow: 0 0 10px rgba(255, 46, 147, 0.6);
   }
 </style>

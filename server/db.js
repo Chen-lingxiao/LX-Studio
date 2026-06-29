@@ -117,13 +117,20 @@ async function initDB() {
     adminCheck.free();
     const countKey = Object.keys(adminRow)[0];
     const adminCount = adminRow ? Number(adminRow[countKey]) : 0;
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
     if (adminCount === 0) {
-      const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-      const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+      if (!adminUsername || !adminPassword) {
+        throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required to create admin user');
+      }
       const hashedPassword = bcrypt.hashSync(adminPassword, 10);
       const insertResult = db.run('INSERT INTO admin_users (username, password) VALUES (?, ?)', [adminUsername, hashedPassword]);
       console.log('Insert result:', insertResult);
-      console.log(`Default admin user created: ${adminUsername}`);
+      console.log(`Admin user created: ${adminUsername}`);
+    } else if (adminUsername && adminPassword) {
+      const hashedPassword = bcrypt.hashSync(adminPassword, 10);
+      const updateResult = db.run('UPDATE admin_users SET username = ?, password = ? WHERE id = 1', [adminUsername, hashedPassword]);
+      console.log(`Admin user updated: ${adminUsername}`);
     }
 
     saveDB();

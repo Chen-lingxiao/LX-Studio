@@ -1,5 +1,27 @@
 <template>
-  <div class="home">
+  <div ref="homeRootRef" class="home" :class="{ 'ambient--active': ambientActive }">
+    <!-- ===== Ambient Glitch Overlay Layer ===== -->
+    <div ref="ambientOverlayRef" class="ambient-overlay" :class="{ 'ambient-overlay--on': ambientActive }">
+      <!-- CRT 扫描线 -->
+      <div class="crt-scanlines"></div>
+      <!-- 暗角 -->
+      <div class="vignette"></div>
+      <!-- RGB 色差分裂 + 闪烁 -->
+      <div ref="chromaticLayerRef" class="chromatic-layer"></div>
+      <!-- 入侵终端窗口 -->
+      <div ref="terminalRef" class="intrusion-terminal" :class="{ 'terminal--on': ambientActive }">
+        <div class="terminal-titlebar">
+          <span class="terminal-dot dot-red"></span>
+          <span class="terminal-dot dot-yellow"></span>
+          <span class="terminal-dot dot-green"></span>
+          <span class="terminal-title">SESSION_0x4F — ROOT</span>
+        </div>
+        <div ref="terminalBodyRef" class="terminal-body">
+          <div class="terminal-line prompt">C:\Users\ROOT&gt; _</div>
+        </div>
+      </div>
+    </div>
+    <!-- 主故障 Canvas -->
     <canvas ref="glitchCanvasRef" class="glitch-canvas"></canvas>
 
     <!-- ==================== Header ==================== -->
@@ -256,20 +278,34 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { PowerGlitch } from 'powerglitch'
 
-// Template refs
+// ==================== Template Refs ====================
+const homeRootRef = ref(null)
+const ambientOverlayRef = ref(null)
 const glitchCanvasRef = ref(null)
+const terminalRef = ref(null)
+const terminalBodyRef = ref(null)
+const chromaticLayerRef = ref(null)
 const heroTitleRef = ref(null)
 
-// ==================== Globals ====================
+// ==================== Reactive State ====================
+const ambientActive = ref(false)
+
+// ==================== Internal State ====================
 let glitchCtx = null
-let glitchFragments = []
-let ambientTimer = null
-let ambientInterval = null
-let ambientTextTimer = null
-let animFrame = null
 let heroGlitch = null
 
-// ==================== Canvas Helpers ====================
+// Timer IDs — all managed for clean teardown
+let fragmentTimer = null
+let textGlitchTimer = null
+let terminalTimer = null
+let typewriterTimer = null
+let flashTimer = null
+let shakeTimer = null
+let chromaticTimer = null
+let tearTimer = null
+let noiseTimer = null
+
+// ==================== Canvas Resize ====================
 function resizeCanvas() {
   const canvas = glitchCanvasRef.value
   if (!canvas) return
@@ -277,70 +313,306 @@ function resizeCanvas() {
   canvas.height = window.innerHeight
 }
 
-function spawnFragment() {
+// ==================== Canvas Effects ====================
+
+// 1) Glitch Blocks — RGB split horizontal slices (subtle)
+function spawnGlitchBlocks(count) {
   const canvas = glitchCanvasRef.value
-  if (!canvas) return
-  const neonColors = [
-    { r: 0, g: 240, b: 255 },
-    { r: 255, g: 46, b: 147 },
-    { r: 0, g: 240, b: 255 },
-    { r: 255, g: 46, b: 147 },
-    { r: 255, g: 255, b: 255 },
-  ]
-  const color = neonColors[Math.floor(Math.random() * neonColors.length)]
+  if (!canvas || !glitchCtx) return
   const w = canvas.width
   const h = canvas.height
-  const fw = 60 + Math.random() * 200
-  const fh = 3 + Math.random() * 18
-  glitchFragments.push({
-    x: Math.random() * (w - fw),
-    y: Math.random() * (h - fh),
-    w: fw,
-    h: fh,
-    offsetX: (Math.random() - 0.5) * 80,
-    color,
-    life: 0,
-    maxLife: 200 + Math.random() * 300,
-  })
-}
-
-function drawGlitchFragments() {
-  if (!glitchCtx) return
-  const canvas = glitchCanvasRef.value
-  if (!canvas) return
-  glitchCtx.clearRect(0, 0, canvas.width, canvas.height)
-  glitchFragments = glitchFragments.filter(f => {
-    f.life += 16
-    if (f.life >= f.maxLife) return false
-    const alpha = 1 - f.life / f.maxLife
-    const { r, g, b } = f.color
-    glitchCtx.fillStyle = `rgba(${r},${g},${b},${alpha * 0.6})`
-    glitchCtx.fillRect(f.x + f.offsetX, f.y, f.w, f.h)
-    glitchCtx.fillStyle = `rgba(${r},${g},${b},${alpha * 0.25})`
-    glitchCtx.fillRect(f.x + f.offsetX, f.y - 2, f.w, 3)
-    glitchCtx.fillStyle = `rgba(${r},${g},${b},${alpha * 0.15})`
-    glitchCtx.fillRect(f.x + f.offsetX + Math.random() * f.w, f.y, 1, f.h)
-    return true
-  })
-  if (glitchFragments.length > 0 || ambientInterval) {
-    animFrame = requestAnimationFrame(drawGlitchFragments)
-  } else {
-    animFrame = null
+  for (let i = 0; i < count; i++) {
+    const y = Math.random() * h
+    const bw = 30 + Math.random() * (w * 0.2)
+    const bh = 2 + Math.random() * 10
+    const x = Math.random() * (w - bw)
+    const rOff = (Math.random() - 0.5) * 40
+    const bOff = (Math.random() - 0.5) * 35
+    // Red channel offset
+    glitchCtx.fillStyle = 'rgba(255,46,147,0.3)'
+    glitchCtx.fillRect(x + rOff, y, bw, bh)
+    // Blue channel offset
+    glitchCtx.fillStyle = 'rgba(0,200,255,0.3)'
+    glitchCtx.fillRect(x + bOff, y, bw, bh)
+    // Thin white line atop
+    glitchCtx.fillStyle = 'rgba(255,255,255,0.18)'
+    glitchCtx.fillRect(x, y, bw, 1)
   }
 }
 
-function scheduleFragment() {
-  if (!ambientInterval) return
-  const n = 1 + Math.floor(Math.random() * 2)
-  for (let i = 0; i < n; i++) spawnFragment()
-  ambientTimer = setTimeout(scheduleFragment, 50 + Math.random() * 300)
+// 2) Screen Tearing — narrow band, lighter
+function spawnScreenTear() {
+  const canvas = glitchCanvasRef.value
+  if (!canvas || !glitchCtx) return
+  const w = canvas.width
+  const h = canvas.height
+  const y = Math.random() * h * 0.8
+  const th = 8 + Math.random() * 30
+  const offset = (Math.random() - 0.5) * w * 0.35
+  glitchCtx.fillStyle = 'rgba(255,46,147,0.15)'
+  glitchCtx.fillRect(offset, y, w, th)
+  glitchCtx.fillStyle = 'rgba(0,240,255,0.12)'
+  glitchCtx.fillRect(offset + 1, y + 1, w, th - 2)
+  glitchCtx.strokeStyle = 'rgba(255,255,255,0.25)'
+  glitchCtx.lineWidth = 1
+  glitchCtx.beginPath()
+  glitchCtx.moveTo(0, y)
+  glitchCtx.lineTo(w, y)
+  glitchCtx.moveTo(0, y + th)
+  glitchCtx.lineTo(w, y + th)
+  glitchCtx.stroke()
 }
 
+// 3) Static Noise — draw random dots directly (perf: no ImageData buffer)
+function spawnNoise(count) {
+  const canvas = glitchCanvasRef.value
+  if (!canvas || !glitchCtx) return
+  const w = canvas.width
+  const h = canvas.height
+  for (let i = 0; i < count; i++) {
+    const x = Math.random() * w
+    const y = Math.random() * h
+    const brightness = Math.floor(Math.random() * 255)
+    glitchCtx.fillStyle = `rgba(${brightness},${brightness},${brightness},${Math.random() * 0.18})`
+    glitchCtx.fillRect(x, y, 1 + Math.random() * 2, 1)
+  }
+  setTimeout(() => {
+    if (ambientActive.value && glitchCanvasRef.value) {
+      glitchCtx.clearRect(0, 0, w, h)
+    }
+  }, 60)
+}
+
+// 4) Full Screen Flash
+function triggerScreenFlash(color, alpha) {
+  const canvas = glitchCanvasRef.value
+  if (!canvas || !glitchCtx) return
+  glitchCtx.fillStyle = `rgba(${color},${alpha})`
+  glitchCtx.fillRect(0, 0, canvas.width, canvas.height)
+}
+
+// ==================== CSS-based Effects ====================
+
+// 5) Body Shake
+function triggerBodyShake(intensity) {
+  const root = homeRootRef.value
+  if (!root) return
+  const dx = (Math.random() - 0.5) * intensity
+  const dy = (Math.random() - 0.5) * intensity
+  root.style.transform = `translate(${dx}px, ${dy}px)`
+  setTimeout(() => {
+    if (root) root.style.transform = ''
+  }, 80 + Math.random() * 60)
+}
+
+// 6) Chromatic Aberration Flash
+function triggerChromaticFlash() {
+  const layer = chromaticLayerRef.value
+  if (!layer) return
+  layer.classList.add('chromatic--on')
+  setTimeout(() => layer.classList.remove('chromatic--on'), 80 + Math.random() * 100)
+}
+
+// 7) Intrusion Terminal — typewriter + auto-scroll
+const TERMINAL_SESSIONS = [
+  // Session 1: 系统突破 — SSH 入侵
+  [
+    { type: 'cmd', text: 'ssh root@10.7.3.9 -p 22' },
+    { type: 'out', text: 'Connecting to 10.7.3.9:22...' },
+    { type: 'out', text: 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3' },
+    { type: 'out', text: 'auth [PUBLICKEY] ... ACCEPTED' },
+    { type: 'cmd', text: 'whoami && id' },
+    { type: 'out', text: 'root / uid=0(root) gid=0(root)' },
+    { type: 'cmd', text: 'uname -a' },
+    { type: 'out', text: 'Linux SRV-揽星河 6.8.0 #1 SMP x86_64' },
+    { type: 'cmd', text: 'hostname -I' },
+    { type: 'out', text: '10.7.3.9 172.17.0.1' },
+  ],
+  // Session 2: 权限扫描 & 数据定位
+  [
+    { type: 'cmd', text: 'find / -perm -4000 -type f 2>/dev/null | head -4' },
+    { type: 'out', text: '/usr/bin/sudo' },
+    { type: 'out', text: '/usr/bin/su' },
+    { type: 'out', text: '/usr/bin/passwd' },
+    { type: 'out', text: '/usr/lib/dbus-1.0/dbus-daemon-launch-helper' },
+    { type: 'cmd', text: 'cat /etc/shadow | head -2' },
+    { type: 'out', text: 'root:$6$h4ck...:19000:0:99999:7:::' },
+    { type: 'out', text: 'admin:$6$p4ss...:19000:0:99999:7:::' },
+    { type: 'cmd', text: 'ls -lh /var/lib/mysql/db_core/' },
+    { type: 'out', text: '-rw------- ibdata1       12K  Jun 29' },
+    { type: 'out', text: '-rw------- users.ibd     48M  Jun 29' },
+    { type: 'out', text: '-rw------- sessions.ibd  22M  Jun 29' },
+  ],
+  // Session 3: 数据窃取
+  [
+    { type: 'cmd', text: 'mysqldump -u root db_core users > /tmp/.dmp' },
+    { type: 'out', text: 'Dumping users... 48MB written.' },
+    { type: 'cmd', text: 'scp /tmp/.dmp ghost@10.7.3.9:~/exfil/' },
+    { type: 'out', text: '.dmp    100%   48MB  12.5MB/s   00:04' },
+    { type: 'cmd', text: 'shred -zu /tmp/.dmp' },
+    { type: 'out', text: 'Trace erased. No local copy remains.' },
+    { type: 'cmd', text: 'history -c && unset HISTFILE' },
+    { type: 'out', text: 'Shell history cleared.' },
+  ],
+  // Session 4: 横向移动 & 后门部署
+  [
+    { type: 'cmd', text: 'netstat -tlnp | grep LISTEN' },
+    { type: 'out', text: 'tcp  :22    sshd        1024/sshd' },
+    { type: 'out', text: 'tcp  :80    nginx       2048/nginx' },
+    { type: 'out', text: 'tcp  :3306  mysqld      3072/mysqld' },
+    { type: 'cmd', text: 'echo "* * * * * root /tmp/.sysd" >> /etc/crontab' },
+    { type: 'out', text: 'Persistence established via crontab.' },
+    { type: 'cmd', text: 'rm -rf /var/log/auth.log /var/log/syslog' },
+    { type: 'out', text: 'Logs purged.' },
+    { type: 'out', text: 'Ghost in the machine. 揽星河 OUT.' },
+  ],
+]
+
+let terminalSessionIdx = 0
+let isTypewriting = false
+
+function clearTerminal() {
+  const body = terminalBodyRef.value
+  if (!body) return
+  body.innerHTML = '<div class="terminal-line prompt">C:\\Users\\ROOT&gt; _</div>'
+}
+
+function appendTerminalLine(type, text) {
+  const body = terminalBodyRef.value
+  if (!body) return
+  const el = document.createElement('div')
+  el.className = `terminal-line ${type === 'cmd' ? 'cmd' : 'output'}`
+  el.innerHTML = text
+  body.appendChild(el)
+  // Auto-scroll to bottom
+  body.scrollTop = body.scrollHeight
+}
+
+function typewriterWrite(line, onDone) {
+  if (!ambientActive.value) return
+  const body = terminalBodyRef.value
+  if (!body) return
+  const promptEl = body.querySelector('.terminal-line.prompt:last-child')
+  if (promptEl) promptEl.remove()
+
+  const el = document.createElement('div')
+  el.className = `terminal-line ${line.type === 'cmd' ? 'cmd' : 'output'}`
+  body.appendChild(el)
+
+  let idx = 0
+  const fullText = line.text
+  const speed = 15 + Math.random() * 35
+
+  function tick() {
+    if (!ambientActive.value || idx >= fullText.length) {
+      el.innerHTML = fullText
+      appendTerminalLine('prompt', 'C:\\Users\\ROOT&gt; _')
+      body.scrollTop = body.scrollHeight
+      if (onDone) onDone()
+      return
+    }
+    el.innerHTML = fullText.substring(0, idx + 1) + '<span class="cursor-blink">|</span>'
+    idx++
+    body.scrollTop = body.scrollHeight
+    typewriterTimer = setTimeout(tick, speed)
+  }
+  tick()
+}
+
+function playTerminalSession(sessionLines, lineIdx = 0) {
+  if (!ambientActive.value || lineIdx >= sessionLines.length) {
+    // Schedule next session after delay
+    if (ambientActive.value) {
+      terminalSessionIdx = (terminalSessionIdx + 1) % TERMINAL_SESSIONS.length
+      terminalTimer = setTimeout(() => {
+        clearTerminal()
+        playTerminalSession(TERMINAL_SESSIONS[terminalSessionIdx])
+      }, 3000 + Math.random() * 3000)
+    }
+    return
+  }
+  typewriterWrite(sessionLines[lineIdx], () => {
+    const delay = sessionLines[lineIdx].type === 'cmd' ? 100 + Math.random() * 200 : 40 + Math.random() * 120
+    terminalTimer = setTimeout(() => {
+      playTerminalSession(sessionLines, lineIdx + 1)
+    }, delay)
+  })
+}
+
+function startTerminal() {
+  clearTerminal()
+  terminalSessionIdx = Math.floor(Math.random() * TERMINAL_SESSIONS.length)
+  playTerminalSession(TERMINAL_SESSIONS[terminalSessionIdx])
+}
+
+function stopTerminal() {
+  if (typewriterTimer) { clearTimeout(typewriterTimer); typewriterTimer = null }
+  clearTerminal()
+}
+
+// ==================== Schedulers (recursive, random interval) ====================
+
+// Glitch blocks — less frequent, smaller, fewer
+function scheduleBlocks() {
+  if (!ambientActive.value) return
+  const count = 1 + Math.floor(Math.random() * 2)
+  spawnGlitchBlocks(count)
+  fragmentTimer = setTimeout(scheduleBlocks, 400 + Math.random() * 700)
+}
+
+// Screen tear — less frequent
+function scheduleTear() {
+  if (!ambientActive.value) return
+  if (Math.random() < 0.35) spawnScreenTear()
+  tearTimer = setTimeout(scheduleTear, 1000 + Math.random() * 2500)
+}
+
+// Static noise — faster dots, much less dense
+function scheduleNoise() {
+  if (!ambientActive.value) return
+  if (Math.random() < 0.5) spawnNoise(200 + Math.floor(Math.random() * 400))
+  noiseTimer = setTimeout(scheduleNoise, 600 + Math.random() * 2000)
+}
+
+// Screen flash — less frequent
+function scheduleFlash() {
+  if (!ambientActive.value) return
+  const colors = [
+    '255,46,147',
+    '0,240,255',
+    '255,255,255',
+    '0,0,0',
+  ]
+  const color = colors[Math.floor(Math.random() * colors.length)]
+  triggerScreenFlash(color, 0.05 + Math.random() * 0.1)
+  setTimeout(() => {
+    if (ambientActive.value && glitchCtx && glitchCanvasRef.value) {
+      glitchCtx.clearRect(0, 0, glitchCanvasRef.value.width, glitchCanvasRef.value.height)
+    }
+  }, 50)
+  flashTimer = setTimeout(scheduleFlash, 2500 + Math.random() * 5000)
+}
+
+// Body shake — moderate
+function scheduleShake() {
+  if (!ambientActive.value) return
+  triggerBodyShake(1.5 + Math.random() * 4)
+  shakeTimer = setTimeout(scheduleShake, 800 + Math.random() * 2500)
+}
+
+// Chromatic aberration
+function scheduleChromatic() {
+  if (!ambientActive.value) return
+  triggerChromaticFlash()
+  chromaticTimer = setTimeout(scheduleChromatic, 800 + Math.random() * 3000)
+}
+
+// Text glitch (same logic as before, targeting PowerGlitch wrappers)
 function triggerAmbientTextGlitch() {
-  if (!ambientInterval) return
+  if (!ambientActive.value) return
   const candidates = document.querySelectorAll('.glitchable-text')
   if (candidates.length === 0) {
-    ambientTextTimer = setTimeout(triggerAmbientTextGlitch, 600 + Math.random() * 1400)
+    textGlitchTimer = setTimeout(triggerAmbientTextGlitch, 600 + Math.random() * 1400)
     return
   }
   const count = 1 + Math.floor(Math.random() * 3)
@@ -354,31 +626,54 @@ function triggerAmbientTextGlitch() {
     wrapper.classList.add('text-glitch-ambient')
     setTimeout(() => { wrapper.classList.remove('text-glitch-ambient') }, 500)
   }
-  ambientTextTimer = setTimeout(triggerAmbientTextGlitch, 600 + Math.random() * 1400)
+  textGlitchTimer = setTimeout(triggerAmbientTextGlitch, 600 + Math.random() * 1400)
 }
 
+// ==================== Start / Stop ====================
 function startAmbientGlitch() {
-  ambientInterval = scheduleFragment
-  scheduleFragment()
+  ambientActive.value = true
+  scheduleBlocks()
+  scheduleTear()
+  scheduleNoise()
+  scheduleFlash()
+  scheduleShake()
+  scheduleChromatic()
+  startTerminal()
   triggerAmbientTextGlitch()
-  if (!animFrame) animFrame = requestAnimationFrame(drawGlitchFragments)
+}
+
+function clearAllTimers() {
+  const timers = [fragmentTimer, textGlitchTimer, terminalTimer, flashTimer, shakeTimer, chromaticTimer, tearTimer, noiseTimer]
+  timers.forEach(t => { if (t) clearTimeout(t) })
+  fragmentTimer = textGlitchTimer = terminalTimer = flashTimer = null
+  shakeTimer = chromaticTimer = tearTimer = noiseTimer = null
+  if (typewriterTimer) { clearTimeout(typewriterTimer); typewriterTimer = null }
 }
 
 function stopAmbientGlitch() {
-  ambientInterval = null
-  if (ambientTimer) { clearTimeout(ambientTimer); ambientTimer = null }
-  if (ambientTextTimer) { clearTimeout(ambientTextTimer); ambientTextTimer = null }
-  document.querySelectorAll('.text-glitch-ambient').forEach(el => { el.classList.remove('text-glitch-ambient') })
-  glitchFragments = []
-  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null }
+  ambientActive.value = false
+  clearAllTimers()
+  stopTerminal()
+
+  // Clean text glitch classes
+  document.querySelectorAll('.text-glitch-ambient').forEach(el => el.classList.remove('text-glitch-ambient'))
+
+  // Clean canvas
   if (glitchCtx && glitchCanvasRef.value) {
     glitchCtx.clearRect(0, 0, glitchCanvasRef.value.width, glitchCanvasRef.value.height)
   }
+
+  // Reset body transform
+  const root = homeRootRef.value
+  if (root) root.style.transform = ''
+
+  // Reset chromatic layer
+  const chroma = chromaticLayerRef.value
+  if (chroma) chroma.classList.remove('chromatic--on')
 }
 
 // ==================== Lifecycle ====================
 onMounted(() => {
-  // Canvas setup
   glitchCtx = glitchCanvasRef.value?.getContext('2d') || null
   resizeCanvas()
   window.addEventListener('resize', resizeCanvas)
@@ -447,9 +742,7 @@ onMounted(() => {
     heroTitle.addEventListener('mouseenter', () => {
       heroTitle.textContent = '你好 世界'
       heroGlitch.startGlitch()
-      ambientTimer = setTimeout(() => {
-        startAmbientGlitch()
-      }, 2000)
+      setTimeout(() => { startAmbientGlitch() }, 2000)
     })
     heroTitle.addEventListener('mouseleave', () => {
       stopAmbientGlitch()
@@ -1145,7 +1438,7 @@ onBeforeUnmount(() => {
 
 <!-- ⚡ Non-scoped: dynamic classes applied by PowerGlitch / JS -->
 <style>
-/* CSS Variables — global, used by body & PowerGlitch wrappers */
+/* CSS Variables — global */
 :root {
   --bg: #000000;
   --neon-pink: #FF2E93;
@@ -1165,7 +1458,237 @@ onBeforeUnmount(() => {
   --header-h: 72px;
 }
 
-/* Ambient glitch canvas overlay */
+/* ==================== Ambient Overlay Container ==================== */
+.ambient-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.ambient-overlay--on {
+  opacity: 1;
+}
+
+/* 1) CRT Scanlines */
+.crt-scanlines {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.15) 0px,
+    rgba(0,0,0,0.15) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  z-index: 1;
+}
+
+/* 2) Vignette — dark edges */
+.vignette {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0,0,0,0.35) 70%,
+    rgba(0,0,0,0.65) 90%,
+    rgba(0,0,0,0.85) 100%
+  );
+  z-index: 2;
+}
+
+/* 3) Chromatic Aberration Flash Layer */
+.chromatic-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.05s ease;
+  pointer-events: none;
+}
+.chromatic--on {
+  opacity: 1;
+  background: rgba(255,46,147,0.06);
+  box-shadow:
+    3px 0 0 rgba(255,46,147,0.15),
+    -2px 0 0 rgba(0,240,255,0.12);
+}
+
+/* 4) Holographic Intrusion Terminal — Red Alert / Intrusion style */
+.intrusion-terminal {
+  position: absolute;
+  bottom: 32px;
+  right: 40px;
+  width: 420px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  /* Dark crimson holographic glass */
+  background:
+    linear-gradient(180deg, rgba(18,2,4,0.94) 0%, rgba(12,4,6,0.90) 100%);
+  /* Angled corners via clip-path */
+  clip-path: polygon(
+    14px 0, calc(100% - 14px) 0, 100% 14px,
+    100% calc(100% - 14px), calc(100% - 14px) 100%,
+    14px 100%, 0 calc(100% - 14px), 0 14px
+  );
+  /* Right-side fade out — dissolve from ~55% toward right edge */
+  -webkit-mask-image: linear-gradient(to right, black 48%, transparent 93%);
+  mask-image: linear-gradient(to right, black 48%, transparent 93%);
+  overflow: hidden;
+  z-index: 4;
+  opacity: 0;
+  /* 3D perspective rotation + entry animation */
+  transform: perspective(1000px) translateY(20px) scale(0.92) rotateY(-15deg) rotateX(2deg);
+  transition: opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1);
+  transform-style: preserve-3d;
+  /* Red neon border glow — multi-layer */
+  box-shadow:
+    0 0 14px rgba(255,40,60,0.4),
+    0 0 45px rgba(255,40,60,0.14),
+    0 0 90px rgba(255,30,50,0.08),
+    inset 0 1px 0 rgba(255,60,80,0.14),
+    inset 0 -1px 0 rgba(255,80,30,0.08);
+}
+/* Border via pseudo-element for clip-path compatibility */
+.intrusion-terminal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  clip-path: inherit;
+  border: 1.5px solid rgba(255,40,60,0.45);
+  box-shadow: 0 0 16px rgba(255,30,50,0.18) inset;
+}
+/* Corner diamond accent dots — red/amber diagonal */
+.intrusion-terminal::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: 5;
+  pointer-events: none;
+  clip-path: inherit;
+  background:
+    linear-gradient(135deg, rgba(255,40,60,0.8) 2px, transparent 2px),
+    linear-gradient(225deg, rgba(255,40,60,0.8) 2px, transparent 2px),
+    linear-gradient(315deg, rgba(255,130,20,0.7) 2px, transparent 2px),
+    linear-gradient(45deg, rgba(255,130,20,0.7) 2px, transparent 2px);
+  opacity: 0.7;
+  filter: blur(0.5px);
+}
+.terminal--on {
+  opacity: 1;
+  transform: perspective(1000px) translateY(0) scale(1) rotateY(-12deg) rotateX(1deg);
+}
+/* ===== Title Bar ===== */
+.terminal-titlebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px 10px;
+  background:
+    linear-gradient(180deg, rgba(255,40,60,0.10) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(255,40,60,0.22);
+  z-index: 1;
+}
+/* Accent glow line under title bar — red → amber */
+.terminal-titlebar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,40,60,0.55), rgba(255,130,20,0.35), transparent);
+}
+/* Status diamond indicators */
+.terminal-dot {
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  box-shadow: 0 0 4px currentColor;
+}
+.dot-red   { background: #FF2040; color: #FF2040; }
+.dot-yellow { background: #FF8800; color: #FF8800; }
+.dot-green  { background: #FF2E50; color: #FF2E50; }
+.terminal-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,200,180,0.55);
+  margin-left: 6px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+/* ===== Body / Content Area ===== */
+.terminal-body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 14px 20px;
+  overflow-y: auto;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  line-height: 21px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,40,60,0.28) transparent;
+  /* Subtle scan grid — red tint */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,40,60,0.02) 0px,
+      transparent 2px,
+      transparent 4px
+    );
+}
+.terminal-body::-webkit-scrollbar {
+  width: 3px;
+}
+.terminal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.terminal-body::-webkit-scrollbar-thumb {
+  background: rgba(255,40,60,0.28);
+}
+.terminal-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+  text-shadow: 0 0 4px currentColor;
+}
+.terminal-line.prompt {
+  color: rgba(255,60,80,0.95);
+}
+.terminal-line.cmd {
+  color: rgba(255,60,80,0.95);
+}
+.terminal-line.cmd::before {
+  content: '▸ ';
+  color: rgba(255,130,20,0.85);
+  font-size: 10px;
+}
+.terminal-line.output {
+  color: rgba(255,200,190,0.6);
+}
+/* Typewriter cursor blink */
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.cursor-blink {
+  animation: cursorBlink 0.5s step-end infinite;
+  color: rgba(255,130,20,0.9);
+  font-weight: bold;
+}
+
+/* ==================== Canvas Overlay ==================== */
 .glitch-canvas {
   position: fixed;
   top: 0; left: 0;
@@ -1174,7 +1697,12 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
-/* Ambient text glitch — CSS animation for .powerglitch wrappers (dynamic) */
+/* ==================== Body Shake Transition ==================== */
+.home {
+  transition: transform 0.06s ease-out;
+}
+
+/* ==================== Text Glitch (PowerGlitch ambient trigger) ==================== */
 @keyframes ambientTextGlitch {
   0%   { transform: translate(0);     opacity: 1;    filter: none; }
   8%   { transform: translate(3px,-2px); opacity: 0.75; filter: blur(1.2px) brightness(1.18); }

@@ -263,6 +263,13 @@ body {
   --cyber-shadow-pink-md: 0 0 4px #ff1493, 0 0 10px rgba(255, 20, 147, 0.4);
   --cyber-shadow-pink-lg: 0 0 4px #ff1493, 0 0 10px #ff1493, 0 0 24px #ff2e93;
 
+  /* 文字发光效果 */
+  --cyber-glow-cyan-subtle: 0 0 6px rgba(0, 240, 255, 0.5);
+  --cyber-glow-pink-subtle: 0 0 6px rgba(255, 46, 147, 0.5);
+
+  /* 卡片背景 */
+  --cyber-bg-card: #05050a;
+
   /* 字体 */
   --cyber-font-mono: 'Share Tech Mono', 'Courier New', monospace;
   --cyber-font-display: 'Orbitron', sans-serif;

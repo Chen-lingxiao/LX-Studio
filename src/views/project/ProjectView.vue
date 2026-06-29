@@ -2,17 +2,11 @@
 import { ref, onMounted, watch, nextTick, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useTheme } from '../../composables/useTheme';
-import { useCyberpunkGlitch } from '../../composables/useCyberpunkGlitch';
 
 const router = useRouter();
 const route = useRoute();
 const mainRef = ref<HTMLElement | null>(null);
 const { isCyberpunk } = useTheme();
-useCyberpunkGlitch(
-  computed(() => document.querySelector('.project-layout') as HTMLElement | null),
-  isCyberpunk,
-  { selectors: ['.el-menu-item'] }
-);
 
 interface ProjectItem {
   index: string;
