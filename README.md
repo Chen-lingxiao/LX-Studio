@@ -1,6 +1,6 @@
 # 揽星河 | LX-Studio
 
-一个基于 Vue 3 的现代化个人技术博客与项目展示平台，集成了现代前端技术与交互式文档功能。平台融合了技术文章分享、项目案例展示、学习笔记记录等核心功能
+一个基于 Vue 3 + Express 的全栈个人技术博客与项目展示平台，集成了现代前端技术、后端 API 与管理后台。平台融合了技术文章分享、项目案例展示、学习笔记记录等核心功能
 
 ## 目录
 
@@ -13,6 +13,7 @@
 - [项目结构](#项目结构)
 - [组件说明](#组件说明)
 - [配置说明](#配置说明)
+- [自定义配置指南](#自定义配置指南)
 - [贡献规范](#贡献规范)
 - [许可证](#许可证)
 - [致谢](#致谢)
@@ -21,7 +22,7 @@
 
 ## 项目概述
 
-揽星河 | LX-Studio 是一个面向开发者的个人技术站点，旨在记录技术成长、分享项目经验与展示开发成果。
+揽星河 | LX-Studio 是一个面向开发者的全栈个人技术站点，采用 Vue 3 + Express 架构，旨在记录技术成长、分享项目经验与展示开发成果。
 
 ### 核心理念
 
@@ -29,6 +30,7 @@
 - **项目展示**：以详尽的案例展示项目背景、技术栈、开发过程与个人贡献
 - **知识积累**：构建结构化的学习笔记体系，便于知识回顾与分享
 - **美学体验**：追求极致的视觉设计与交互体验，展现技术与人文的融合
+- **全栈架构**：前后端分离设计，支持管理后台与 API 服务
 
 ---
 
@@ -40,9 +42,10 @@
 |------|------|
 | **星空动画背景** | 首页顶部全屏星空粒子动画，包含星星闪烁、流星划过效果，营造沉浸式宇宙视觉体验 |
 | **滚动视差效果** | 支持滚轮滚动切换章节，实现平滑的视差过渡效果 |
-| **文章推荐展示** | 展示最新技术文章，支持分类筛选与分页浏览 |
-| **技术生态链接** | 收录常用技术平台链接，包含 Leaflet、OpenLayers、Mapbox、Cesium、ECharts 等 |
-| **动态水面效果** | 首页底部沉浸式水波动画，增强视觉层次感 |
+| **项目展示区域** | 展示精选项目案例，支持分页浏览，点击可跳转项目详情 |
+| **文章推荐展示** | 展示最新技术文章，支持分页浏览 |
+| **休息区域** | 首页底部放松模块，包含音乐播放器等娱乐功能 |
+| **赛博朋克模式** | 彩蛋特性，触发 Matrix Rain、故障动画等特效 |
 
 ### 文章模块
 
@@ -67,7 +70,7 @@
 
 | 功能 | 描述 |
 |------|------|
-| **项目画廊** | 侧边栏导航展示多个项目案例 |
+| **项目画廊** | 侧边栏导航展示多个项目案例，数据从 API 动态加载 |
 | **项目详情** | 详尽展示项目背景、技术栈、个人职责与项目截图 |
 | **技术栈展示** | 标签式展示项目使用的技术栈 |
 | **职责描述** | 结构化描述在项目中的具体工作内容与贡献 |
@@ -87,17 +90,29 @@
 | 功能 | 描述 |
 |------|------|
 | **明暗模式** | 一键切换亮色/暗色主题，自动记忆用户偏好 |
-| **主题色预设** | 提供多种主题色方案（极光绿、极客蓝、日出橙、暮光紫） |
+| **主题色预设** | 提供 6 种主题色方案（默认白、淡紫色、淡绿色、薄荷绿、柔蓝色、淡粉色） |
 | **主题色切换** | 实时预览主题色效果，即时生效 |
+| **赛博朋克模式** | 彩蛋特性，触发特殊的故障动画效果 |
 | **本地存储** | 用户偏好设置自动保存到浏览器本地存储 |
+| **FPS 显示** | 可选的帧率显示功能 |
+
+### 管理后台
+
+| 功能 | 描述 |
+|------|------|
+| **身份认证** | JWT Token 认证，安全登录管理后台 |
+| **文章管理** | 创建、编辑、删除文章，支持 Markdown 编辑器 |
+| **笔记管理** | 管理学习笔记内容 |
+| **项目管理** | 管理项目展示信息，支持图片上传 |
+| **文件上传** | 支持图片等文件上传，自动存储到服务器 |
 
 ### UI 组件
 
 | 功能 | 描述 |
 |------|------|
 | **加载动画** | 应用启动时的品牌加载动画，增强仪式感 |
-| **顶部导航栏** | 透明悬浮导航栏，支持路由高亮与滚动变色 |
-| **底部页脚** | 响应式页脚，支持透明模式与项目/学习页面融合 |
+| **顶部导航栏** | 透明悬浮导航栏，支持路由高亮、滚动变色、赛博朋克故障效果 |
+| **底部页脚** | 响应式页脚，支持透明模式与项目/学习页面融合，显示系统版本 |
 | **博客卡片** | 文章卡片组件，支持悬停动画与点击反馈 |
 | **博客分页** | 文章列表分页组件，简洁易用 |
 
@@ -113,6 +128,19 @@
 | 构建工具 | Vite | 8.0.x |
 | 类型支持 | TypeScript | 6.0.x |
 | 路由管理 | Vue Router | 5.0.x |
+| HTTP 客户端 | Axios | 1.16.x |
+
+### 后端服务
+
+| 类别 | 技术 | 版本 |
+|------|------|------|
+| 服务框架 | Express | 4.21.x |
+| 数据库 | sql.js (SQLite) | 1.14.x |
+| 身份认证 | jsonwebtoken | 9.0.x |
+| 密码加密 | bcryptjs | 2.4.x |
+| 文件上传 | multer | 2.2.x |
+| 跨域支持 | cors | 2.8.x |
+| 环境变量 | dotenv | 17.4.x |
 
 ### UI 与样式
 
@@ -122,6 +150,7 @@
 | 图标库 | @element-plus/icons-vue | 2.3.x |
 | 图标组件 | Lucide Vue Next | 1.0.x |
 | 样式预处理 | Sass | 1.99.x |
+| 动画效果 | PowerGlitch | 2.5.x |
 
 ### 内容处理
 
@@ -129,6 +158,7 @@
 |------|------|------|
 | Markdown 解析 | markdown-it | 14.2.x |
 | Markdown 扩展 | markdown-it-container | 4.0.x |
+| 代码高亮 | highlight.js | 11.11.x |
 
 ### 开发工具
 
@@ -139,6 +169,7 @@
 | 自动导入支持 | unplugin-auto-import | 21.0.x |
 | Markdown 组件 | unplugin-vue-markdown | 32.0.x |
 | Vue 开发工具 | vite-plugin-vue-devtools | 8.1.x |
+| 并发运行 | concurrently | 9.1.x |
 
 ---
 
@@ -178,11 +209,25 @@ npm install
 
 ### 3. 启动开发服务器
 
+启动前端开发服务器：
+
 ```bash
 pnpm dev
 ```
 
 访问 http://localhost:5173 查看运行效果。
+
+启动后端 API 服务器：
+
+```bash
+pnpm dev:server
+```
+
+同时启动前端和后端：
+
+```bash
+pnpm dev:all
+```
 
 ### 4. 构建生产版本
 
@@ -198,6 +243,14 @@ pnpm build
 pnpm preview
 ```
 
+### 6. Docker 部署
+
+项目支持 Docker 容器化部署：
+
+```bash
+docker-compose up -d
+```
+
 ---
 
 ## 页面模块
@@ -206,10 +259,10 @@ pnpm preview
 
 首页采用全屏滚动设计，包含四个主要部分：
 
-1. **首屏**：星空背景动画，展示站点名称与标语
-2. **文章区**：天空背景，展示精选技术文章，支持分类筛选
-3. **技术生态区**：草地背景，展示常用技术平台链接卡片
-4. **休息区**：水波动画效果，作为首页收尾
+1. **首屏（Hero）**：星空背景动画，展示站点名称与标语
+2. **项目展示区**：天空背景，展示精选项目案例，支持分页浏览
+3. **文章区**：渐变背景，展示最新技术文章，支持分页浏览
+4. **休息区**：水波动画效果，包含音乐播放器等放松模块
 
 ### 文章页面（Articles）
 
@@ -229,12 +282,21 @@ pnpm preview
 
 项目页面采用侧边栏 + 主内容区布局：
 
-- **左侧边栏**：项目列表导航
+- **左侧边栏**：项目列表导航（从 API 动态加载）
 - **主内容区**：项目详情展示，包含：
   - 项目概述与链接
   - 技术栈标签
   - 个人职责描述
   - 项目截图轮播
+
+### 管理后台（Admin）
+
+管理后台提供内容管理功能，支持 JWT 身份认证：
+
+- **文章管理**：创建、编辑、删除文章
+- **笔记管理**：管理学习笔记内容
+- **项目管理**：管理项目展示信息
+- **文件上传**：支持图片等文件上传
 
 ---
 
@@ -248,46 +310,64 @@ LX-Studio/
 │   ├── music/                       # 音乐文件
 │   └── favicon.ico                  # 网站图标
 │
-├── src/                             # 源代码目录
-│   │
-│   ├── assets/                       # 资源文件
-│   │   ├── fonts/                    # 字体文件
-│   │   └── styles/                   # 样式文件
-│   │
-│   ├── components/                   # Vue 组件
-│   │   ├── background/               # 背景动画组件
-│   │   ├── blog/                     # 博客相关组件
-│   │   ├── relax/                    # 放松模块组件
-│   │   ├── layout/                   # 布局组件
-│   │   └── settings/                 # 设置组件
-│   │
-│   ├── composables/                  # 可组合函数
-│   │   ├── useSettings.ts            # 设置管理（主题、偏好）
-│   │   ├── useHomeSection.js         # 首页章节状态管理
-│   │   └── useAudioPlayer.ts         # 音乐播放器状态管理
-│   │
-│   ├── data/                         # 数据文件
-│   │   ├── articles.js               # 文章数据配置
-│   │   ├── config.js                 # 学习模块配置
-│   │   └── content/                  # 文章内容
-│   │
-│   ├── router/                       # 路由配置
-│   ├── views/                        # 页面组件
-│   │   ├── project/                  # 项目子页面
-│   │   ├── HomeView.vue              # 首页
-│   │   ├── ArticlesView.vue          # 文章页面
-│   │   └── StudyView.vue             # 学习页面
-│   │
-│   ├── utils/                        # 工具函数
-│   ├── App.vue                       # 根组件
-│   ├── main.js                       # 应用入口
-│   └── env.d.ts                      # TypeScript 环境声明
+├── server/                          # 后端服务目录
+│   ├── middleware/                   # 中间件
+│   │   └── auth.js                  # JWT 认证中间件
+│   ├── routes/                      # API 路由
+│   │   ├── admin.js                 # 管理后台 API
+│   │   ├── articles.js              # 文章 API
+│   │   ├── notes.js                 # 笔记 API
+│   │   ├── projects.js              # 项目 API
+│   │   └── upload.js                # 文件上传 API
+│   ├── db.js                        # 数据库初始化
+│   ├── index.js                     # 服务器入口
+│   └── init-projects.js             # 项目数据初始化
 │
-├── .env                             # 环境变量（API 密钥等）
-├── index.html                        # HTML 入口
-├── vite.config.ts                    # Vite 配置
-├── package.json                      # 依赖配置
-├── tsconfig.json                     # TypeScript 配置
+├── src/                             # 源代码目录
+│   ├── assets/                      # 资源文件
+│   │   ├── fonts/                   # 字体文件
+│   │   └── styles/                  # 样式文件
+│   │
+│   ├── components/                  # Vue 组件
+│   │   ├── background/              # 背景动画组件
+│   │   ├── blog/                    # 博客相关组件
+│   │   ├── relax/                   # 放松模块组件
+│   │   └── settings/                # 设置组件
+│   │
+│   ├── composables/                 # 可组合函数
+│   │   ├── useSettings.ts           # 设置管理
+│   │   ├── useTheme.ts              # 主题管理系统
+│   │   ├── useHomeSection.js        # 首页章节状态管理
+│   │   └── useAudioPlayer.ts        # 音乐播放器状态管理
+│   │
+│   ├── data/                        # 数据文件
+│   │   ├── articles.js              # 文章数据配置
+│   │   ├── config.js                # 学习模块配置
+│   │   └── content/                 # 文章内容
+│   │
+│   ├── router/                      # 路由配置
+│   ├── views/                       # 页面组件
+│   │   ├── admin/                   # 管理后台组件
+│   │   ├── project/                 # 项目子页面
+│   │   ├── HomeView.vue             # 首页
+│   │   ├── ArticlesView.vue         # 文章页面
+│   │   ├── StudyView.vue            # 学习页面
+│   │   └── AdminView.vue            # 管理后台页面
+│   │
+│   ├── utils/                       # 工具函数
+│   ├── App.vue                      # 根组件
+│   ├── main.js                      # 应用入口
+│   └── env.d.ts                     # TypeScript 环境声明
+│
+├── uploads/                         # 上传文件目录
+├── data/                            # SQLite 数据库目录
+├── .env.example                     # 环境变量示例
+├── index.html                       # HTML 入口
+├── vite.config.ts                   # Vite 配置
+├── package.json                     # 依赖配置
+├── tsconfig.json                    # TypeScript 配置
+├── Dockerfile                       # Docker 配置
+├── docker-compose.yml               # Docker Compose 配置
 └── .gitignore                       # Git 忽略配置
 ```
 
@@ -323,8 +403,8 @@ LX-Studio/
 
 | 组件 | 文件位置 | 描述 |
 |------|----------|------|
-| 顶部导航 | [AppHeader.vue](src/components/layout/AppHeader.vue) | 顶部导航栏，支持透明悬浮、路由高亮、滚动变色 |
-| 底部页脚 | [AppFooter.vue](src/components/layout/AppFooter.vue) | 底部页脚，支持透明模式适配 |
+| 顶部导航 | [AppHeader.vue](src/components/AppHeader.vue) | 顶部导航栏，支持透明悬浮、路由高亮、滚动变色、赛博朋克故障效果 |
+| 底部页脚 | [AppFooter.vue](src/components/AppFooter.vue) | 底部页脚，支持透明模式适配，显示系统版本与同步时间 |
 
 ### 设置组件
 
@@ -347,11 +427,21 @@ LX-Studio/
 | `/articles` | ArticlesView.vue | 文章页面 |
 | `/study/*` | StudyView.vue | 学习页面（捕获所有子路由） |
 | `/project` | ProjectView.vue | 项目列表 |
-| `/project/digital-campus` | DigitalCampusDetail.vue | 数字校园项目详情 |
-| `/project/graduation-project` | GraduationProject.vue | 毕业设计项目详情 |
-| `/project/cesium-sandbox` | CesiumSandboxDetail.vue | Cesium 沙盒详情 |
-| `/project/echarts-datav` | EchartsDatav.vue | ECharts 数据大屏详情 |
-| `/project/example` | ExampleProject.vue | 示例项目详情 |
+| `/project/:slug` | ProjectDetail.vue | 项目详情（动态路由） |
+| `/admin` | AdminView.vue | 管理后台 |
+
+### API 路由
+
+后端 API 路由定义在 `server/routes/` 目录：
+
+| API 路径 | 描述 |
+|----------|------|
+| `/lx-api/articles` | 文章 CRUD 接口 |
+| `/lx-api/notes` | 笔记 CRUD 接口 |
+| `/lx-api/projects` | 项目 CRUD 接口 |
+| `/lx-api/upload` | 文件上传接口 |
+| `/lx-api/admin` | 管理员认证接口 |
+| `/lx-api/health` | 健康检查接口 |
 
 ---
 
@@ -359,9 +449,19 @@ LX-Studio/
 
 ### 一、添加新文章
 
+文章系统支持两种方式添加：
+
+#### 方式一：通过管理后台（推荐）
+
+1. 访问 `/admin` 路径，登录管理后台
+2. 在"文章管理"标签页点击"新建文章"
+3. 使用 Markdown 编辑器编写内容并保存
+
+#### 方式二：手动配置
+
 文章系统由两部分组成：**数据配置** + **Markdown 内容文件**。
 
-#### 1. 编写 Markdown 内容
+##### 1. 编写 Markdown 内容
 
 在 `src/data/content/` 目录下创建 Markdown 文件：
 
@@ -374,7 +474,7 @@ src/data/content/
 
 支持标准 Markdown 语法，包括标题、代码块、图片、链接、列表等。
 
-#### 2. 注册文章数据
+##### 2. 注册文章数据
 
 编辑 [src/data/articles.js](src/data/articles.js)，在 `articles` 数组中添加新条目：
 
@@ -395,7 +495,7 @@ src/data/content/
 }
 ```
 
-#### 3. 更新分类计数
+##### 3. 更新分类计数
 
 在同文件的 `categories` 数组中更新对应分类的 `count`：
 
@@ -466,32 +566,38 @@ public/docs/
 
 ### 三、添加项目示例
 
-项目示例由 **路由配置** + **详情组件** + **预览图片** 组成。
+项目系统支持两种方式添加：
 
-#### 1. 添加预览截图
+#### 方式一：通过管理后台（推荐）
 
-在 `public/Preview/` 目录下创建项目文件夹，放入截图：
+1. 访问 `/admin` 路径，登录管理后台
+2. 在"项目管理"标签页点击"新建项目"
+3. 填写项目信息、上传截图并保存
 
+#### 方式二：API 接口
+
+项目数据存储在 SQLite 数据库中，通过 API 动态加载。可以使用以下 API：
+
+```bash
+# 获取所有项目
+GET /lx-api/projects
+
+# 创建新项目（需要认证）
+POST /lx-api/projects
+{
+  "title": "项目名称",
+  "route_index": "project/my-project",
+  "description": "项目描述",
+  "config": {
+    "name": "项目名称",
+    "url": "https://example.com",
+    "description": "详细描述",
+    "techStack": ["Vue", "Express"],
+    "responsibilities": ["负责前端开发"],
+    "images": ["/uploads/screenshot1.png"]
+  }
+}
 ```
-public/Preview/
-├── DigitalCampus/
-│   └── DigitalCampus1.png
-└── MyNewProject/          ← 新建文件夹
-    ├── preview1.png
-    └── preview2.png
-```
-
-#### 2. 创建详情组件
-
-在 `src/views/project/` 目录下创建 Vue 组件，参考现有组件结构。
-
-#### 3. 注册路由
-
-编辑 [src/router/index.js](src/router/index.js)，在 `project` 的 `children` 中添加新路由。
-
-#### 4. 添加侧边栏菜单项
-
-编辑 [src/views/project/ProjectView.vue](src/views/project/ProjectView.vue)，在 `projectList` 中添加新条目。
 
 ---
 
@@ -520,31 +626,39 @@ public/music/
 
 ---
 
-### 五、首页技术生态链接
-
-首页"技术生态"章节的链接数据定义在 [src/views/HomeView.vue](src/views/HomeView.vue) 的 `linksData` 数组中：
-
-```javascript
-{
-  name: '工具名称',
-  desc: '工具简介，显示在卡片中...',
-  url: 'https://example.com'
-}
-```
-
 ---
 
 ### 六、主题色配置
 
-主题色预设定义在 [src/composables/useSettings.ts](src/composables/useSettings.ts) 的 `themeColorPresets` 对象中。
+主题色预设定义在 [src/composables/useTheme.ts](src/composables/useTheme.ts) 的 `themeColorPresets` 对象中，支持 6 种预设主题：
+
+- **默认白** - 纯净白色主题
+- **淡紫色** - 优雅紫色调
+- **淡绿色** - 清新绿色调
+- **薄荷绿** - 凉爽薄荷色
+- **柔蓝色** - 温和蓝色调
+- **淡粉色** - 柔和粉色调
+
+此外还支持**赛博朋克模式**（彩蛋特性），通过特殊方式触发。
 
 ---
 
 ### 七、环境变量配置
 
-API 密钥等敏感信息通过 `.env` 文件配置：
+API 密钥等敏感信息通过 `.env` 文件配置（参考 `.env.example`）：
 
 ```env
+# 后端服务端口
+PORT=3000
+
+# JWT 密钥
+JWT_SECRET=your-jwt-secret
+
+# 管理员账户
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-password
+
+# 聚合数据 API（可选）
 VITE_JUHE_API_KEY_CALENDAR=your-calendar-api-key
 VITE_JUHE_API_KEY_HISTORY=your-history-api-key
 ```
@@ -564,7 +678,10 @@ VITE_JUHE_API_KEY_HISTORY=your-history-api-key
 | 文章数据 | `src/data/articles.js` | 文章列表配置 |
 | 学习目录 | `src/data/config.js` | 学习模块菜单配置 |
 | 音乐列表 | `src/composables/useAudioPlayer.ts` | 播放器歌曲配置 |
-| 首页链接 | `src/views/HomeView.vue` | 技术生态链接数据 |
+| 上传文件 | `uploads/` | 用户上传的文件 |
+| 数据库 | `data/` | SQLite 数据库文件 |
+| 后端路由 | `server/routes/` | API 路由定义 |
+| 主题配置 | `src/composables/useTheme.ts` | 主题色与模式配置 |
 
 ---
 
@@ -621,7 +738,10 @@ MIT License
 - [Vite](https://vitejs.dev/) - 下一代前端构建工具
 - [Vue Router](https://router.vuejs.org/) - Vue.js 官方路由管理
 - [Element Plus](https://element-plus.org/) - 基于 Vue 3 的组件库
+- [Express](https://expressjs.com/) - 快速、开放、极简的 Web 框架
+- [sql.js](https://sql.js.org/) - SQLite 的 JavaScript 实现
 - [markdown-it](https://markdown-it.github.io/) - Markdown 解析器
+- [highlight.js](https://highlightjs.org/) - 语法高亮库
 
 ### 设计灵感
 
