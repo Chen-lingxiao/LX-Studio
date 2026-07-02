@@ -39,33 +39,33 @@ export default defineConfig({
       allow: ['.'],
     },
     proxy: {
-      '/api/calendar': {
+      '/lx-api/calendar': {
         target: 'https://apis.juhe.cn/fapig/calendar/day',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/calendar/, ''),
+        rewrite: (path) => path.replace(/^\/lx-api\/calendar/, ''),
       },
-      '/api/history': {
+      '/lx-api/history': {
         target: 'https://v.juhe.cn/todayOnhistory/queryEvent',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/history/, ''),
+        rewrite: (path) => path.replace(/^\/lx-api\/history/, ''),
       },
-      '/api/articles': {
+      '/lx-api/articles': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
-      '/api/notes': {
+      '/lx-api/notes': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
-      '/api/projects': {
+      '/lx-api/projects': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
-      '/api/upload': {
+      '/lx-api/upload': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
-      '/api/admin': {
+      '/lx-api/admin': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },

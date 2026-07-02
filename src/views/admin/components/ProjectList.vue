@@ -48,7 +48,7 @@ const filteredProjects = computed(() => {
 const loadProjects = async () => {
   loading.value = true;
   try {
-    const response = await fetch('/api/projects');
+    const response = await fetch('/lx-api/projects');
     const result = await response.json();
     if (result.success) {
       projects.value = result.data;

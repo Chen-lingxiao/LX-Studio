@@ -1,4 +1,4 @@
-﻿﻿﻿<script setup>
+﻿﻿﻿﻿﻿﻿<script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { PowerGlitch } from 'powerglitch';
@@ -495,7 +495,7 @@ const setProjectPage = (page) => {
 
 const loadProjects = async () => {
   try {
-    const response = await fetch('/api/projects');
+    const response = await fetch('/lx-api/projects');
     const result = await response.json();
     if (result.success) {
       projects.value = result.data.map((p) => {
@@ -531,11 +531,11 @@ const pageSize = 6;
 
 const loadArticles = async () => {
   try {
-    const response = await fetch('/api/articles');
+    const response = await fetch('/lx-api/articles');
     const result = await response.json();
     if (result.success) {
       articles.value = result.data;
-      const tagsResponse = await fetch('/api/articles/tags');
+      const tagsResponse = await fetch('/lx-api/articles/tags');
       const tagsResult = await tagsResponse.json();
       if (tagsResult.success) tags.value = tagsResult.data;
     }

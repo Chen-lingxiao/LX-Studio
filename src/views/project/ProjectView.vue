@@ -32,7 +32,7 @@ const fromChildPath = (childPath: string): string => {
 
 const loadProjects = async () => {
   try {
-    const response = await fetch('/api/projects');
+    const response = await fetch('/lx-api/projects');
     const result = await response.json();
     if (result.success) {
       projectList.value = result.data.map((p: any) => ({

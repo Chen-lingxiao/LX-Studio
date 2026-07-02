@@ -158,7 +158,7 @@ const loadProject = async () => {
     const slug = getSlug();
     searchedKey.value = slug;
 
-    const response = await fetch('/api/projects');
+    const response = await fetch('/lx-api/projects');
     const result = await response.json();
 
     if (result.success) {
@@ -205,7 +205,7 @@ watch(
   () => route.fullPath,
   () => {
     if (!route.params.slug && route.path === '/project') {
-      fetch('/api/projects')
+      fetch('/lx-api/projects')
         .then(r => r.json())
         .then(r => {
           if (r.success && r.data && r.data.length > 0) {

@@ -81,7 +81,7 @@ export const fetchHistoryEvents = async (
   }
 
   try {
-    const response = await axios.get('/api/history', {
+    const response = await axios.get('/lx-api/history', {
       params: {
         key: JUHE_API_KEY_HISTORY,
         date: dateStr,
@@ -121,7 +121,7 @@ export const fetchCalendarDay = async (
   }
 
   try {
-    const response = await axios.get('/api/calendar', {
+    const response = await axios.get('/lx-api/calendar', {
       params: {
         key: JUHE_API_KEY_CALENDAR,
         date: dateStr,

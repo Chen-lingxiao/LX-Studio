@@ -11,7 +11,7 @@ const filteredNotes = ref([]);
 const loadNotes = async () => {
   loading.value = true;
   try {
-    const response = await fetch('/api/notes');
+    const response = await fetch('/lx-api/notes');
     const result = await response.json();
     if (result.success) {
       notes.value = result.data;

@@ -6,7 +6,11 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DB_PATH = path.join(__dirname, '../data.db');
+const DB_DIR = path.join(__dirname, '../data');
+if (!fs.existsSync(DB_DIR)) {
+  fs.mkdirSync(DB_DIR, { recursive: true });
+}
+const DB_PATH = path.join(DB_DIR, 'data.db');
 
 let db = null;
 let SQL = null;

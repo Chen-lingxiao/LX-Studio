@@ -45,7 +45,7 @@ router.post('/', authMiddleware, upload.single('file'), (req, res) => {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
 
-    const fileUrl = `/uploads/${req.file.filename}`;
+    const fileUrl = `/lx-api/uploads/${req.file.filename}`;
     res.json({
       success: true,
       data: {

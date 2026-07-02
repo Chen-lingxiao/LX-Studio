@@ -23,14 +23,15 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/lx-api/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.use('/api/articles', articlesRoutes);
-app.use('/api/notes', notesRoutes);
-app.use('/api/projects', projectsRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/lx-api/articles', articlesRoutes);
+app.use('/lx-api/notes', notesRoutes);
+app.use('/lx-api/projects', projectsRoutes);
+app.use('/lx-api/upload', uploadRoutes);
+app.use('/lx-api/admin', adminRoutes);
 
-app.get('/api/health', (req, res) => {
+app.get('/lx-api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
@@ -38,7 +39,7 @@ if (fs.existsSync(path.join(__dirname, '../dist'))) {
   app.use(express.static(path.join(__dirname, '../dist')));
   
   app.get('*', (req, res) => {
-    if (req.path.startsWith('/api/')) {
+    if (req.path.startsWith('/lx-api/')) {
       return res.status(404).json({ error: 'Not found' });
     }
     res.sendFile(path.join(__dirname, '../dist/index.html'));

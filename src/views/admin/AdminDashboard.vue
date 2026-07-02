@@ -52,7 +52,7 @@ const handleDelete = async (id, type) => {
     });
 
     const token = localStorage.getItem('admin_token');
-    const response = await fetch(`/api/${type}/${id}`, {
+    const response = await fetch(`/lx-api/${type}/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -77,8 +77,8 @@ const handleSave = async (data) => {
   try {
     const token = localStorage.getItem('admin_token');
     const url = editingItem.value 
-      ? `/api/${data.type}/${editingItem.value.id}` 
-      : `/api/${data.type}`;
+      ? `/lx-api/${data.type}/${editingItem.value.id}` 
+      : `/lx-api/${data.type}`;
     const method = editingItem.value ? 'PUT' : 'POST';
 
     const response = await fetch(url, {
@@ -108,8 +108,8 @@ const handleProjectSave = async (data) => {
   try {
     const token = localStorage.getItem('admin_token');
     const url = editingProject.value
-      ? `/api/projects/${editingProject.value.id}`
-      : '/api/projects';
+      ? `/lx-api/projects/${editingProject.value.id}`
+      : '/lx-api/projects';
     const method = editingProject.value ? 'PUT' : 'POST';
 
     const response = await fetch(url, {

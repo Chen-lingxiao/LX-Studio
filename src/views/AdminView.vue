@@ -14,7 +14,7 @@ const handleLogin = (user) => {
 const checkAuth = () => {
   const token = localStorage.getItem('admin_token');
   if (token) {
-    fetch('/api/admin/verify', {
+    fetch('/lx-api/admin/verify', {
       headers: {
         'Authorization': `Bearer ${token}`
       }

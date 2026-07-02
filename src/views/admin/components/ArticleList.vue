@@ -11,7 +11,7 @@ const filteredArticles = ref([]);
 const loadArticles = async () => {
   loading.value = true;
   try {
-    const response = await fetch('/api/articles');
+    const response = await fetch('/lx-api/articles');
     const result = await response.json();
     if (result.success) {
       articles.value = result.data;

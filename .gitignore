@@ -43,7 +43,6 @@ __screenshots__/
 .env.*.local
 
 # Database
-data.db
 data/
 
 # Cesium cache

@@ -62,7 +62,7 @@
   const loadArticles = async () => {
     loading.value = true;
     try {
-      const response = await fetch('/api/articles');
+      const response = await fetch('/lx-api/articles');
       const result = await response.json();
       if (result.success) {
         articles.value = result.data;
@@ -74,7 +74,7 @@
 
   const loadTags = async () => {
     try {
-      const response = await fetch('/api/articles/tags');
+      const response = await fetch('/lx-api/articles/tags');
       const result = await response.json();
       if (result.success) {
         tags.value = result.data;

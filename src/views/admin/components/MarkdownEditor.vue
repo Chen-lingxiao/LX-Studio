@@ -106,7 +106,7 @@ const handleContentImageUpload = async (event) => {
   formData.append('file', file);
 
   try {
-    const response = await fetch('/api/upload', {
+    const response = await fetch('/lx-api/upload', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`

@@ -39,7 +39,7 @@ const combinedMenu = computed(() => {
     icon: 'folder',
     children: apiNotes.value.map(n => ({
       title: n.title || '无标题笔记',
-      path: `/api/note/${n.id}`,
+      path: `/lx-api/note/${n.id}`,
       isApiNote: true,
     }))
   };
@@ -224,7 +224,7 @@ async function loadNoteFromApi(noteId: string) {
     contentRef.value?.scrollTo(0, 0);
     outlineRef.value?.scrollTo(0, 0);
 
-    const response = await fetch(`/api/notes/${noteId}`);
+    const response = await fetch(`/lx-api/notes/${noteId}`);
     const result = await response.json();
 
     if (!result.success) {
@@ -252,8 +252,8 @@ async function loadNoteFromApi(noteId: string) {
 // 加载Markdown文件
 async function loadMarkdown(path: string) {
   try {
-    if (path.startsWith('/api/note/')) {
-      const noteId = path.replace('/api/note/', '');
+    if (path.startsWith('/lx-api/note/')) {
+      const noteId = path.replace('/lx-api/note/', '');
       await loadNoteFromApi(noteId);
       return;
     }
@@ -287,7 +287,7 @@ async function loadMarkdown(path: string) {
 // 加载API笔记列表
 async function loadApiNotes() {
   try {
-    const response = await fetch('/api/notes');
+    const response = await fetch('/lx-api/notes');
     const result = await response.json();
     if (result.success) {
       apiNotes.value = result.data.filter((n: any) => n.content);
